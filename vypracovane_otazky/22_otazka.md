@@ -1,10 +1,10 @@
-# 📚 Zápisky: Otázka č. 22 - Prohledávání do hloubky a do šířky
+# Zápisky: Otázka č. 22 - Prohledávání do hloubky a do šířky
 **Datum:** 2026-02-17
-**Status:** ✅ Hotovo (teorie) | ⬜ Procvičení úloh
+**Status:** Hotovo (teorie) | Procvičení úloh
 
 ---
 
-## ✅ Checklist bodů otázky
+## Checklist bodů otázky
 - [x] Bod 1: DFS – jednotlivé kroky, zásobník, rekurzivní i iterativní verze
 - [x] Bod 2: BFS – jednotlivé kroky, fronta (Queue)
 - [x] Bod 3: Časová a prostorová složitost
@@ -13,7 +13,7 @@
 
 ---
 
-## 🧠 Klíčové koncepty & Snippety
+## Klíčové koncepty & Snippety
 
 ---
 
@@ -132,7 +132,7 @@ static void DFS(Dictionary<string, List<string>> graf, string start)
 - FIFO zajistí zpracování po vrstvách → proto BFS najde nejkratší cestu v neohodnoceném grafu
 - BFS existuje POUZE v iterativní verzi
 
-**⚠️ Klíčový rozdíl oproti DFS:**
+** Klíčový rozdíl oproti DFS:**
 - DFS: Označíme jako navštívené AŽ PŘI ZPRACOVÁNÍ (Pop)
 - BFS: Označíme jako navštívené UŽ PŘI PŘIDÁNÍ DO FRONTY (Enqueue)
 
@@ -164,7 +164,7 @@ static void BFS(Node start)
     HashSet<Node> navstivene = new HashSet<Node>();
 
     fronta.Enqueue(start);
-    navstivene.Add(start);  // ⚠️ Označíme HNED při přidání!
+    navstivene.Add(start);  //  Označíme HNED při přidání!
 
     while (fronta.Count > 0)
     {
@@ -236,7 +236,7 @@ static Dictionary<string, int> BFSsVzdalenosti(
 - E = počet hran (Edges) – každou hranu "projdeme" 2× (z obou stran)
 - Platí pro DFS i BFS
 
-**⚠️ Záleží na reprezentaci grafu:**
+** Záleží na reprezentaci grafu:**
 ```
 ╔═══════════════════════════════════════════════════════════╗
 ║  Reprezentace          │  Časová složitost DFS/BFS       ║
@@ -375,10 +375,10 @@ static List<string> NejkratsiCesta(
 ╔══════════════════════════════════════════════════════════╗
 ║  Typ grafu              │  Algoritmus  │  Najde nejkr.? ║
 ╠══════════════════════════════════════════════════════════╣
-║  Neohodnocený           │  BFS         │  ✅ ANO        ║
-║  Ohodnocený (kladné)    │  Dijkstra    │  ✅ ANO        ║
-║  Ohodnocený (záporné)   │  Bellman-Ford│  ✅ ANO        ║
-║  DFS (jakýkoliv graf)   │  DFS         │  ❌ NE         ║
+║  Neohodnocený           │  BFS         │   ANO        ║
+║  Ohodnocený (kladné)    │  Dijkstra    │   ANO        ║
+║  Ohodnocený (záporné)   │  Bellman-Ford│   ANO        ║
+║  DFS (jakýkoliv graf)   │  DFS         │   NE         ║
 ╚══════════════════════════════════════════════════════════╝
 ```
 
@@ -386,19 +386,19 @@ Pro ohodnocené grafy → Dijkstrův algoritmus (Otázka 25).
 
 ---
 
-## 📋 Relevantní procvičovací úlohy
-- ⬜ **Úloha 352** (⭐) – Existuje autobusové spojení? – DFS/BFS dosažitelnost
-- ⬜ **Úloha 353** (⭐) – Dostupná města – všechny dosažitelné vrcholy
-- ⬜ **Úloha 354** (⭐⭐) – Skupinky lidí – komponenty souvislosti
-- ⬜ **Úloha 355** (⭐⭐) – Cesta bludištěm – rekonstrukce cesty
-- ⬜ **Úloha 356** (⭐⭐) – Letiště s nejméně přestupy – BFS nejkratší cesta
-- ⬜ **Úloha 383** (⭐⭐) – Věž na šachovnici – implicitní graf
-- ⬜ **Úloha 385** (⭐⭐) – Bludiště ve čtverečkové síti – mřížkový BFS
-- ⬜ **Úloha 384** (⭐⭐⭐) – Šachový kůň – BFS min. počet tahů
+## Relevantní procvičovací úlohy
+- **Úloha 352** () – Existuje autobusové spojení? – DFS/BFS dosažitelnost
+- **Úloha 353** () – Dostupná města – všechny dosažitelné vrcholy
+- **Úloha 354** () – Skupinky lidí – komponenty souvislosti
+- **Úloha 355** () – Cesta bludištěm – rekonstrukce cesty
+- **Úloha 356** () – Letiště s nejméně přestupy – BFS nejkratší cesta
+- **Úloha 383** () – Věž na šachovnici – implicitní graf
+- **Úloha 385** () – Bludiště ve čtverečkové síti – mřížkový BFS
+- **Úloha 384** () – Šachový kůň – BFS min. počet tahů
 
 ---
 
-## ⚠️ Na co si dát pozor (Maturitní "chytáky")
+## Na co si dát pozor (Maturitní "chytáky")
 
 1. **DFS vs BFS označování navštívených:**
    - DFS iterativní: označit při Pop (nebo check po Pop)
@@ -420,19 +420,19 @@ Pro ohodnocené grafy → Dijkstrův algoritmus (Otázka 25).
    - DFS NIKDY negarantuje nejkratší cestu
 
 5. **HashSet vs List pro navštívené:**
-   - HashSet.Contains() = O(1) ✅
-   - List.Contains() = O(n) ❌
+   - HashSet.Contains() = O(1)
+   - List.Contains() = O(n)
 
 ---
 
-## 🚀 Senior Tip
+## Senior Tip
 - V praxi se graf nejčastěji reprezentuje jako `Dictionary<string, List<string>>`
 - `navstivene.Add()` v HashSet vrací `bool` → ušetříš volání Contains()
 - Pro BFS s vzdálenostmi stačí `Dictionary<string, int>` – slouží jako navštíveno I vzdálenost
 
 ---
 
-## 🔗 Souvislosti s jinými otázkami
+## Souvislosti s jinými otázkami
 - **Otázka 3** (Fronta a zásobník) – BFS používá Queue, DFS používá Stack
 - **Otázka 5** (Rekurze) – DFS rekurzivní = přirozené využití call stacku
 - **Otázka 8** (Reprezentace grafu) – Složitost závisí na reprezentaci

@@ -1,10 +1,7 @@
-# 📚 Zápisky: Otázka č. 9 - Stromy a jejich využití. Průchod stromem
-**Datum:** 2025-02-16  
-**Status:** 🚧 Rozpracováno (Body 1-8 hotovo, 9-10 zbývá)
+# Zápisky: Otázka č. 9 - Stromy a jejich využití. Průchod stromem
 
----
+## Checklist bodů otázky
 
-## ✅ Checklist bodů otázky
 - [x] Bod 1: Definice stromu
 - [x] Bod 2: Definice binárního stromu
 - [x] Bod 3: Definice binárního vyhledávacího stromu (BVS)
@@ -13,88 +10,113 @@
 - [x] Bod 6: Průchod stromem do hloubky (DFS) a do šířky (BFS)
 - [x] Bod 7: Co může být ve stromu uloženo
 - [x] Bod 8: Co je halda a k čemu slouží
-- [ ] Bod 9: Příklady využití stromů
-- [ ] Bod 10: Možný způsob implementace
+- [x] Bod 9: Příklady využití stromů
+- [x] Bod 10: Možný způsob implementace
+- [x] Vyvážené stromy (AVL, Red-Black) a problém degenerace BVS
+- [x] Souvislosti s frontou, zásobníkem, rekurzí, grafy
 
 ---
 
-## 🧠 Klíčové koncepty & Snippety
+## Klíčové koncepty & Snippety
 
 ### Bod 1: Definice stromu
 
-**Teorie:**
-- Strom je **hierarchická datová struktura** složená z uzlů a hran
-- Má jeden **kořen (root)** - vrchní uzel
-- Každý uzel (kromě kořene) má **právě jednoho rodiče**
-- Uzly mohou mít **libovolný počet potomků**
-- **Neobsahuje cykly** - není možné se vrátit ke stejnému uzlu
+**Strom** je hierarchická datová struktura tvořená **uzly (nodes)** a **hranami (edges)**. Z matematického hlediska je to **souvislý acyklický graf** – speciální typ grafu, který:
+- je **souvislý** (mezi každými dvěma uzly existuje cesta),
+- **neobsahuje cykly** (nelze se vrátit do stejného uzlu, aniž bys prošel hranu zpět).
 
-**ASCII Vizualizace:**
+**Klíčové vlastnosti:**
+- Má **právě jeden kořen (root)** – výchozí uzel struktury.
+- Každý uzel kromě kořene má **právě jednoho rodiče (parent)**.
+- Uzel může mít **libovolný počet potomků (children)** – pro obecný strom.
+- Strom s `n` uzly má vždy **přesně `n − 1` hran**.
+- Mezi libovolnými dvěma uzly existuje **právě jedna cesta**.
+
+**ASCII vizualizace:**
 ```
-        [A]  ← Kořen (root)
+        [A]  ← kořen (root)
        / | \
       /  |  \
-    [B] [C] [D]  ← Potomci kořene (děti)
+    [B] [C] [D]  ← potomci kořene (children, levels)
     / \      |
    /   \     |
- [E]   [F]  [G]  ← Listy (nemají potomky)
+ [E]   [F]  [G]  ← listy (leaves) – nemají potomky
 ```
 
 **Terminologie:**
-- **Kořen (Root):** Nejvyšší uzel (A)
-- **Rodiče (Parent):** Uzel s potomky
-- **Potomci (Children):** Uzly pod rodičem
-- **Listy (Leaves):** Uzly bez potomků (E, F, G)
-- **Vnitřní uzly:** Uzly s alespoň jedním potomkem
-- **Hloubka uzlu:** Počet hran od kořene
-- **Výška stromu:** Maximální hloubka listu
+| Pojem | Význam |
+|-------|--------|
+| **Kořen (Root)** | Nejvyšší uzel; jediný bez rodiče. |
+| **Rodič (Parent)** | Uzel, který má potomky. |
+| **Potomek (Child)** | Uzel, který má rodiče. |
+| **Sourozenci (Siblings)** | Uzly se stejným rodičem. |
+| **Předek (Ancestor)** | Uzel na cestě od kořene k danému uzlu. |
+| **Potomek (Descendant)** | Uzel v podstromu daného uzlu. |
+| **List (Leaf)** | Uzel bez potomků (vnější uzel). |
+| **Vnitřní uzel (Internal node)** | Uzel s alespoň jedním potomkem. |
+| **Podstrom (Subtree)** | Strom tvořený uzlem a všemi jeho potomky. |
+| **Hloubka (Depth)** | Počet hran od kořene k danému uzlu (kořen má hloubku 0). |
+| **Výška (Height)** | Hloubka nejhlubšího listu; výška stromu = výška kořene. |
+| **Úroveň (Level)** | Množina uzlů ve stejné hloubce. |
+| **Stupeň uzlu** | Počet jeho potomků (v některých textech celkový počet sousedů). |
 
-**Rozdíl strom vs graf:**
-```
-Strom:
-- ❌ Neobsahuje cykly
-- ✅ Má jeden kořen
-- ✅ Hierarchická struktura
-- Každý uzel má max 1 rodiče
+**Rozdíl strom vs. graf:**
 
-Graf:
-- ✅ Může obsahovat cykly
-- ❌ Nemá kořen
-- ❌ Obecná struktura
-- Uzel může mít více "rodičů"
-```
+| Vlastnost | Strom | Graf |
+|-----------|-------|------|
+| Cykly | NE | Může |
+| Kořen | ANO (jeden) | NE |
+| Hran | `V − 1` | obecně |
+| Cesta mezi dvěma uzly | Právě jedna | Libovolný počet |
+| Hierarchie | Ano | Ne nutně |
+
+**Speciální typy stromů:**
+- **Obecný (n-ární) strom** – uzly mají libovolný počet potomků.
+- **Binární strom** – maximálně 2 potomci.
+- **Vyhledávací strom (BST/BVS)** – binární strom s pravidlem uspořádání.
+- **Vyvážený strom (AVL, Red-Black)** – BVS s mechanismem udržujícím malou výšku.
+- **B-strom, B+ strom** – m-ární strom optimalizovaný pro databáze a disky.
+- **Halda (Heap)** – úplný binární strom s heap property.
+- **Trie (prefixový strom)** – strom pro řetězce, větvení podle znaků.
+- **Quad-tree / Octree** – prostorové členění (2D/3D).
 
 ---
 
 ### Bod 2: Definice binárního stromu
 
-**Teorie:**
-- Binární strom = každý uzel má **maximálně 2 potomky**
-- Rozlišujeme **levého** a **pravého** potomka
-- Pořadí potomků **záleží** (levý ≠ pravý)
+**Binární strom** je strom, kde každý uzel má **maximálně 2 potomky** – pojmenované **levý** a **pravý** podstrom. **Pořadí potomků záleží** – `(L, R) ≠ (R, L)`.
 
-**ASCII Vizualizace:**
 ```
-        [10]        ← Kořen
+        [10]        ← kořen
         /  \
        /    \
-     [5]    [15]    ← Levý a pravý potomek
+     [5]    [15]    ← levý a pravý potomek
      / \      \
     /   \      \
-  [3]   [7]   [20]  ← Listy
+  [3]   [7]   [20]  ← listy
 ```
 
-**Kód (Maturitní verze):**
-```csharp
-// ✅ VERZE A - MATURITNÍ
-// Struktura uzlu binárního stromu
+**Důležité vlastnosti:**
+- Maximální počet uzlů na úrovni `d`: **2^d**.
+- Maximální počet uzlů ve stromu výšky `h`: **2^(h+1) − 1**.
+- Minimální výška pro `n` uzlů: **⌈log₂(n+1)⌉ − 1**, tedy přibližně **log₂ n**.
+- Vyvážený binární strom má výšku `O(log n)`, degenerovaný `O(n)`.
 
+**Typy binárních stromů:**
+1. **Plný binární strom (full)** – každý uzel má buď 0 nebo 2 potomky.
+2. **Úplný binární strom (complete)** – všechny úrovně plně obsazené, kromě poslední, která je zaplněna **zleva**. (Halda je úplný binární strom.)
+3. **Perfektní binární strom (perfect)** – všechny vnitřní uzly mají 2 potomky a všechny listy jsou na stejné úrovni.
+4. **Degenerovaný strom** – každý uzel má max 1 potomek → vlastně **spojový seznam**.
+5. **Vyvážený binární strom** – výška obou podstromů každého uzlu se liší max o 1 (AVL).
+
+**Implementace uzlu:**
+```csharp
 class Node
 {
-    public int Data;           // Hodnota uzlu
-    public Node Left;          // Levý potomek (může být null)
-    public Node Right;         // Pravý potomek (může být null)
-    
+    public int Data;
+    public Node Left;
+    public Node Right;
+
     public Node(int data)
     {
         Data = data;
@@ -112,42 +134,48 @@ root.Left.Right = new Node(7);
 root.Right.Right = new Node(20);
 ```
 
-**Typy binárních stromů:**
-1. **Plný (Full):** Každý uzel má 0 nebo 2 potomky
-2. **Úplný (Complete):** Všechny úrovně zaplněné, kromě poslední (zleva)
-3. **Perfektní (Perfect):** Všechny listy na stejné úrovni
-
-**Vlastnosti:**
-- Maximální počet uzlů na úrovni h: **2^h**
-- Maximální počet uzlů ve stromu výšky h: **2^(h+1) - 1**
-- Minimální výška pro n uzlů: **log₂(n)**
+**Alternativně přes pole** (jak ukládá halda):
+```csharp
+int[] strom = new int[15];
+// Index 0 = kořen
+// Levý potomek uzlu i: 2*i + 1
+// Pravý potomek uzlu i: 2*i + 2
+// Rodič uzlu i: (i - 1) / 2
+```
+Tento přístup je úsporný pro úplné stromy (žádné odkazy), ale plýtvá pamětí pro řídké/nepravidelné stromy.
 
 ---
 
 ### Bod 3: Definice binárního vyhledávacího stromu (BVS)
 
-**Teorie:**
-- BVS = binární strom s pravidlem uspořádání
-- **ZLATÉ PRAVIDLO:** Pro každý uzel platí:
-  - Všechny hodnoty v **levém** podstromu < hodnota uzlu
-  - Všechny hodnoty v **pravém** podstromu > hodnota uzlu
+**Binární vyhledávací strom (BVS, Binary Search Tree)** je binární strom s pravidlem uspořádání:
 
-**ASCII Vizualizace:**
+**ZLATÉ PRAVIDLO BVS:**
+- Pro každý uzel platí:
+  - **Všechny hodnoty v levém podstromu < hodnota uzlu**
+  - **Všechny hodnoty v pravém podstromu > hodnota uzlu**
+
+Pravidlo se vztahuje na **celé podstromy**, ne jen na bezprostřední děti.
+
 ```
-        [10]        ← Kořen
+        [10]
         /  \
        /    \
-     [5]    [15]    ← 5 < 10 < 15 ✅
+     [5]    [15]
      / \      \
     /   \      \
-  [3]   [7]   [20]  ← 3 < 5 < 7  a  15 < 20 ✅
+  [3]   [7]   [20]
 ```
 
-**Kód (Maturitní verze):**
-```csharp
-// ✅ VERZE A - MATURITNÍ
-// BVS s automatickým Insert()
+Ověření: V levém podstromu kořene `[10]` jsou `{5, 3, 7}` – všechny menší než 10. V pravém podstromu `{15, 20}` – všechny větší.
 
+**Klíčové důsledky BVS:**
+- Vyhledávání trvá v průměru **O(log n)** v dobře vyváženém stromu.
+- **In-order průchod** vypíše hodnoty **seřazené**.
+- Minimum je v **nejlevějším** uzlu, maximum v **nejpravějším**.
+
+**Implementace s automatickým Insert:**
+```csharp
 class BinarySearchTree
 {
     class Node
@@ -155,7 +183,7 @@ class BinarySearchTree
         public int Data;
         public Node Left;
         public Node Right;
-        
+
         public Node(int data)
         {
             Data = data;
@@ -163,40 +191,35 @@ class BinarySearchTree
             Right = null;
         }
     }
-    
+
     private Node root;
-    
+
     public BinarySearchTree()
     {
         root = null;
     }
-    
-    // ✨ Automatické přidání prvku
+
     public void Insert(int value)
     {
         root = InsertRecursive(root, value);
     }
-    
+
     private Node InsertRecursive(Node current, int value)
     {
-        // Prázdné místo → vytvoříme uzel
         if (current == null)
             return new Node(value);
-        
-        // Porovnáme a jdeme vlevo/vpravo
+
         if (value < current.Data)
             current.Left = InsertRecursive(current.Left, value);
         else if (value > current.Data)
             current.Right = InsertRecursive(current.Right, value);
-        // else: duplicita, nepřidáváme
-        
+        // else: duplicita - obvykle nepřidáváme
+
         return current;
     }
 }
-```
 
-**Použití:**
-```csharp
+// Použití:
 BinarySearchTree bst = new BinarySearchTree();
 bst.Insert(10);
 bst.Insert(5);
@@ -204,38 +227,52 @@ bst.Insert(15);
 bst.Insert(3);
 bst.Insert(7);
 bst.Insert(20);
-// Strom je automaticky správně uspořádaný!
 ```
 
-**Časová složitost Insert():**
-- **Vyvážený strom:** O(log n)
-- **Nevyvážený strom:** O(n) (degeneruje na spojový seznam)
+**Časová složitost Insert/Search/Delete:**
+- **Vyvážený BVS:** O(log n).
+- **Degenerovaný BVS:** O(n) – strom zdegeneroval na spojový seznam.
+
+**Problém degenerace:**
+Při vkládání **seřazených** dat (1, 2, 3, 4, 5, …) BVS degeneruje:
+```
+[1]
+  \
+  [2]
+    \
+    [3]
+      \
+      [4]
+        \
+        [5]   → spojový seznam, hledání O(n)
+```
+
+Řešením jsou **samovyvažující stromy**:
+- **AVL strom** – udržuje výškový rozdíl podstromů max 1.
+- **Red-Black strom** – kompromis s méně rotacemi (použit v `SortedSet<T>` v .NET, v `std::map` v C++, v Linux scheduleru).
+- **B-strom, B+ strom** – pro databáze a disky.
+
+Tyto struktury garantují O(log n) i v nejhorším případě, ale vyžadují **rotace** po každém vložení/odstranění pro udržení rovnováhy.
 
 ---
 
-### Bod 4: Algoritmus procházení libovolného stromu
+### Bod 4: Algoritmus procházení libovolného (obecného) stromu
 
-**Teorie:**
-- Procházení = navštívit **každý uzel právě jednou**
-- Obecný strom může mít **libovolný počet potomků**
-- Používá se **rekurze** (přirozené pro stromovou strukturu)
+**Procházení (traversal)** = navštívit každý uzel **právě jednou**. Pro obecný strom (libovolný počet potomků) je nejpřirozenější **rekurzivní DFS**.
 
-**Struktura obecného stromu:**
+**Struktura uzlu obecného stromu:**
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Uzel obecného (N-árního) stromu
-
 class TreeNode
 {
     public int Data;
-    public List<TreeNode> Children;  // Seznam všech potomků
-    
+    public List<TreeNode> Children;
+
     public TreeNode(int data)
     {
         Data = data;
         Children = new List<TreeNode>();
     }
-    
+
     public void AddChild(TreeNode child)
     {
         Children.Add(child);
@@ -243,20 +280,16 @@ class TreeNode
 }
 ```
 
-**Kód (Maturitní verze):**
+**Procházení do hloubky (DFS) – rekurzivně:**
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Procházení do hloubky (DFS)
-
 void TraverseTree(TreeNode node)
 {
-    // Základní případ: prázdný uzel
     if (node == null)
         return;
-    
+
     // 1. Zpracuj aktuální uzel
     Console.WriteLine(node.Data);
-    
+
     // 2. Rekurzivně projdi všechny potomky
     foreach (TreeNode child in node.Children)
     {
@@ -265,7 +298,7 @@ void TraverseTree(TreeNode node)
 }
 ```
 
-**Příklad stromu:**
+**Příklad:**
 ```
         [A]
        / | \
@@ -273,16 +306,14 @@ void TraverseTree(TreeNode node)
      / \    |
    [E] [F] [G]
 ```
+Pořadí výpisu: **A B E F C D G** (pre-order na obecném stromu).
 
-**Pořadí výpisu:** A B E F C D G
-
-**Další operace při procházení:**
+**Užitečné operace při průchodu:**
 ```csharp
-// Sečtení všech hodnot
+// Součet hodnot
 int Sum(TreeNode node)
 {
     if (node == null) return 0;
-    
     int sum = node.Data;
     foreach (TreeNode child in node.Children)
         sum += Sum(child);
@@ -293,18 +324,16 @@ int Sum(TreeNode node)
 int CountNodes(TreeNode node)
 {
     if (node == null) return 0;
-    
     int count = 1;
     foreach (TreeNode child in node.Children)
         count += CountNodes(child);
     return count;
 }
 
-// Hloubka stromu
+// Hloubka (výška) stromu
 int GetDepth(TreeNode node)
 {
     if (node == null) return 0;
-    
     int maxChildDepth = 0;
     foreach (TreeNode child in node.Children)
     {
@@ -316,41 +345,36 @@ int GetDepth(TreeNode node)
 }
 ```
 
-**Časová složitost:** O(n) - navštívíme každý uzel právě jednou
+**Časová složitost:** **O(n)** – musíme navštívit každý uzel právě jednou. Nemůže to být rychlejší.
+**Paměťová složitost:** **O(h)** kvůli rekurzi (h = výška stromu).
 
 ---
 
 ### Bod 5: Algoritmus hledání prvku v BVS
 
-**Teorie:**
-- Využití BVS pravidla → nemusíme procházet celý strom
-- V každém kroku **eliminujeme polovinu** stromu
-- Procházíme jen **jednu cestu** od kořene k listu
+BVS umožňuje **rychlé vyhledávání** – v každém kroku **eliminujeme polovinu** zbývajícího stromu.
 
 **Algoritmus:**
-1. Začni v kořeni
+1. Začni v kořeni.
 2. Porovnej hledanou hodnotu s aktuálním uzlem:
-   - **Našli jsme** → vrátíme true
-   - **Hledané < aktuální** → jdi **vlevo**
-   - **Hledané > aktuální** → jdi **vpravo**
-3. Opakuj, dokud nenajdeš NEBO nedojdeš k null
+   - Pokud rovná – našli jsme.
+   - Pokud menší – jdi **vlevo**.
+   - Pokud větší – jdi **vpravo**.
+3. Opakuj, dokud nenajdeš nebo nedojdeš na `null`.
 
 **Vizualizace hledání 7:**
 ```
         [10]  ← 7 < 10 → jdi VLEVO
         /  \
-       ↓    
+       ↓
      [5]    [15]  ← 7 > 5 → jdi VPRAVO
      / \      \
         ↓
-  [3]   [7]  [20]  ← 7 == 7 → NAŠLI! ✅
+  [3]   [7]  [20]  ← 7 == 7 → NAŠLI
 ```
 
-**Kód (Maturitní verze - Rekurzivní):**
+**Rekurzivní verze:**
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Hledání v BVS - rekurzivně
-
 public bool Search(int value)
 {
     return SearchRecursive(root, value);
@@ -358,15 +382,12 @@ public bool Search(int value)
 
 private bool SearchRecursive(Node current, int value)
 {
-    // Prázdný uzel → nenašli
     if (current == null)
         return false;
-    
-    // Našli jsme!
+
     if (value == current.Data)
         return true;
-    
-    // Jdi vlevo nebo vpravo
+
     if (value < current.Data)
         return SearchRecursive(current.Left, value);
     else
@@ -374,79 +395,62 @@ private bool SearchRecursive(Node current, int value)
 }
 ```
 
-**Kód (Maturitní verze - Iterativní):**
+**Iterativní verze (efektivnější, bez call-stack overhead):**
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Hledání v BVS - iterativně (efektivnější!)
-
 public bool SearchIterative(int value)
 {
     Node current = root;
-    
     while (current != null)
     {
-        // Našli jsme!
         if (value == current.Data)
             return true;
-        
-        // Jdi vlevo nebo vpravo
+
         if (value < current.Data)
             current = current.Left;
         else
             current = current.Right;
     }
-    
-    return false; // Nenašli
+    return false;
 }
 ```
 
-**Varianta - vrátit celý uzel:**
+**Vrácení celého uzlu:**
 ```csharp
 public Node Find(int value)
 {
     Node current = root;
-    
     while (current != null)
     {
-        if (value == current.Data)
-            return current;
-        
-        if (value < current.Data)
-            current = current.Left;
-        else
-            current = current.Right;
+        if (value == current.Data) return current;
+        current = (value < current.Data) ? current.Left : current.Right;
     }
-    
     return null;
 }
 ```
 
 **Časová složitost:**
-- **Vyvážený BVS:** O(log n) - procházíme jen jednu cestu
-- **Nevyvážený BVS:** O(n) - v nejhorším případě je to spojový seznam
+- **Vyvážený BVS:** **O(log n)**.
+- **Nevyvážený BVS:** O(n).
 
-**Porovnání s jinými metodami:**
-```
-Pro 1000 prvků:
-- BVS hledání (vyvážený): ≈ 10 kroků
-- Lineární hledání: ≈ 500 kroků (průměr)
-- Binární hledání v poli: ≈ 10 kroků
-```
+**Porovnání pro 1 000 prvků:**
+- BVS (vyvážený): ~10 kroků
+- Lineární hledání: ~500 kroků průměrně
+- Binární vyhledávání v poli: ~10 kroků (ale pole musí být seřazené a vyhledávání pouze, ne snadná modifikace).
+
+**Výhoda BVS oproti seřazenému poli:** Vložení/odstranění je O(log n), v poli O(n) (kvůli posunu).
 
 ---
 
 ### Bod 6: Průchod stromem do hloubky (DFS) a do šířky (BFS)
 
-**Teorie:**
-- Existují **2 základní strategie** procházení stromů
-- **DFS (Depth-First Search)** - Procházení do hloubky
-  - Jdeme co nejhlouběji, pak se vracíme
-  - Používá **zásobník** (Stack) nebo rekurzi
-- **BFS (Breadth-First Search)** - Procházení do šířky
-  - Procházíme po úrovních (po "patrech")
-  - Používá **frontu** (Queue)
+Dvě základní strategie procházení:
 
-**Příklad stromu:**
+| Strategie | Princip | Datová struktura | Pořadí |
+|-----------|---------|------------------|--------|
+| **BFS** (Breadth-First Search) | Po úrovních ("po patrech") | **Fronta (FIFO)** | 1 → 2 → 3 → 4 → 5 |
+| **DFS** (Depth-First Search) | Co nejhlouběji, pak návrat | **Zásobník (LIFO)** nebo rekurze | 1 → 2 → 4 → 5 → 3 |
+
+**Příklad pro porovnání:**
 ```
         [1]
        /   \
@@ -454,409 +458,230 @@ Pro 1000 prvků:
      / \   / \
    [4][5][6][7]
 ```
-
-**DFS pořadí:** 1 → 2 → 4 → 5 → 3 → 6 → 7 (jdeme dolů, pak se vracíme)  
-**BFS pořadí:** 1 → 2 → 3 → 4 → 5 → 6 → 7 (úroveň po úrovni)
+- **BFS:** 1 → 2 → 3 → 4 → 5 → 6 → 7 (po úrovních).
+- **DFS pre-order:** 1 → 2 → 4 → 5 → 3 → 6 → 7 (do hloubky).
 
 ---
 
-#### 🌊 BFS - Procházení do šířky
+#### BFS – procházení do šířky
 
-**Princip:**
-- Projdeme všechny uzly na úrovni N dříve, než přejdeme na úroveň N+1
-- Používáme **frontu (Queue)** - FIFO (First In, First Out)
+**Princip:** Projít všechny uzly na úrovni N dříve než přejdeme na úroveň N+1. Fronta funguje jako FIFO – první přidaný se vybere první.
 
 **Algoritmus:**
-1. Vlož kořen do fronty
+1. Vlož kořen do fronty.
 2. Dokud fronta není prázdná:
-   - Vyndej uzel z fronty
-   - Zpracuj ho (vypiš)
-   - Přidej všechny jeho potomky do fronty
+   - Vyber uzel z fronty.
+   - Zpracuj ho.
+   - Přidej všechny jeho potomky do fronty.
 
-**Kód (Maturitní verze):**
+**Kód:**
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// BFS - procházení do šířky
-
 void BFS(Node root)
 {
-    if (root == null)
-        return;
-    
-    // Vytvoříme frontu a vložíme kořen
+    if (root == null) return;
+
     Queue<Node> queue = new Queue<Node>();
     queue.Enqueue(root);
-    
-    // Dokud je ve frontě něco
+
     while (queue.Count > 0)
     {
-        // Vybereme uzel z fronty
         Node current = queue.Dequeue();
-        
-        // Zpracujeme ho (vypiseme)
         Console.Write(current.Data + " ");
-        
-        // Přidáme jeho potomky do fronty
-        if (current.Left != null)
-            queue.Enqueue(current.Left);
-        
-        if (current.Right != null)
-            queue.Enqueue(current.Right);
+
+        if (current.Left != null) queue.Enqueue(current.Left);
+        if (current.Right != null) queue.Enqueue(current.Right);
     }
 }
 ```
 
-**Simulace BFS krok po kroku:**
+**Simulace krok po kroku pro výše uvedený strom:**
 ```
-Strom:
-        [1]
-       /   \
-     [2]   [3]
-     / \   / \
-   [4][5][6][7]
-
 Krok 1: Fronta = [1]
-        Dequeue → zpracuj 1 → Enqueue [2, 3]
-        Výpis: 1
-
+  Dequeue → 1 → Enqueue [2, 3]
 Krok 2: Fronta = [2, 3]
-        Dequeue → zpracuj 2 → Enqueue [4, 5]
-        Výpis: 1 2
-
+  Dequeue → 2 → Enqueue [4, 5]
 Krok 3: Fronta = [3, 4, 5]
-        Dequeue → zpracuj 3 → Enqueue [6, 7]
-        Výpis: 1 2 3
-
-Krok 4: Fronta = [4, 5, 6, 7]
-        Dequeue → zpracuj 4 (nemá potomky)
-        Výpis: 1 2 3 4
-
-Krok 5: Fronta = [5, 6, 7]
-        Dequeue → zpracuj 5
-        Výpis: 1 2 3 4 5
-
-Krok 6: Fronta = [6, 7]
-        Dequeue → zpracuj 6
-        Výpis: 1 2 3 4 5 6
-
-Krok 7: Fronta = [7]
-        Dequeue → zpracuj 7
-        Výpis: 1 2 3 4 5 6 7
-
-Konec - fronta je prázdná!
+  Dequeue → 3 → Enqueue [6, 7]
+Krok 4-7: Postupně 4, 5, 6, 7 (žádní potomci)
+Výpis: 1 2 3 4 5 6 7
 ```
 
-**BFS s výpisem po úrovních:**
+**BFS po úrovních (uvidíme strukturu stromu):**
 ```csharp
 void BFSLevels(Node root)
 {
-    if (root == null)
-        return;
-    
+    if (root == null) return;
+
     Queue<Node> queue = new Queue<Node>();
     queue.Enqueue(root);
-    
+
     while (queue.Count > 0)
     {
-        // Zjistíme, kolik uzlů je na aktuální úrovni
         int levelSize = queue.Count;
-        
-        // Projdeme všechny uzly na této úrovni
         for (int i = 0; i < levelSize; i++)
         {
             Node current = queue.Dequeue();
             Console.Write(current.Data + " ");
-            
-            if (current.Left != null)
-                queue.Enqueue(current.Left);
-            
-            if (current.Right != null)
-                queue.Enqueue(current.Right);
+            if (current.Left != null) queue.Enqueue(current.Left);
+            if (current.Right != null) queue.Enqueue(current.Right);
         }
-        
-        // Konec úrovně - nový řádek
         Console.WriteLine();
     }
 }
 
 // Výstup:
-// 1 
-// 2 3 
+// 1
+// 2 3
 // 4 5 6 7
 ```
 
----
-
-#### 🏔️ DFS - Procházení do hloubky
-
-**Princip:**
-- Jdeme co nejhlouběji v jednom směru, pak se vracíme
-- Používáme **zásobník (Stack)** nebo **rekurzi**
-- Pro binární strom máme **3 varianty**:
-  1. **Pre-order** (N-L-R) - Uzel, pak potomci
-  2. **In-order** (L-N-R) - Levý, uzel, pravý
-  3. **Post-order** (L-R-N) - Potomci, pak uzel
-
-**Klíč k pochopení:**
-- **Rekurze má 3 fáze:** Sestup dolů → Zpracování → Návrat zpět
-- **Pořadí těchto fází určuje typ průchodu!**
+**Použití BFS:**
+- **Nejkratší cesta v neohodnoceném grafu** (počet hran, ne suma vah).
+- Výpis úrovní stromu.
+- Level-order serializace.
+- Hledání nejbližšího řešení v nelineárním stavovém prostoru.
 
 ---
 
-##### Pre-order DFS (N-L-R)
+#### DFS – procházení do hloubky
 
-**Zpracuj uzel PŘED potomky**
+**Princip:** Jdeme co nejhlouběji v jednom směru, pak se vracíme. Implicitní zásobník = call stack rekurze; explicitní zásobník pro iterativní verzi.
 
-**Kód:**
+**Pro binární strom existují 3 varianty DFS podle pořadí zpracování uzlu:**
+1. **Pre-order (N-L-R)** – Uzel **před** potomky.
+2. **In-order (L-N-R)** – Uzel **mezi** levým a pravým podstromem.
+3. **Post-order (L-R-N)** – Uzel **po** obou potomcích.
+
+Klíč k pochopení: každé rekurzivní volání má 3 fáze (sestup, zpracování, návrat). Pořadí, kdy v rámci kroku "zpracujeme" uzel, určuje typ průchodu.
+
+---
+
+##### Pre-order (N-L-R)
+
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Pre-order: N-L-R
-
 void PreOrder(Node node)
 {
-    if (node == null)
-        return;
-    
-    // 1. Zpracuj aktuální uzel
-    Console.Write(node.Data + " ");
-    
-    // 2. Projdi levý podstrom
-    PreOrder(node.Left);
-    
-    // 3. Projdi pravý podstrom
-    PreOrder(node.Right);
+    if (node == null) return;
+
+    Console.Write(node.Data + " ");   // 1. Zpracuj
+    PreOrder(node.Left);              // 2. Levý
+    PreOrder(node.Right);             // 3. Pravý
 }
 ```
 
-**Příklad:**
-```
-        [1]
-       /   \
-     [2]   [3]
-     / \   / \
-   [4][5][6][7]
+**Pořadí pro náš strom:** `1 2 4 5 3 6 7`.
 
-Pre-order: 1 2 4 5 3 6 7
-
-Postup:
-1. Vypíšu 1 → jdu do 2
-2. Vypíšu 2 → jdu do 4
-3. Vypíšu 4 → návrat
-4. Jdu do 5 → vypíšu 5 → návrat
-5. Návrat do 1 → jdu do 3
-6. Vypíšu 3 → jdu do 6
-7. Vypíšu 6 → návrat
-8. Jdu do 7 → vypíšu 7
-```
-
-**Použití:** Kopírování stromu, prefix zápis výrazu
+**Použití:** kopírování stromu (kořen prve, pak děti), serializace, prefixový (polský) zápis výrazu.
 
 ---
 
-##### In-order DFS (L-N-R)
+##### In-order (L-N-R)
 
-**Zpracuj uzel MEZI potomky**
-
-**Kód:**
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// In-order: L-N-R
-
 void InOrder(Node node)
 {
-    if (node == null)
-        return;
-    
-    // 1. Projdi levý podstrom
-    InOrder(node.Left);
-    
-    // 2. Zpracuj aktuální uzel
-    Console.Write(node.Data + " ");
-    
-    // 3. Projdi pravý podstrom
-    InOrder(node.Right);
+    if (node == null) return;
+
+    InOrder(node.Left);                // 1. Levý
+    Console.Write(node.Data + " ");    // 2. Zpracuj
+    InOrder(node.Right);               // 3. Pravý
 }
 ```
 
-**Příklad:**
+**Pořadí pro náš strom:** `4 2 5 1 6 3 7`.
+
+**KLÍČOVÉ PRO BVS:** In-order výpis BVS dává **seřazené hodnoty**.
+
 ```
-        [1]
-       /   \
-     [2]   [3]
-     / \   / \
-   [4][5][6][7]
+BVS:           [10]
+              /    \
+            [5]    [15]
+            / \      \
+          [3] [7]   [20]
 
-In-order: 4 2 5 1 6 3 7
-
-Postup:
-1. Jdu do 2 (NEVYPISUJI 1!)
-2. Jdu do 4 (NEVYPISUJI 2!)
-3. Levý null → vypíšu 4 → návrat
-4. Zpět v 2 → vypíšu 2
-5. Jdu do 5 → vypíšu 5 → návrat
-6. Zpět v 1 → vypíšu 1
-7. Jdu do 3 → jdu do 6 → vypíšu 6
-8. Zpět v 3 → vypíšu 3
-9. Jdu do 7 → vypíšu 7
+In-order: 3 5 7 10 15 20  → SEŘAZENÉ
 ```
 
-**✨ KLÍČOVÉ pro BVS:**
-```
-BVS:
-        [10]
-       /    \
-     [5]    [15]
-     / \      \
-   [3] [7]   [20]
+Proč? V BVS platí: pro každý uzel je celý jeho levý podstrom menší, pravý větší. In-order navštíví nejprve celý levý, pak kořen, pak celý pravý – přesně v pořadí hodnot.
 
-In-order výpis: 3 5 7 10 15 20  ← SEŘAZENÉ! ✅
-```
-
-**Proč?** BVS má pravidlo: levý < uzel < pravý  
-→ In-order (L-N-R) vypíše přirozeně **seřazené hodnoty**!
-
-**Použití:** Získání seřazených hodnot z BVS (nejdůležitější použití!)
+**Použití:** seřazený výpis BVS, kontrola, zda binární strom je BVS, debug výpis.
 
 ---
 
-##### Post-order DFS (L-R-N)
+##### Post-order (L-R-N)
 
-**Zpracuj uzel PO potomcích**
-
-**Kód:**
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Post-order: L-R-N
-
 void PostOrder(Node node)
 {
-    if (node == null)
-        return;
-    
-    // 1. Projdi levý podstrom
-    PostOrder(node.Left);
-    
-    // 2. Projdi pravý podstrom
-    PostOrder(node.Right);
-    
-    // 3. Zpracuj aktuální uzel
-    Console.Write(node.Data + " ");
+    if (node == null) return;
+
+    PostOrder(node.Left);             // 1. Levý
+    PostOrder(node.Right);            // 2. Pravý
+    Console.Write(node.Data + " ");   // 3. Zpracuj
 }
 ```
 
-**Příklad:**
-```
-        [1]
-       /   \
-     [2]   [3]
-     / \   / \
-   [4][5][6][7]
+**Pořadí pro náš strom:** `4 5 2 6 7 3 1`.
 
-Post-order: 4 5 2 6 7 3 1
-
-Postup:
-1. Jdu do 2 → jdu do 4
-2. Obě děti 4 null → vypíšu 4
-3. Zpět v 2 → jdu do 5 → vypíšu 5
-4. Zpět v 2 → OBĚ děti hotové → vypíšu 2
-5. Zpět v 1 → jdu do 3 → jdu do 6 → vypíšu 6
-6. Zpět v 3 → jdu do 7 → vypíšu 7
-7. Zpět v 3 → OBĚ děti hotové → vypíšu 3
-8. Zpět v 1 → OBĚ děti hotové → vypíšu 1
-```
-
-**Použití:** Mazání stromu (smažeme děti před rodičem), postfix zápis výrazu, výpočet výšky stromu
+**Použití:** mazání stromu (smazat děti **před** rodičem), výpočet velikosti/výšky stromu, postfixový (reverzní polský) zápis výrazu, vyhodnocení expression tree.
 
 ---
 
-#### 📊 Porovnání všech průchodů
-
-**Stejný strom:**
-```
-        [1]
-       /   \
-     [2]   [3]
-     / \   / \
-   [4][5][6][7]
-```
-
-| Průchod | Pořadí | Vzorec | Kdy použít |
-|---------|--------|--------|------------|
-| **Pre-order** | 1 2 4 5 3 6 7 | N-L-R | Kopírování stromu, prefix výrazy |
-| **In-order** | 4 2 5 1 6 3 7 | L-N-R | **Seřazený výpis BVS!** |
-| **Post-order** | 4 5 2 6 7 3 1 | L-R-N | Mazání stromu, postfix výrazy |
-| **BFS** | 1 2 3 4 5 6 7 | Po úrovních | Nejkratší cesta, úrovně stromu |
-
----
-
-#### 🔄 DFS iterativní (se zásobníkem)
+##### DFS iterativní (se zásobníkem)
 
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// DFS iterativní verze (Pre-order)
-
 void DFSIterative(Node root)
 {
-    if (root == null)
-        return;
-    
+    if (root == null) return;
+
     Stack<Node> stack = new Stack<Node>();
     stack.Push(root);
-    
+
     while (stack.Count > 0)
     {
         Node current = stack.Pop();
         Console.Write(current.Data + " ");
-        
-        // POZOR: Pravý PŘED levým (stack je LIFO)
-        if (current.Right != null)
-            stack.Push(current.Right);
-        
-        if (current.Left != null)
-            stack.Push(current.Left);
+
+        // POZOR: pravý PŘED levým (stack je LIFO)
+        if (current.Right != null) stack.Push(current.Right);
+        if (current.Left != null) stack.Push(current.Left);
     }
 }
 ```
 
-**Proč pravý před levým?**
-- Stack je **LIFO** (Last In, First Out)
-- Chceme zpracovat levý PŘED pravým
-- Musíme pravý vložit PŘED levým, aby levý byl navrchu!
+**Proč pravý před levým?** Zásobník je LIFO. Pokud chceme zpracovat levý před pravým (pre-order), musíme pravý strčit první, aby levý zůstal nahoře a vyběhl dříve.
 
 ---
 
-#### ⏱️ Časová a paměťová složitost
+#### Porovnání průchodů
 
-| Průchod | Časová složitost | Paměťová složitost | Vysvětlení |
-|---------|------------------|-------------------|------------|
-| **BFS** | O(n) | O(w) | w = šířka stromu (max. počet uzlů na úrovni) |
-| **DFS (rekurzivní)** | O(n) | O(h) | h = výška stromu (hloubka call stacku) |
-| **DFS (iterativní)** | O(n) | O(h) | h = výška stromu (velikost stacku) |
+| Průchod | Pořadí pro vzorový strom | Vzorec | Hlavní použití |
+|---------|--------------------------|--------|----------------|
+| **Pre-order** | 1 2 4 5 3 6 7 | N-L-R | Kopírování stromu, prefix výrazy, serializace |
+| **In-order** | 4 2 5 1 6 3 7 | L-N-R | Seřazený výpis BVS |
+| **Post-order** | 4 5 2 6 7 3 1 | L-R-N | Mazání stromu, postfix výrazy, výška stromu |
+| **BFS** | 1 2 3 4 5 6 7 | Po úrovních | Nejkratší cesta, výpis po patrech |
 
-**Pro vyvážený strom:**
-- h ≈ log n (výška)
-- w ≈ n/2 (max. šířka na poslední úrovni)
+#### Časová a paměťová složitost průchodů
 
-**Pro nevyvážený strom (spojový seznam):**
-- h = n (výška)
-- w = 1 (šířka)
+| Průchod | Časová | Paměťová | Vysvětlení |
+|---------|--------|----------|------------|
+| **BFS** | O(n) | O(w) | w = max. šířka stromu (na poslední úrovni může být ~n/2) |
+| **DFS rekurzivní** | O(n) | O(h) | h = výška stromu (hloubka call stacku) |
+| **DFS iterativní** | O(n) | O(h) | h = výška stromu (velikost zásobníku) |
+
+Pro **vyvážený strom** je h ≈ log n a w ≈ n/2 → DFS je paměťově efektivnější (O(log n) vs O(n)).
+Pro **degenerovaný strom** (spojový seznam) je h = n a w = 1 → BFS je paměťově efektivnější.
 
 ---
 
 ### Bod 7: Co může být ve stromu uloženo
 
-**Teorie:**
-- Ve stromu může být uložen **JAKÝKOLI datový typ**!
-- Jednoduché typy: int, string, double, char
-- Složené typy: vlastní třídy, struktury
-- **Podmínka pro BVS:** Data musí být **porovnatelná** (aby fungoval Insert/Search)
+Strom je **generická struktura** – v uzlech může být **libovolný datový typ**. Pro BVS je jediná podmínka: data musí být **porovnatelná** (implementovat `IComparable<T>` nebo mít komparátor).
 
----
-
-#### 1️⃣ Čísla (int, double)
-
+#### Čísla (int, double)
+Klasický příklad. BVS čísel je výchozí učební model.
 ```csharp
-// ✅ Nejjednodušší
 class Node
 {
     public int Data;
@@ -864,124 +689,81 @@ class Node
     public Node Right;
 }
 ```
+**Použití:** matematické výrazy, seřazení čísel, priority queue, indexy.
 
-**Použití:** Matematické výrazy, seřazování čísel, priority queue
-
----
-
-#### 2️⃣ Textové řetězce (string)
-
+#### Textové řetězce (string)
+Strings se porovnávají lexikograficky.
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// BVS pro slova
-
 class StringNode
 {
     public string Data;
     public StringNode Left;
     public StringNode Right;
-    
+
     public StringNode(string data)
     {
         Data = data;
     }
 }
 
-// Insert - porovnávání stringů
 StringNode InsertRecursive(StringNode current, string word)
 {
     if (current == null)
         return new StringNode(word);
-    
-    int comparison = string.Compare(word, current.Data);
-    
-    if (comparison < 0)
+
+    int cmp = string.Compare(word, current.Data);
+    if (cmp < 0)
         current.Left = InsertRecursive(current.Left, word);
-    else if (comparison > 0)
+    else if (cmp > 0)
         current.Right = InsertRecursive(current.Right, word);
-    
+
     return current;
 }
 ```
-
-**Příklad BVS slov:**
+**Příklad:**
 ```
         [Dog]
        /     \
-   [Cat]     [Zebra]
+   [Cat]    [Zebra]
    /   \
 [Ant] [Cow]
 
-In-order výpis: Ant Cat Cow Dog Zebra (abecedně!)
+In-order: Ant Cat Cow Dog Zebra (abecedně)
 ```
+**Použití:** slovníky, autocomplete, vyhledávání ve slovech.
 
-**Použití:** Slovníky, vyhledávání v textu, autocomplete
-
----
-
-#### 3️⃣ Vlastní třídy/objekty
-
+#### Vlastní třídy (objekty)
+Pro vlastní typy implementujeme `IComparable<T>` nebo předáme `IComparer<T>`.
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Třída Student implementující IComparable
-
 class Student : IComparable<Student>
 {
     public string Name;
     public int Age;
     public double GPA;
-    
+
     public Student(string name, int age, double gpa)
     {
         Name = name;
         Age = age;
         GPA = gpa;
     }
-    
-    // Určíme, podle čeho porovnávat (např. jméno)
+
     public int CompareTo(Student other)
     {
         return string.Compare(this.Name, other.Name);
     }
 }
-
-// Uzel stromu
-class StudentNode
-{
-    public Student Data;
-    public StudentNode Left;
-    public StudentNode Right;
-    
-    public StudentNode(Student data)
-    {
-        Data = data;
-    }
-}
 ```
+**Použití:** evidence studentů, zaměstnanců, produktů; databázové indexy.
 
-**Strom studentů:**
-```
-        [Student: "David", 20, 3.5]
-       /                           \
-[Student: "Alice", 19, 3.8]    [Student: "Martin", 21, 3.2]
-```
-
-**Použití:** Evidence studentů, databázové indexy, třídění záznamů
-
----
-
-#### 4️⃣ Souborový systém (obecný strom)
-
+#### Souborový systém (obecný strom)
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Obecný strom (ne BVS!)
-
 class FileNode
 {
     public string Name;
     public bool IsDirectory;
-    public List<FileNode> Children;  // N potomků!
-    
+    public List<FileNode> Children;
+
     public FileNode(string name, bool isDirectory)
     {
         Name = name;
@@ -990,35 +772,27 @@ class FileNode
     }
 }
 ```
-
-**Příklad:**
+**Struktura:**
 ```
         [C:\]
        /  |  \
-      /   |   \
 [Users][Windows][Program Files]
    |
 [Documents]
    |
 [foto.jpg]
 ```
+**Použití:** Explorer, file managery, virtuální FS.
 
-**Použití:** Souborový systém (Explorer), organizace složek
-
----
-
-#### 5️⃣ Aritmetické výrazy (Expression Tree)
-
+#### Aritmetické výrazy (Expression Tree)
+Strom, kde **listy jsou operandy** (čísla, proměnné) a **vnitřní uzly operátory** (+, −, *, /).
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Strom pro matematický výraz
-
 class ExpressionNode
 {
-    public string Value;  // Číslo nebo operátor (+, -, *, /)
+    public string Value;
     public ExpressionNode Left;
     public ExpressionNode Right;
-    
+
     public ExpressionNode(string value)
     {
         Value = value;
@@ -1026,7 +800,7 @@ class ExpressionNode
 }
 ```
 
-**Příklad: (3 + 5) * 2**
+**Výraz `(3 + 5) * 2`:**
 ```
         [*]
        /   \
@@ -1039,228 +813,123 @@ class ExpressionNode
 ```csharp
 int Evaluate(ExpressionNode node)
 {
-    if (node == null)
-        return 0;
-    
-    // List (číslo) → vrátíme hodnotu
+    if (node == null) return 0;
+
     if (node.Left == null && node.Right == null)
         return int.Parse(node.Value);
-    
-    // Rekurzivně vypočítáme levý a pravý
-    int leftValue = Evaluate(node.Left);
-    int rightValue = Evaluate(node.Right);
-    
-    // Aplikujeme operátor
+
+    int left = Evaluate(node.Left);
+    int right = Evaluate(node.Right);
+
     switch (node.Value)
     {
-        case "+": return leftValue + rightValue;
-        case "-": return leftValue - rightValue;
-        case "*": return leftValue * rightValue;
-        case "/": return leftValue / rightValue;
-        default: return 0;
+        case "+": return left + right;
+        case "-": return left - right;
+        case "*": return left * right;
+        case "/": return left / right;
+        default:  return 0;
     }
 }
-
-// Evaluate(root) → 3 + 5 = 8, 8 * 2 = 16
 ```
+**Použití:** kalkulačky, překladače (AST = Abstract Syntax Tree), formule v Excelu.
 
-**Použití:** Kalkulačky, překladače (parsování výrazů), vyhodnocování formulí
-
----
-
-#### 🎯 Klíčové principy
-
-**Pro BVS:**
-- Musí existovat pravidlo porovnání!
-- Jednoduché typy (int, string) fungují automaticky
-- Vlastní třídy: implementuj `IComparable<T>`
-
-**Pro obecný strom:**
-- Žádné omezení - cokoli!
-- Nepotřebuješ porovnávání
-- Příklady: souborový systém, DOM strom, organizační struktura
+#### Klíčové principy
+- **BVS** vyžaduje porovnatelnost. Primitivní typy a string fungují automaticky; pro vlastní třídy implementuj `IComparable<T>`.
+- **Obecný strom** nemá omezení – cokoliv, žádné porovnávání není třeba.
 
 ---
 
 ### Bod 8: Co je halda a k čemu slouží
 
-**Teorie:**
-- **Halda (Heap)** = speciální typ **binárního stromu**
-- **2 klíčové vlastnosti:**
-  1. **Úplný binární strom** - všechny úrovně plně zaplněné kromě poslední (ta zleva)
-  2. **Heap property** - pravidlo uspořádání:
-     - **Min-heap:** Rodič ≤ všechny potomky (minimum v kořeni)
-     - **Max-heap:** Rodič ≥ všechny potomky (maximum v kořeni)
+**Halda (Heap)** je speciální typ **úplného binárního stromu** s vlastností uspořádání **heap property**:
+- **Min-heap:** každý rodič ≤ všech svých potomků → **minimum je v kořeni**.
+- **Max-heap:** každý rodič ≥ všech svých potomků → **maximum je v kořeni**.
 
----
-
-#### 📊 Vizualizace Min-Heap
+#### Vizualizace Min-heap a Max-heap
 
 ```
-        [1]         ← Nejmenší (kořen)
-       /   \
-     [3]   [2]      ← Rodiče menší než děti ✅
-     / \   / \
-   [7][5][8][6]     ← 3≤7, 3≤5, 2≤8, 2≤6 ✅
+Min-heap:           Max-heap:
+    [1]                [10]
+   /   \              /    \
+ [3]   [2]          [8]    [9]
+ / \   / \          / \    / \
+[7][5][8][6]      [3][5][6][7]
 ```
 
-**Kontrola pravidla:**
-- Rodič `1`: děti {3, 2} → 1 ≤ 3 ✅, 1 ≤ 2 ✅
-- Rodič `3`: děti {7, 5} → 3 ≤ 7 ✅, 3 ≤ 5 ✅
-- Rodič `2`: děti {8, 6} → 2 ≤ 8 ✅, 2 ≤ 6 ✅
+Ověření Min-heap: rodič `1` ≤ děti {3, 2}; rodič `3` ≤ {7, 5}; rodič `2` ≤ {8, 6}.
 
----
+#### KRITICKÝ ROZDÍL: halda vs. BVS
 
-#### 📊 Vizualizace Max-Heap
-
-```
-        [10]        ← Největší (kořen)
-       /    \
-     [8]    [9]     ← Rodiče větší než děti ✅
-     / \    / \
-   [3][5] [6][7]    ← 8≥3, 8≥5, 9≥6, 9≥7 ✅
-```
-
----
-
-#### ⚠️ KRITICKÝ ROZDÍL: Halda vs BVS
-
-**POZOR! Halda NENÍ BVS!**
+**Halda NENÍ BVS!** Pravidla jsou jiná, účel je jiný.
 
 | Vlastnost | BVS | Halda |
 |-----------|-----|-------|
-| **Pravidlo** | Levý < uzel < pravý | Rodič ≤/≥ děti |
-| **Struktura** | Může být nevyvážená | Vždy úplný bin. strom |
-| **Minimum** | Zcela vlevo | V kořeni! ✅ |
-| **In-order** | Seřazené ✅ | NESEŘAZENÉ ❌ |
-| **Účel** | Seřazená data, vyhledávání | Priority queue, rychlý přístup k min/max |
+| **Pravidlo** | Levý < uzel < pravý (řazení) | Rodič ≤/≥ děti (heap property) |
+| **Struktura** | Může být nevyvážená | Vždy úplný binární strom |
+| **Min/max** | Min nejvíc vlevo, max vpravo | V kořeni |
+| **In-order výpis** | Seřazený | NESEŘAZENÝ |
+| **Hledání obecného prvku** | O(log n) | O(n) |
+| **Účel** | Seřazení, vyhledávání | Rychlý přístup k min/max |
 
-**Příklad rozdílu:**
-```
-BVS:                    Min-Heap:
-    [5]                     [1]
-   /   \                   /   \
- [3]   [7]               [3]   [2]
-                        /  \
-                      [7]  [5]
+**Tedy: pokud chceš seřazený výpis, použij BVS, ne haldu. Halda umí jen rychle dát extrém.**
 
-In-order BVS: 3 5 7 (seřazené ✅)
-In-order Heap: 7 3 1 5 2 (NESEŘAZENÉ ❌)
-```
+#### Uložení haldy v poli
 
-**Klíčová pointa:**
-- **BVS** → pro seřazený výpis, vyhledávání
-- **Halda** → pro rychlý přístup k minimu/maximu, NE pro seřazený výpis!
+**Halda se obvykle neukládá jako uzly s odkazy, ale v jednom poli!** Díky úplnému uspořádání lze hierarchii rekonstruovat z indexů.
 
----
-
-#### 💾 Uložení haldy V POLI
-
-**🎯 KLÍČOVÉ:** Halda se NEUKLÁDÁ pomocí uzlů s odkazy, ale **V POLI!**
-
-```csharp
-// ✅ VERZE A - MATURITNÍ
-// Halda jako pole
-
-int[] heap = {1, 3, 2, 7, 5, 8, 6};
-```
-
-**Vizualizace:**
 ```
 Pole:  [1, 3, 2, 7, 5, 8, 6]
 Index:  0  1  2  3  4  5  6
 
 Strom:
-        [1]         Index 0
+        [1]         index 0
        /   \
-     [3]   [2]      Index 1, 2
+     [3]   [2]      index 1, 2
      / \   / \
-   [7][5][8][6]     Index 3, 4, 5, 6
+   [7][5][8][6]     index 3, 4, 5, 6
+```
+
+**Vzorce pro navigaci (uzel na indexu `i`):**
+```csharp
+int leftChild  = 2 * i + 1;
+int rightChild = 2 * i + 2;
+int parent     = (i - 1) / 2;
 ```
 
 **Proč pole?**
-- ✅ Úspora paměti (žádné odkazy Left/Right)
-- ✅ Rychlejší přístup (cache-friendly)
-- ✅ Jednodušší implementace operací
+- Žádné odkazy = úspora paměti.
+- Souvislý blok = lepší cache lokalita.
+- Jednoduchá implementace operací.
+- Heap sort je in-place.
 
----
+#### Operace v Min-heap
 
-#### 🧮 Vzorce pro navigaci
-
-**Pro uzel na indexu `i`:**
-
+##### `GetMin()` – O(1)
+Minimum je vždy v kořeni:
 ```csharp
-// Levý potomek
-int leftChild = 2 * i + 1;
-
-// Pravý potomek
-int rightChild = 2 * i + 2;
-
-// Rodič
-int parent = (i - 1) / 2;
-```
-
-**Příklad:**
-```
-Uzel na indexu 1 (hodnota 3):
-- Levý: 2*1+1 = 3 → heap[3] = 7 ✅
-- Pravý: 2*1+2 = 4 → heap[4] = 5 ✅
-- Rodič: (1-1)/2 = 0 → heap[0] = 1 ✅
-```
-
----
-
-#### 🔧 Základní operace v Min-Heap
-
-##### 1️⃣ GetMin() - Získání minima
-
-```csharp
-// ✅ VERZE A - MATURITNÍ
-// Vrátí minimum (kořen)
-
 public int GetMin()
 {
-    if (heap.Count == 0)
-        throw new Exception("Halda je prázdná");
-    
-    return heap[0]; // Minimum je vždy v kořeni!
+    if (heap.Count == 0) throw new Exception("Halda je prázdná");
+    return heap[0];
 }
 ```
 
-**Časová složitost:** O(1) - konstantní čas! ⚡
-
----
-
-##### 2️⃣ Insert() - Přidání prvku
+##### `Insert(value)` – O(log n)
 
 **Algoritmus:**
-1. Přidej prvek na **konec pole** (poslední list)
-2. **Bubble Up** (probublej nahoru):
-   - Porovnávej s rodičem
-   - Pokud je menší než rodič → prohoď
-   - Opakuj, dokud není na správném místě
+1. Přidej prvek na **konec pole** (poslední list úplného stromu).
+2. **Bubble Up** (probublej nahoru): pokud je menší než rodič, prohoď s ním a opakuj.
 
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Přidání prvku do min-heap
-
 public void Insert(int value)
 {
-    // 1. Přidej na konec
     heap.Add(value);
-    
-    // 2. Bubble Up
     int index = heap.Count - 1;
-    
+
     while (index > 0)
     {
         int parentIndex = (index - 1) / 2;
-        
-        // Je na správném místě?
-        if (heap[index] >= heap[parentIndex])
-            break;
-        
-        // Prohoď s rodičem
+        if (heap[index] >= heap[parentIndex]) break;
         Swap(index, parentIndex);
         index = parentIndex;
     }
@@ -1274,389 +943,87 @@ void Swap(int i, int j)
 }
 ```
 
-**Příklad Insert(0) krok po kroku:**
+**Příklad Insert(0):**
 ```
-Původní halda:
-        [1]
-       /   \
-     [3]   [2]
-     / \
-   [7][5]
+Před:      Po přidání na konec:    Po Bubble Up:
+   [1]            [1]                    [0]
+  /   \          /   \                  /   \
+ [3]  [2]      [3]   [2]              [3]   [1]
+ / \           / \   /                / \   /
+[7][5]       [7][5][0]              [7][5][2]
 
-Pole: [1, 3, 2, 7, 5]
-
-Krok 1: Přidej 0 na konec
-Pole: [1, 3, 2, 7, 5, 0]
-        [1]
-       /   \
-     [3]   [2]
-     / \   /
-   [7][5][0]
-
-Krok 2: Bubble Up - 0 < 2 → prohoď
-Pole: [1, 3, 0, 7, 5, 2]
-        [1]
-       /   \
-     [3]   [0]  ← prohozeno
-     / \   /
-   [7][5][2]
-
-Krok 3: Bubble Up - 0 < 1 → prohoď
-Pole: [0, 3, 1, 7, 5, 2]
-        [0]         ← nový kořen!
-       /   \
-     [3]   [1]
-     / \   /
-   [7][5][2]
-
-Hotovo! 0 je nové minimum.
+(0 prohozeno s 2, pak s 1 → 0 je nový kořen)
 ```
 
-**Časová složitost:** O(log n) - max. výška stromu
-
----
-
-##### 3️⃣ ExtractMin() - Odebrání minima
+##### `ExtractMin()` – O(log n)
 
 **Algoritmus:**
-1. Ulož minimum (kořen) do proměnné
-2. Přesuň **poslední prvek** na místo kořene
-3. **Bubble Down** (probublej dolů):
-   - Porovnej s menším z dětí
-   - Pokud je větší → prohoď
-   - Opakuj
+1. Zapamatuj kořen (minimum).
+2. Přesuň **poslední prvek** na pozici kořene.
+3. **Bubble Down**: porovnej s menším z dětí; pokud je větší, prohoď a opakuj.
+4. Vrať uložené minimum.
 
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// Odebrání minima z min-heap
-
 public int ExtractMin()
 {
-    if (heap.Count == 0)
-        throw new Exception("Halda je prázdná");
-    
-    // 1. Ulož minimum
+    if (heap.Count == 0) throw new Exception("Halda je prázdná");
+
     int min = heap[0];
-    
-    // 2. Poslední prvek na místo kořene
     heap[0] = heap[heap.Count - 1];
     heap.RemoveAt(heap.Count - 1);
-    
-    // 3. Bubble Down
+
     int index = 0;
-    
     while (true)
     {
-        int leftChild = 2 * index + 1;
-        int rightChild = 2 * index + 2;
+        int left = 2 * index + 1;
+        int right = 2 * index + 2;
         int smallest = index;
-        
-        // Najdi nejmenší z: rodič, levý, pravý
-        if (leftChild < heap.Count && 
-            heap[leftChild] < heap[smallest])
-            smallest = leftChild;
-        
-        if (rightChild < heap.Count && 
-            heap[rightChild] < heap[smallest])
-            smallest = rightChild;
-        
-        // Je na správném místě?
-        if (smallest == index)
-            break;
-        
-        // Prohoď s menším dítětem
+
+        if (left < heap.Count && heap[left] < heap[smallest])
+            smallest = left;
+        if (right < heap.Count && heap[right] < heap[smallest])
+            smallest = right;
+
+        if (smallest == index) break;
+
         Swap(index, smallest);
         index = smallest;
     }
-    
     return min;
 }
 ```
 
-**Příklad ExtractMin() krok po kroku:**
-```
-Původní halda:
-        [1]
-       /   \
-     [3]   [2]
-     / \   /
-   [7][5][6]
+##### `BuildHeap` – O(n)
+Vytvořit haldu z neuspořádaného pole **najednou** lze v lineárním čase (heapify zdola). Postupné vkládání by trvalo O(n log n).
 
-Pole: [1, 3, 2, 7, 5, 6]
-
-Krok 1: Ulož min=1, přesuň poslední (6) na kořen
-Pole: [6, 3, 2, 7, 5]
-        [6]
-       /   \
-     [3]   [2]
-     / \
-   [7][5]
-
-Krok 2: Bubble Down - 6 > min(3,2) → prohoď s 2
-Pole: [2, 3, 6, 7, 5]
-        [2]
-       /   \
-     [3]   [6]
-     / \
-   [7][5]
-
-Krok 3: Bubble Down - 6 na správném místě (děti 7,5 jsou větší)
-Hotovo!
-
-Vrátíme: min = 1
-```
-
-**Časová složitost:** O(log n)
-
----
-
-#### 🎯 K čemu se halda používá
-
-##### 1️⃣ Priority Queue (Fronta s prioritou)
-
-```csharp
-// Příklad: Nemocniční systém
-MinHeap urgentQueue = new MinHeap();
-urgentQueue.Insert(3); // Střední urgence
-urgentQueue.Insert(1); // Kritický! ← Vždy jako první
-urgentQueue.Insert(5); // Lehký případ
-
-int next = urgentQueue.ExtractMin(); // Vrátí 1 (kritický)
-```
-
-**Reálné použití:**
-- CPU scheduling (operační systémy)
-- Síťové routery (prioritní pakety)
-- Nemocnice (urgentní případy)
-- Event handling (události podle času)
-
----
-
-##### 2️⃣ Heap Sort (Třídění pomocí haldy)
-
-**Algoritmus:**
-1. Vytvoř max-heap z pole
-2. Postupně odebírej maximum → seřazené pole
-
-**Časová složitost:** O(n log n) ✅  
-**Paměťová složitost:** O(1) - třídí in-place ✅
-
----
-
-##### 3️⃣ K největších/nejmenších prvků
-
-```csharp
-// Najdi 3 nejmenší čísla z velkého datasetu
-// Použij min-heap a třikrát zavolej ExtractMin()
-```
-
----
-
-##### 4️⃣ Dijkstrův algoritmus
-
-Hledání nejkratší cesty v grafu používá min-heap pro výběr nejbližšího vrcholu.
-
----
-
-#### ⏱️ Časová složitost operací haldy
+#### Časové složitosti operací haldy
 
 | Operace | Složitost | Vysvětlení |
 |---------|-----------|------------|
-| **GetMin/Max** | O(1) | Minimum/maximum je v kořeni |
-| **Insert** | O(log n) | Bubble Up - max výška stromu |
-| **ExtractMin/Max** | O(log n) | Bubble Down - max výška |
-| **Build Heap** | O(n) | Vytvoření haldy z pole |
+| `GetMin/Max` | O(1) | Kořen |
+| `Insert` | O(log n) | Bubble Up max h kroků |
+| `ExtractMin/Max` | O(log n) | Bubble Down max h kroků |
+| `BuildHeap` | O(n) | Heapify zdola |
+| Heap Sort | O(n log n) | n × ExtractMin |
+| Hledání obecného prvku | O(n) | Nemá uspořádání pro lookup |
 
----
+#### K čemu se halda používá
 
-#### 📋 Shrnutí haldy
+**1) Priority Queue (Fronta s prioritou)** – nejtypičtější použití. Vyber vždy prvek s nejvyšší prioritou.
+- CPU scheduling (OS).
+- Síťové routery (prioritní pakety).
+- Nemocnice (triage podle urgence).
+- Event handling (události podle času).
 
-| Aspekt | Hodnota |
-|--------|---------|
-| **Typ** | Speciální binární strom |
-| **Struktura** | Úplný binární strom |
-| **Pravidlo** | Rodič ≤/≥ všechny potomky |
-| **Uložení** | **V poli!** (ne uzly s odkazy) |
-| **Hlavní operace** | Insert O(log n), ExtractMin O(log n), GetMin O(1) |
-| **Použití** | Priority queue, Heap sort, K-largest/smallest, Dijkstra |
-| **Hlavní rozdíl od BVS** | Rychlý přístup k min/max, NE pro seřazený výpis |
+**2) Heap Sort** – O(n log n) třídění in-place, v praxi méně používané kvůli horší cache lokalitě než QuickSort/TimSort.
 
----
-
-## ⚠️ Na co si dát pozor (Maturitní "chytáky")
-
-### Při definicích:
-- **Strom vs graf:** Strom NEOBSAHUJE cykly, graf může
-- **Binární strom:** Max 2 potomci, pořadí záleží (levý ≠ pravý)
-- **Obecný strom:** Libovolný počet potomků, libovolná hloubka!
-- **BVS pravidlo:** VŠECHNY hodnoty v levém podstromu < uzel < VŠECHNY v pravém
-- **Halda pravidlo:** Rodič ≤/≥ děti (JINÉ než BVS!)
-
-### Při implementaci:
-- **Null kontrola:** Vždy kontroluj, jestli uzel není null!
-- **Rekurze:** Nezapomeň na základní případ (null → zastavení)
-- **BVS Insert:** Použij rekurzi nebo while cyklus, ne ruční `root.Left = ...`
-- **Duplicity:** Rozhodněte se, jestli je přidáváte (typicky NE)
-- **Halda v poli:** Používá vzorce pro navigaci, NE odkazy!
-
-### U časové složitosti:
-- **Vyvážený vs nevyvážený:** O(log n) vs O(n)
-- **Procházení:** Vždy O(n) - musíme navštívit všechny uzly
-- **Hledání v BVS:** O(log n) POUZE pokud je strom vyvážený!
-- **Halda operace:** GetMin O(1), Insert/Extract O(log n)
-
-### Průchody stromem:
-- **Pre-order (N-L-R):** Zpracuj uzel PŘED potomky
-- **In-order (L-N-R):** Zpracuj uzel MEZI potomky → **BVS seřazené!**
-- **Post-order (L-R-N):** Zpracuj uzel PO potomcích
-- **BFS:** Používá **frontu**, DFS používá **zásobník** (nebo rekurzi)
-- **In-order na haldě:** NESEŘAZENÉ! (to je častá chyba)
-
-### Halda vs BVS:
-- **Halda NENÍ BVS!** Jiné pravidlo, jiný účel
-- **Halda:** Rychlý přístup k min/max (priority queue)
-- **BVS:** Seřazený výpis, vyhledávání
-- **Halda v poli:** Ne uzly s odkazy!
-- **Bubble Up/Down:** Nezapomeň porovnávat s rodičem/dětmi správně
-
-### U ústní zkoušky:
-- Umět nakreslit příklad stromu na tabuli
-- Vysvětlit průchod krok po kroku s ukazováním
-- Ukázat, jak Insert() automaticky najde místo v BVS
-- Porovnat BVS hledání s lineárním hledáním
-- Umět vysvětlit rozdíl mezi DFS a BFS
-- Nakreslit, jak funguje Bubble Up/Down v haldě
-- Vysvětlit, proč In-order vypíše BVS seřazené
-- Ukázat vzorce pro navigaci v haldě (2*i+1, 2*i+2, (i-1)/2)
-
----
-
-## 🚀 Senior Tip
-
-### Iterativní vs Rekurzivní
-**Rekurzivní verze:**
-- ✅ Elegantnější, kratší kód
-- ✅ Přirozenější pro stromové struktury
-- ❌ Spotřebovává paměť (call stack)
-- ❌ Může způsobit StackOverflow u velkých stromů
-
-**Iterativní verze:**
-- ✅ Šetří paměť
-- ✅ Rychlejší (bez rekurzivního overhead)
-- ✅ Vhodnější pro velké stromy
-- ❌ Delší kód
-
-**Pro maturitu:** Nauč se obě verze! Rekurzivní je jednodušší na vysvětlení, iterativní ukazuje hlubší pochopení.
-
----
-
-### Kdy použít který průchod?
-
-| Scénář | Průchod | Proč? |
-|--------|---------|-------|
-| **Seřazený výpis BVS** | In-order | Vypíše hodnoty vzestupně! |
-| **Kopírování stromu** | Pre-order | Vytvoříme rodiče před dětmi |
-| **Mazání stromu** | Post-order | Smažeme děti před rodičem |
-| **Nejkratší cesta** | BFS | Prochází po úrovních |
-| **Hledání cesty** | DFS | Jde hlouběji, méně paměti |
-| **Vyhodnocení výrazu** | Post-order | Vypočítáme operandy před operátorem |
-
----
-
-### Nevyvážený BVS problém
-```
-Vkládání v pořadí: 1, 2, 3, 4, 5
-
-Výsledek:
-[1]
-  \
-  [2]
-    \
-    [3]
-      \
-      [4]
-        \
-        [5]  → Spojový seznam! O(n) operace!
-```
-
-**Řešení:** AVL stromy, Red-Black stromy (automatické vyvažování) - nemusíš implementovat, stačí zmínit existenci.
-
----
-
-### Generické stromy v praxi
-
+**3) Top-K problém** – najít K nejmenších/největších prvků z velkého datasetu.
 ```csharp
-// 💡 VERZE B - SENIOR
-// Generický BVS pro jakýkoli typ
-
-class BinarySearchTree<T> where T : IComparable<T>
+// K největších přes Min-heap velikosti K
+MinHeap topK = new MinHeap(maxSize: K);
+foreach (int num in data)
 {
-    class Node
-    {
-        public T Data { get; set; }
-        public Node Left { get; set; }
-        public Node Right { get; set; }
-        
-        public Node(T data) => Data = data;
-    }
-    
-    private Node root;
-    
-    public void Insert(T value)
-    {
-        root = InsertRecursive(root, value);
-    }
-    
-    private Node InsertRecursive(Node current, T value)
-    {
-        if (current == null)
-            return new Node(value);
-        
-        int comparison = value.CompareTo(current.Data);
-        
-        if (comparison < 0)
-            current.Left = InsertRecursive(current.Left, value);
-        else if (comparison > 0)
-            current.Right = InsertRecursive(current.Right, value);
-        
-        return current;
-    }
-}
-
-// Použití:
-var intTree = new BinarySearchTree<int>();
-var stringTree = new BinarySearchTree<string>();
-var studentTree = new BinarySearchTree<Student>();
-```
-
-**Proč je to lepší:**
-- ✅ Jeden kód pro všechny typy
-- ✅ Type-safe (kompilátor kontroluje typy)
-- ✅ Znovupoužitelné
-
----
-
-### V praxi:
-- C# má `SortedSet<T>` (implementuje balancovaný BST)
-- C# má `PriorityQueue<T>` (implementuje haldu) - od .NET 6
-- Nepiš vlastní BVS/Halda do produkce, použij knihovní implementaci
-- BVS je základ pro pokročilejší struktury (B-stromy v databázích)
-- Halda je ideální pro Dijkstrův algoritmus, A* pathfinding
-
----
-
-### Halda - praktické tipy
-- **Proč pole místo uzlů?** Cache-friendly, úspora paměti, rychlejší
-- **Build Heap:** Rychlejší vytvořit haldu najednou (O(n)) než postupně vkládat (O(n log n))
-- **Max-heap vs Min-heap:** Stačí změnit porovnání (< na >)
-- **K největších prvků:** Použij min-heap velikosti K (ne max-heap!)
-
-```csharp
-// Najdi 3 největší čísla z velkého datasetu
-MinHeap topK = new MinHeap(maxSize: 3);
-foreach (int num in dataset)
-{
-    if (topK.Count < 3)
+    if (topK.Count < K)
         topK.Insert(num);
     else if (num > topK.GetMin())
     {
@@ -1664,78 +1031,344 @@ foreach (int num in dataset)
         topK.Insert(num);
     }
 }
-// topK obsahuje 3 největší čísla
+```
+Pro K největších použij **Min-heap velikosti K** (kořen je nejmenší z těch K – pokud nové číslo je větší, vyhoď kořen).
+
+**4) Dijkstrův algoritmus** – výběr nejbližšího nezpracovaného vrcholu pomocí min-heap.
+
+**5) A\* pathfinding** – min-heap podle f-skóre.
+
+**6) Huffmanovo kódování** – sloučení dvou nejmenších stromů pomocí min-heap.
+
+V .NET je `PriorityQueue<TElement, TPriority>` (od .NET 6) přesně tato struktura.
+
+---
+
+### Bod 9: Příklady využití stromů
+
+**Databáze** – B-strom, B+ strom jsou základ databázových indexů (MySQL InnoDB, PostgreSQL, SQLite). Umožňují O(log n) vyhledávání i pro tabulky s miliardami záznamů, kde data nejsou celá v paměti.
+
+**Souborový systém** – Adresářová struktura je obecný strom. NTFS, ext4, btrfs (B-tree FS) uvnitř používají B-stromy pro indexy souborů.
+
+**HTML DOM** – Document Object Model je strom HTML elementů. Browser engine prochází DOM stromem pro renderování. JavaScript DOM API operuje nad tímto stromem.
+
+**Kompilátory a parsery** – AST (Abstract Syntax Tree) reprezentuje strukturu programu. `if-then-else`, výrazy, definice funkcí – vše jsou uzly AST. Compiler nad AST provádí optimalizace, generuje kód.
+
+**Game AI – Decision Trees** – stromová struktura rozhodování. Behavior trees v herním AI, Minimax strom pro šachy s alpha-beta ořezáním.
+
+**Huffmanovo kódování** – komprese textu. Frekvence znaků → strom → kratší kód pro častější znaky. Použito v ZIP, JPEG, MP3.
+
+**Routing v sítích** – BGP, OSPF používají stromové struktury pro směrovací tabulky. STP (Spanning Tree Protocol) vytváří strom z grafu propojení switchů.
+
+**3D rendering** – BVH (Bounding Volume Hierarchy), KD-tree, Octree pro prostorové členění scény. Akcelerace ray tracingu.
+
+**Strojové učení** – Decision Tree algoritmus (CART, ID3, C4.5). Random Forest = lesa rozhodovacích stromů. Gradient Boosting (XGBoost, LightGBM).
+
+**Verzování (Git)** – commit graf je DAG (téměř strom). Merkle tree pro hashování obsahu, blockchain.
+
+**Autocomplete a fulltext search** – Trie (prefixový strom) pro slovníky a autocomplete. Suffix tree pro fulltextové vyhledávání.
+
+**Priority queues v OS** – process scheduling, I/O scheduling, network packet queueing – vše typicky implementováno přes haldy.
+
+**Expression evaluation** – Excel formule, kalkulačky, scriptovací jazyky – AST nad výrazem, vyhodnocení Post-order průchodem.
+
+**Genealogie** – rodokmen je v zásadě obrácený binární strom (každý člověk má 2 rodiče, kteří mají také 2 rodiče, atd.).
+
+---
+
+### Bod 10: Možný způsob implementace
+
+Implementace generického BVS s plnou sadou operací:
+
+```csharp
+class BinarySearchTree<T> where T : IComparable<T>
+{
+    private class Node
+    {
+        public T Data;
+        public Node Left;
+        public Node Right;
+
+        public Node(T data)
+        {
+            Data = data;
+        }
+    }
+
+    private Node root;
+    public int Count { get; private set; }
+
+    public void Insert(T value)
+    {
+        root = InsertRec(root, value);
+    }
+
+    private Node InsertRec(Node current, T value)
+    {
+        if (current == null)
+        {
+            Count++;
+            return new Node(value);
+        }
+
+        int cmp = value.CompareTo(current.Data);
+        if (cmp < 0)
+            current.Left = InsertRec(current.Left, value);
+        else if (cmp > 0)
+            current.Right = InsertRec(current.Right, value);
+        // cmp == 0 → duplicita, ignoruj
+
+        return current;
+    }
+
+    public bool Contains(T value)
+    {
+        Node current = root;
+        while (current != null)
+        {
+            int cmp = value.CompareTo(current.Data);
+            if (cmp == 0) return true;
+            current = (cmp < 0) ? current.Left : current.Right;
+        }
+        return false;
+    }
+
+    public T FindMin()
+    {
+        if (root == null) throw new InvalidOperationException("Strom je prázdný");
+        Node current = root;
+        while (current.Left != null) current = current.Left;
+        return current.Data;
+    }
+
+    public T FindMax()
+    {
+        if (root == null) throw new InvalidOperationException("Strom je prázdný");
+        Node current = root;
+        while (current.Right != null) current = current.Right;
+        return current.Data;
+    }
+
+    public void Remove(T value)
+    {
+        root = RemoveRec(root, value);
+    }
+
+    private Node RemoveRec(Node current, T value)
+    {
+        if (current == null) return null;
+
+        int cmp = value.CompareTo(current.Data);
+        if (cmp < 0)
+            current.Left = RemoveRec(current.Left, value);
+        else if (cmp > 0)
+            current.Right = RemoveRec(current.Right, value);
+        else
+        {
+            // Nalezeno - 3 případy mazání:
+            // 1) Žádný potomek → odstraň
+            if (current.Left == null && current.Right == null)
+            {
+                Count--;
+                return null;
+            }
+            // 2) Jeden potomek → nahraď tím potomkem
+            if (current.Left == null) { Count--; return current.Right; }
+            if (current.Right == null) { Count--; return current.Left; }
+
+            // 3) Dva potomci → najdi následníka (min v pravém podstromu),
+            //    nahraď, smaž následníka
+            Node successor = current.Right;
+            while (successor.Left != null) successor = successor.Left;
+            current.Data = successor.Data;
+            current.Right = RemoveRec(current.Right, successor.Data);
+        }
+        return current;
+    }
+
+    public IEnumerable<T> InOrder()
+    {
+        return InOrderRec(root);
+    }
+
+    private IEnumerable<T> InOrderRec(Node node)
+    {
+        if (node == null) yield break;
+        foreach (T x in InOrderRec(node.Left)) yield return x;
+        yield return node.Data;
+        foreach (T x in InOrderRec(node.Right)) yield return x;
+    }
+
+    public int Height()
+    {
+        return HeightRec(root);
+    }
+
+    private int HeightRec(Node node)
+    {
+        if (node == null) return -1;   // prázdný strom má výšku -1, list 0
+        return 1 + Math.Max(HeightRec(node.Left), HeightRec(node.Right));
+    }
+}
+
+// Použití
+var bst = new BinarySearchTree<int>();
+bst.Insert(10);
+bst.Insert(5);
+bst.Insert(15);
+foreach (int x in bst.InOrder())
+    Console.WriteLine(x);
 ```
 
----
+**Mazání uzlu** je nejnetriviálnější operace – tři případy:
+1. **Žádný potomek (list)** – prostě odstraň.
+2. **Jeden potomek** – nahraď uzel jeho potomkem.
+3. **Dva potomci** – najdi **in-order následníka** (minimum v pravém podstromu) nebo **předchůdce** (maximum v levém), nahraď jeho hodnotou a smaž následníka.
 
-## 🔗 Souvislosti s jinými otázkami
+**Vyvážené stromy (AVL, Red-Black)** přidávají po každé modifikaci **rotace** pro udržení O(log n) výšky.
 
-- **Otázka 2 (Spojové struktury):** Strom je také spojová struktura (uzly propojené odkazy), halda ale používá pole
-- **Otázka 3 (Fronta a zásobník):** BFS používá frontu, DFS používá zásobník (nebo rekurzi = automatický zásobník)
-- **Otázka 5 (Rekurze):** Procházení stromu je klasický příklad rekurze, Post-order průchod je rekurzivní
-- **Otázka 6 (Práce se soubory):** Souborový systém je stromová struktura
-- **Otázka 7 (Časová složitost):** O(log n) vs O(n) v závislosti na vyvážení, halda má O(log n) pro Insert/Extract
-- **Otázka 10-13 (Třídění):** Heap Sort používá haldu pro O(n log n) třídění
-- **Otázka 13 (Heap Sort):** Halda je přímo použita pro třídění! Důležitá souvislost
-- **Otázka 14 (Vyhledávání):** BVS kombinuje rychlost bin. vyhledávání s flexibilitou, O(log n) jako binární vyhledávání
-- **Otázka 15 (Rozděl a panuj):** Pre-order průchod odpovídá rozdělení problému na podproblémy
-- **Otázka 16 (Aritmetické výrazy):** Expression tree - strom pro výrazy, Post-order pro vyhodnocení
-- **Otázka 17-18 (OOP):** Implementace stromu pomocí tříd (Node, Tree), dědičnost pro různé typy stromů
-- **Otázka 20 (Událostmi řízené):** Event handling používá priority queue (haldu)
-- **Otázka 21 (Teorie grafů):** Strom je speciální typ grafu (souvislý acyklický graf)
-- **Otázka 22 (DFS/BFS):** Průchody stromem jsou základ pro grafové algoritmy! DFS a BFS na stromech je jednodušší než na grafech
-- **Otázka 25 (Dijkstra):** Dijkstrův algoritmus používá min-heap pro výběr nejbližšího vrcholu
+**V .NET nepiš vlastní BVS do produkce:**
+- `SortedSet<T>` – Red-Black tree.
+- `SortedDictionary<TKey, TValue>` – Red-Black tree.
+- `PriorityQueue<TElement, TPriority>` – Min-heap (.NET 6+).
+
+Pro maturitu je třeba **umět implementovat vlastní BVS** s Insert/Search/Traversal, znát haldu a její vzorce navigace v poli, a popsat operace.
 
 ---
 
-## 📋 Procvičené maturitní úlohy
+## Maturitní chytáky
 
-**Status:** ⬜ Zatím žádné (úlohy procvičíme po dokončení všech bodů)
+### Při definicích
+- **Strom vs. graf:** strom NEOBSAHUJE cykly, je souvislý acyklický graf.
+- **Binární strom:** max 2 potomci, pořadí záleží (levý ≠ pravý).
+- **Obecný strom:** libovolný počet potomků.
+- **BVS pravidlo:** **všechny** hodnoty v levém podstromu < uzel < **všechny** v pravém. Neplatí jen pro bezprostřední děti!
+- **Halda pravidlo:** rodič ≤/≥ děti (jiné než BVS!).
+- **Strom má `V − 1` hran**, halda je úplný binární strom.
 
-**Plánované úlohy (z Mini-Indexu):**
-1. **BST Implementation** - Implementace insert, find, delete
-2. **Tree Traversal** - In-order, pre-order, post-order průchody
-3. **BFS a DFS na stromu** - Oba způsoby procházení
-4. **Min/Max Heap** - Implementace haldové struktury
-5. **Huffman Coding** - Komprese pomocí stromu
-6. **Expression Tree** - Vyhodnocení aritmetického výrazu
+### Při implementaci
+- **Null kontrola:** vždy testuj, jestli uzel není null, jinak NullReferenceException.
+- **Rekurze:** základní případ = uzel null → return.
+- **BVS Insert:** rekurzivně nebo while-cyklem; neukládat ručně `root.Left = ...` zvenku.
+- **Duplicity:** rozhodnout, zda je povolíš (typicky ne).
+- **Halda v poli:** používej vzorce `2i+1`, `2i+2`, `(i-1)/2`, NE odkazy.
+
+### Časová složitost
+- **Vyvážený vs. nevyvážený:** O(log n) vs. O(n).
+- **Procházení:** vždy O(n) – musíme navštívit všechny uzly.
+- **Hledání v BVS:** O(log n) **pouze** pokud je strom vyvážený.
+- **Halda:** GetMin O(1), Insert/Extract O(log n), BuildHeap O(n).
+
+### Průchody
+- **Pre-order (N-L-R):** uzel před potomky.
+- **In-order (L-N-R):** uzel mezi – **BVS seřazené!**
+- **Post-order (L-R-N):** uzel po potomcích.
+- **BFS:** fronta, po úrovních.
+- **DFS:** zásobník nebo rekurze, do hloubky.
+- **In-order na haldě:** NESEŘAZENÉ (častá chyba).
+
+### Halda vs. BVS
+- **Halda NENÍ BVS!** Pravidla i účel jsou jiné.
+- **Halda:** rychlý přístup k min/max (priority queue).
+- **BVS:** seřazený výpis, vyhledávání.
+- **Halda v poli:** ne uzly s odkazy.
+- **Bubble Up/Down:** porovnávat s rodičem/dětmi správným směrem.
+
+### Při ústní zkoušce
+- Umět nakreslit příklad stromu na tabuli.
+- Vysvětlit průchod krok po kroku s ukazováním.
+- Ukázat, jak Insert v BVS najde místo automaticky.
+- Porovnat BVS hledání s lineárním a binárním vyhledáváním.
+- Vysvětlit rozdíl DFS vs. BFS.
+- Nakreslit Bubble Up/Down v haldě.
+- Vysvětlit, proč In-order vypíše BVS seřazené.
+- Ukázat vzorce navigace v haldě (`2i+1`, `2i+2`, `(i-1)/2`).
+- Diskutovat **problém degenerace BVS** a zmínit AVL/Red-Black jako řešení.
 
 ---
 
-## 📝 Poznámky k dalšímu pokračování
+## Praktické tipy a poznámky
 
-**Hotové body (1-8):**
-- ✅ Bod 1: Definice stromu
-- ✅ Bod 2: Definice binárního stromu
-- ✅ Bod 3: Definice BVS (s automatickým Insert!)
-- ✅ Bod 4: Algoritmus procházení obecného stromu
-- ✅ Bod 5: Algoritmus hledání prvku v BVS
-- ✅ Bod 6: Průchod stromem DFS (Pre/In/Post-order) a BFS
-- ✅ Bod 7: Co může být ve stromu uloženo (int, string, třídy, výrazy, soubory)
-- ✅ Bod 8: Halda (heap) - struktura, operace, použití
+### Iterativní vs. rekurzivní
+**Rekurzivní:** elegantní, kratší, přirozené pro stromové struktury; spotřebovává call stack, riziko StackOverflow u velkých stromů.
 
-**Zbývající body k procvičení:**
-- [ ] Bod 9: Praktické příklady využití stromů v reálném světě
-- [ ] Bod 10: Možný způsob implementace (OOP přístup, kompletní třída)
+**Iterativní:** šetří paměť, rychlejší (bez rekurzivní režie); delší kód.
 
-**Až dokončíme všechny body, přejdeme na fázi praktického procvičení na maturitních úlohách!**
+Pro maturitu znát obě – rekurzivní pro vysvětlení, iterativní pro hlubší pochopení.
+
+### Kdy použít který průchod
+
+| Scénář | Průchod | Proč |
+|--------|---------|------|
+| Seřazený výpis BVS | In-order | Vypíše vzestupně |
+| Kopírování stromu | Pre-order | Rodič před dětmi |
+| Mazání stromu | Post-order | Děti před rodičem |
+| Nejkratší cesta v neohodnoceném grafu | BFS | Po úrovních |
+| Hledání cesty / existence | DFS | Méně paměti |
+| Vyhodnocení výrazu | Post-order | Operandy před operátorem |
+
+### Nevyvážený BVS problém
+```
+Vložení v pořadí: 1, 2, 3, 4, 5
+[1] → [1]→[2] → [1]→[2]→[3] → spojový seznam, O(n)
+```
+**Řešení:** AVL (přísně vyvážený, časté rotace), Red-Black (volnější, méně rotací).
+
+### Halda – praktické tipy
+- **Build Heap O(n)** je rychlejší než postupné vkládání O(n log n).
+- **Max-heap vs. Min-heap:** stačí změnit porovnání (`<` vs `>`).
+- **K největších:** použij **Min-heap velikosti K** (NE Max-heap!). Kořen = "hranice" pro vyhazování.
+- **PriorityQueue v .NET** podporuje `(element, priority)` páry – přesně to, co potřebuješ pro Dijkstru.
 
 ---
 
-## 🎓 Mini-Index relevantních úloh (pro budoucí procvičení)
+## Souvislosti s jinými otázkami
 
-**Plánované úlohy k procvičení (po dokončení všech bodů):**
-1. **BST Implementation** - Kompletní implementace BVS (insert, find, delete, průchody)
-2. **Tree Traversal** - Procvičení všech průchodů (Pre/In/Post-order, BFS)
-3. **BFS vs DFS** - Porovnání obou přístupů na konkrétních úlohách
-4. **Min/Max Heap** - Implementace haldové struktury, Insert, ExtractMin
-5. **Heap Sort** - Třídění pomocí haldy
-6. **Priority Queue** - Použití haldy pro frontu s prioritou
-7. **Expression Tree** - Vyhodnocení aritmetického výrazu pomocí stromu
-8. **File System Tree** - Modelování souborového systému
+- **Otázka 2 (Spojové struktury):** strom je spojová struktura (uzly s odkazy), halda používá pole.
+- **Otázka 3 (Fronta a zásobník):** BFS používá frontu, DFS používá zásobník (nebo rekurzi = implicitní zásobník).
+- **Otázka 5 (Rekurze):** procházení stromu je klasický příklad rekurze; Post-order pro výpočet vlastností.
+- **Otázka 6 (Práce se soubory):** souborový systém je strom.
+- **Otázka 7 (Časová složitost):** O(log n) vs. O(n) podle vyváženosti; halda O(log n) operace.
+- **Otázka 10–13 (Třídění):** Heap Sort, Tree Sort.
+- **Otázka 14 (Vyhledávání):** BVS kombinuje rychlost binárního vyhledávání s flexibilitou dynamického vkládání.
+- **Otázka 15 (Rozděl a panuj):** divide-and-conquer často kreslí rekurzivní strom volání.
+- **Otázka 16 (Aritmetické výrazy):** Expression Tree, Post-order vyhodnocení.
+- **Otázka 17–18 (OOP):** implementace přes třídy Node/Tree, generika, dědičnost.
+- **Otázka 20 (Událostmi řízené):** event scheduling = priority queue (halda).
+- **Otázka 21 (Teorie grafů):** strom = souvislý acyklický graf.
+- **Otázka 22 (DFS/BFS):** stromy jsou nejjednodušší případ DFS/BFS – na grafu jde o totéž s doplněním visited setu.
+- **Otázka 25 (Dijkstra):** min-heap pro výběr nejbližšího vrcholu.
 
 ---
 
-**Konec zápisu - Aktualizováno: 2025-02-16**  
-**Status:** Body 1-8 kompletní s detailními vysvětleními, příklady a kódem
+## Klíčové pojmy k zapamatování
+
+- **Strom** – souvislý acyklický graf; hierarchická struktura.
+- **Kořen, list, vnitřní uzel, hloubka, výška** – základní pojmy.
+- **`V − 1` hran** ve stromu s V uzly; mezi dvěma uzly **právě jedna cesta**.
+- **Binární strom** – max 2 potomci, pořadí (levý/pravý) záleží.
+- **Úplný binární strom** – plné úrovně kromě poslední (zaplněna zleva).
+- **Plný binární strom** – uzel má 0 nebo 2 potomky.
+- **Perfektní binární strom** – plný + všechny listy na stejné úrovni.
+- **Degenerovaný strom** – výška n, defakto spojový seznam.
+- **BVS** – binární strom s pravidlem "levý podstrom < uzel < pravý podstrom".
+- **In-order výpis BVS** – seřazené hodnoty (vzestupně).
+- **Rotace** – základní operace samovyvažujících stromů.
+- **AVL strom, Red-Black strom** – samovyvažující BVS, garantují O(log n).
+- **B-strom, B+ strom** – m-ární stromy pro databáze a souborové systémy.
+- **DFS (Depth-First Search)** – do hloubky; zásobník/rekurze.
+- **BFS (Breadth-First Search)** – do šířky; fronta.
+- **Pre-order (N-L-R)** – uzel před potomky.
+- **In-order (L-N-R)** – uzel mezi potomky.
+- **Post-order (L-R-N)** – uzel po potomcích.
+- **Halda (Heap)** – úplný binární strom s heap property; min-heap nebo max-heap.
+- **Heap property** – rodič ≤/≥ všech potomků (NE celé podstromy jako u BVS).
+- **Halda v poli** – navigace přes `2i+1`, `2i+2`, `(i-1)/2`.
+- **Bubble Up / Bubble Down** – udržení heap property po Insert / ExtractMin.
+- **Priority Queue** – ADT s prioritním výběrem; implementuje se haldou.
+- **Heap Sort** – O(n log n) třídění in-place pomocí max-heap.
+- **Expression Tree (AST)** – strom aritmetického výrazu; vyhodnocení Post-order.
+- **Trie (prefixový strom)** – strom pro řetězce, větvení podle znaků.
+- **Huffmanův strom** – komprese textu, binární strom kódů.
+- **`SortedSet<T>`, `SortedDictionary<TK,TV>`** – Red-Black implementace v .NET.
+- **`PriorityQueue<T,P>`** – min-heap implementace v .NET 6+.

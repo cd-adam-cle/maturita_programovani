@@ -1,10 +1,10 @@
-# 📚 Zápisky: Otázka č. 24 – Topologické třídění a jeho využití
+# Zápisky: Otázka č. 24 – Topologické třídění a jeho využití
 **Datum:** 2025-02-21
-**Status:** ✅ Hotovo
+**Status:** Hotovo
 
 ---
 
-## ✅ Checklist bodů otázky
+## Checklist bodů otázky
 - [x] Bod 1: Motivace
 - [x] Bod 2: Pojmy – cyklus v grafu, DAG, detekce cyklů
 - [x] Bod 3: Topologické uspořádání vrcholů (na obrázku)
@@ -16,7 +16,7 @@
 
 ---
 
-## 🧠 Klíčové koncepty & Snippety
+## Klíčové koncepty & Snippety
 
 ### Bod 1: Motivace
 
@@ -110,7 +110,7 @@ DAG:                          Topologické pořadí:
     A → B → D                   A, C, E, B, D
     ↓       ↑
     C → E →─┘                 Ověření - všechny šipky ukazují DOPRAVA →
-                              A→B ✅  A→C ✅  B→D ✅  C→E ✅  E→D ✅
+                              A→B   A→C   B→D   C→E   E→D
 ```
 
 Jiné platné pořadí: A, B, C, E, D – taky OK!
@@ -137,7 +137,7 @@ DFS na grafu A→B→D, A→C→E→D:
            C=ČERNÝ [D,B,E,C]
   A=ČERNÝ [D,B,E,C,A]
 
-  Reverse: A, C, E, B, D ✅
+  Reverse: A, C, E, B, D
 ```
 
 **Kód (Maturitní verze):**
@@ -217,7 +217,7 @@ Důkaz:
   - DFS z A nejdřív prozkoumá B (a vše za B)
   - B se stane černým DŘÍVE než A
   - B se přidá do seznamu DŘÍVE než A
-  - Po Reverse: A je PŘED B ✅
+  - Po Reverse: A je PŘED B
 ```
 
 ---
@@ -299,7 +299,7 @@ Výhoda: intuitivní ("odebírej vrcholy bez závislostí"), detekce cyklu zdarm
 
 ---
 
-## ⚠️ Na co si dát pozor (Maturitní "chytáky")
+## Na co si dát pozor (Maturitní "chytáky")
 
 - **Topologické třídění POUZE pro DAG** – orientovaný + acyklický. Neorientovaný graf nelze topologicky třídit.
 - **Pořadí nemusí být jednoznačné** – může existovat více platných pořadí
@@ -310,13 +310,13 @@ Výhoda: intuitivní ("odebírej vrcholy bez závislostí"), detekce cyklu zdarm
 
 ---
 
-## 🚀 Senior Tip
+## Senior Tip
 
 Kahnův algoritmus (BFS přístup) je v praxi často preferovaný, protože je snáze paralelizovatelný – všechny vrcholy se vstupním stupněm 0 můžeš zpracovat najednou. Používá se v build systémech a CI/CD pipeline.
 
 ---
 
-## 🔗 Souvislosti s jinými otázkami
+## Souvislosti s jinými otázkami
 
 - **Otázka 3** (Fronta a zásobník) – fronta v Kahnově algoritmu, zásobník v DFS přístupu
 - **Otázka 5** (Rekurze) – DFS je rekurzivní, hrozí StackOverflow na hlubokých grafech

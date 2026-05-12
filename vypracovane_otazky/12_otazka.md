@@ -1,823 +1,928 @@
-# 📚 Zápisky: Otázka č. 12 - Quick Sort
-
-**Datum:** 2025-02-01  
-**Status:** ✅ Hotovo  
-**Obtížnost:** ⭐⭐⭐ (Vysoká - klíčový algoritmus!)
+# Zápisky: Otázka č. 12 - Quick Sort
 
 ---
 
-## ✅ Checklist bodů otázky
+## Obsah
 
-- [x] Bod 1: Motivace pro třídění dat
-- [x] Bod 2: Popis algoritmu po jednotlivých krocích
-- [x] Bod 3: Volba "dobrého" pivota
-- [x] Bod 4: Využití v praxi
-- [x] Bod 5: Znázornění na obrázku
-- [x] Bod 6: Časová složitost
-- [x] Bod 7: Paměťová složitost
-- [x] Bod 8: Podobnost s algoritmem QuickSelect
-
----
-
-## 🧠 Klíčové koncepty & Snippety
-
----
-
-### BOD 1: Motivace pro třídění dat
-
-**Proč třídíme?**
-- **Rychlejší vyhledávání** - binární hledání O(log n) vs lineární O(n)
-- **Efektivnější operace** - duplicity, průniky, sjednocení množin
-- **Čitelnost** - setříděný výstup pro uživatele
-- **Prerekvizita** - mnoho algoritmů vyžaduje setříděný vstup
-
-**Proč Quick Sort?**
-- V praxi **nejpoužívanější** třídící algoritmus
-- `Array.Sort()` v C# ho interně používá (Introspective Sort)
-- Průměrně **O(n log n)** jako Merge Sort, ale:
-  - Třídí **in-place** (nepotřebuje extra paměť O(n))
-  - Lepší **cache locality** → rychlejší v praxi
+1. [Motivace pro třídění](#1-motivace-pro-třídění)
+2. [Princip a popis algoritmu](#2-princip-a-popis-algoritmu)
+3. [Operace Partition](#3-operace-partition)
+4. [Volba pivota](#4-volba-pivota)
+5. [Vizualizace](#5-vizualizace)
+6. [Časová složitost](#6-časová-složitost)
+7. [Paměťová složitost](#7-paměťová-složitost)
+8. [Optimalizace Quick Sortu](#8-optimalizace-quick-sortu)
+9. [QuickSelect - hledání k-tého prvku](#9-quickselect---hledání-k-tého-prvku)
+10. [Quick Sort v praxi (IntroSort)](#10-quick-sort-v-praxi-introsort)
+11. [Porovnání s ostatními algoritmy](#11-porovnání-s-ostatními-algoritmy)
+12. [Maturitní chytáky](#12-maturitní-chytáky)
+13. [Klíčové pojmy](#13-klíčové-pojmy)
 
 ---
 
-### BOD 2: Popis algoritmu po jednotlivých krocích
+## 1. Motivace pro třídění
 
-#### Hlavní myšlenka (Divide & Conquer)
+### Proč třídíme
 
-```
-1. VYBER PIVOT - jeden prvek z pole
-2. PARTITION   - přesuň prvky:
-                 • menší než pivot → VLEVO
-                 • větší než pivot → VPRAVO
-                 • pivot je na FINÁLNÍ pozici
-3. REKURZE    - aplikuj na levou a pravou část
-```
+Třídění je jedna z nejzákladnějších operací v informatice. Setříděná data umožňují rychlejší vyhledávání (binární vyhledávání O(log n)), efektivní detekci duplicit, group-by operace, agregace, slévání datových toků a další. Mnoho algoritmů vyžaduje setříděný vstup jako prerekvizitu (např. Kruskalův MST, řadicí binární strom, k-way merge).
 
-#### ASCII vizualizace principu
+### Proč Quick Sort
 
-```
-Pole: [3, 7, 2, 9, 1, 5, 4, 8, 6]
-                    ↓
-            Vyber pivot (např. 5)
-                    ↓
-    ┌───────────────┼───────────────┐
-    ▼               ▼               ▼
-[3, 2, 1, 4]       [5]       [7, 9, 8, 6]
-  menší než 5    pivot=5     větší než 5
-    ↓                               ↓
- (rekurze)                      (rekurze)
-    ↓                               ↓
-[1, 2, 3, 4]                  [6, 7, 8, 9]
-                    ↓
-        SPOJENO: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-```
+Quick Sort je v praxi **nejpoužívanější** porovnávací třídicí algoritmus. Vymyslel ho **Tony Hoare** v roce 1961. Jeho přednost:
 
-#### Partition - Lomutův algoritmus (krok po kroku)
+- **Průměrná složitost O(n log n)** - stejně jako Merge Sort nebo Heap Sort.
+- **In-place** - na rozdíl od Merge Sortu nepotřebuje O(n) extra paměť.
+- **Velmi malá konstanta** - díky výborné **cache lokality** je v praxi rychlejší než Merge Sort i Heap Sort.
+- **Snadná implementace** - jednodušší než Merge Sort, nepotřebuje pomocné pole.
+- **Hojné využití v knihovnách** - `Array.Sort()` v .NET (přes IntroSort), `std::sort()` v C++, `qsort()` v C, Java `Arrays.sort()` pro primitivní typy.
 
-```
-Pole: [3, 7, 2, 9, 1, 5]    Pivot = 5 (poslední prvek)
+### Stinné stránky
 
-i = index pro "menší prvky" (začíná na -1, před polem)
-j = aktuální procházený prvek
-
-Krok 1: j=0, pole[0]=3, 3<5? ANO → i++, swap(i,j)
-        i=0     → [3, 7, 2, 9, 1, 5]
-                    ↑i
-
-Krok 2: j=1, pole[1]=7, 7<5? NE → nic
-        i=0     → [3, 7, 2, 9, 1, 5]
-                    ↑i
-
-Krok 3: j=2, pole[2]=2, 2<5? ANO → i++, swap(i,j)
-        i=1     → [3, 2, 7, 9, 1, 5]  (swap 7↔2)
-                       ↑i
-
-Krok 4: j=3, pole[3]=9, 9<5? NE → nic
-        i=1     → [3, 2, 7, 9, 1, 5]
-                       ↑i
-
-Krok 5: j=4, pole[4]=1, 1<5? ANO → i++, swap(i,j)
-        i=2     → [3, 2, 1, 9, 7, 5]  (swap 7↔1)
-                          ↑i
-
-FINÁLE: swap pivot na pozici i+1
-        → [3, 2, 1, 5, 7, 9]  (swap 9↔5)
-                    ↑
-               pivot na místě!
-        
-Výsledek: [3, 2, 1] < 5 < [7, 9]
-          Vrátíme index 3 (pozice pivota)
-```
-
-#### Proč `i = low - 1`?
-
-```
-i = hranice mezi "menší" a "větší" prvky
-Na začátku NEMÁME žádné menší prvky → hranice je PŘED polem
-
-Index:   -1    0    1    2    3    4    5
-              [3,   7,   2,   9,   1,   5]
-          ↑i                             ↑pivot
-          
-"Zóna menších" je prázdná
-
-Pokaždé když najdeme menší prvek:
-→ i++ (rozšíříme zónu)
-→ swap (dáme menší prvek do zóny)
-```
-
-#### Proč `Swap(i+1, high)` na konci?
-
-```
-Po for cyklu:        i               high
-                     ↓                 ↓
-Pole: [3, 2, 1,     9, 7,             5]
-       \_____/      \___/             ↑
-       menší        větší           PIVOT
-       
-i = 2 (poslední menší na indexu 2)
-i+1 = 3 (sem patří pivot!)
-high = 5 (pivot je zatím tady)
-
-Swap(3, 5) → [3, 2, 1, 5, 7, 9]
-                       ↑
-                  pivot na místě!
-```
+- **Worst case O(n²)** - patologický případ při špatném výběru pivota (např. setříděné pole + první/poslední pivot).
+- **Není stabilní** - prvky se stejným klíčem mohou změnit relativní pořadí.
+- **Rekurze** - hluboký zásobník v nejhorším případě (až O(n)).
 
 ---
 
-### BOD 3: Volba "dobrého" pivota
+## 2. Princip a popis algoritmu
 
-#### Proč na volbě pivota záleží?
+### Paradigma Divide & Conquer
 
-| Volba pivota | Výsledek | Složitost |
-|--------------|----------|-----------|
-| **Ideální** (medián) | Půlí pole na 2 stejné části | O(n log n) |
-| **Špatná** (min/max) | Jedna část prázdná, druhá n-1 | O(n²) |
+Quick Sort patří mezi algoritmy typu **Rozděl a panuj** (viz Ot. 11 a Ot. 15). Jeho kroky:
 
-#### Strategie volby pivota
+1. **Vyber pivot** - jeden prvek z aktuálního úseku pole, který bude tvořit "rozdělovací hranici".
+2. **Partition** - přeskupit prvky tak, aby:
+   - vlevo od pivota byly všechny prvky `≤ pivot`,
+   - vpravo od pivota byly všechny prvky `> pivot`,
+   - pivot byl na své **finální** pozici v setříděném poli.
+3. **Rekurze** - aplikuj algoritmus rekurzivně na levou a pravou část (bez pivota).
 
-| Strategie | Popis | Složitost implementace |
-|-----------|-------|------------------------|
-| **Poslední prvek** | `pivot = pole[high]` | Jednoduchá ⭐ |
-| **První prvek** | `pivot = pole[low]` | Jednoduchá ⭐ |
-| **Prostřední prvek** | `pivot = pole[(low+high)/2]` | Jednoduchá ⭐ |
-| **Median-of-three** | Medián z prvního, prostředního, posledního | Střední ⭐⭐ |
-| **Random** | Náhodný prvek | Střední ⭐⭐ |
+### Klíčový rozdíl od Merge Sortu
 
-#### ⚠️ Problém s jednoduchými strategiemi
+| Aspekt | Merge Sort | Quick Sort |
+|--------|-----------|-----------|
+| Hlavní práce probíhá v... | **Kombinaci** (MERGE) | **Rozdělení** (PARTITION) |
+| Předtřídění | Rekurze nejprve, MERGE až poté | PARTITION nejprve, rekurze poté |
+| Pomocná paměť | O(n) - pomocná pole | O(log n) - zásobník |
+| Stabilita | Ano | Ne |
+| Worst case | Stále O(n log n) | O(n²) |
+
+### Pseudokód
 
 ```
-Už setříděné pole: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-Pivot = poslední = 9
-Partition: [1,2,3,4,5,6,7,8] | 9 | []
-                              ↑
-                         všechno vlevo!
-
-→ Místo log n úrovní rekurze máme n úrovní → O(n²)
+QUICK_SORT(pole, left, right):
+   if left >= right: return                       // 0 nebo 1 prvek
+   p = PARTITION(pole, left, right)               // p = pozice pivota
+   QUICK_SORT(pole, left, p - 1)                  // setřiď levou část
+   QUICK_SORT(pole, p + 1, right)                 // setřiď pravou část
 ```
 
-#### Median-of-three (doporučená strategie)
+Všimněte si, že po PARTITION je pivot na pozici `p` na svém **finálním** místě - není potřeba ho zahrnout do rekurzivních volání.
+
+### Základní implementace
 
 ```csharp
-// Vyber medián z prvního, prostředního a posledního prvku
+static void QuickSort(int[] pole, int left, int right)
+{
+    if (left >= right) return;                     // základní případ
+
+    int pivotIndex = Partition(pole, left, right); // rozdělení
+
+    QuickSort(pole, left, pivotIndex - 1);          // rekurze - levá část
+    QuickSort(pole, pivotIndex + 1, right);         // rekurze - pravá část
+}
+
+// Volání: QuickSort(pole, 0, pole.Length - 1);
+```
+
+### Generická varianta
+
+```csharp
+static void QuickSort<T>(T[] pole, int left, int right, IComparer<T> cmp = null)
+    where T : IComparable<T>
+{
+    cmp ??= Comparer<T>.Default;
+    if (left >= right) return;
+    int p = Partition(pole, left, right, cmp);
+    QuickSort(pole, left, p - 1, cmp);
+    QuickSort(pole, p + 1, right, cmp);
+}
+```
+
+---
+
+## 3. Operace Partition
+
+PARTITION je srdcem Quick Sortu. Existují dvě klasické varianty: **Lomuto** (jednodušší) a **Hoare** (původní, efektivnější).
+
+### Lomutův partition (didakticky vhodnější)
+
+```csharp
+static int Partition(int[] pole, int left, int right)
+{
+    int pivot = pole[right];                       // pivot = poslední prvek
+    int i = left - 1;                              // hranice "menší zóny"
+
+    for (int j = left; j < right; j++)
+    {
+        if (pole[j] < pivot)                       // patří do levé části
+        {
+            i++;
+            (pole[i], pole[j]) = (pole[j], pole[i]);
+        }
+    }
+
+    (pole[i + 1], pole[right]) = (pole[right], pole[i + 1]);   // pivot na místo
+    return i + 1;
+}
+```
+
+**Invariant:**
+
+```
++----------+----------+----------+----------+
+|  < pivot |  ≥ pivot |  ? ? ? ? |  pivot   |
++----------+----------+----------+----------+
+^          ^          ^                     ^
+left       i+1        j                     right
+```
+
+- Prvky v `pole[left..i]` jsou `< pivot`.
+- Prvky v `pole[i+1..j-1]` jsou `≥ pivot`.
+- Prvky v `pole[j..right-1]` ještě nejsou zpracované.
+- `pole[right]` je pivot.
+
+Po dokončení cyklu jsou všechny prvky zpracované a poslední swap dává pivot na pozici `i+1`.
+
+### Hoareův partition (původní algoritmus)
+
+```csharp
+static int PartitionHoare(int[] pole, int left, int right)
+{
+    int pivot = pole[left + (right - left) / 2];   // pivot = prostřední
+    int i = left - 1;
+    int j = right + 1;
+
+    while (true)
+    {
+        do { i++; } while (pole[i] < pivot);
+        do { j--; } while (pole[j] > pivot);
+        if (i >= j) return j;
+        (pole[i], pole[j]) = (pole[j], pole[i]);
+    }
+}
+```
+
+**Pozor:** Hoareův partition vrací hranici mezi částmi, ne pozici pivota. Rekurzivní volání pak je:
+
+```csharp
+QuickSortHoare(pole, left, p);                     // pozor: p, ne p-1
+QuickSortHoare(pole, p + 1, right);
+```
+
+**Výhody Hoarea:**
+- Méně swapů v průměru (cca 3× méně).
+- Méně náchylný na patologické případy.
+
+**Nevýhody Hoarea:**
+- Pivot není garantovaně na své finální pozici.
+- Méně intuitivní.
+
+V praxi se používá obvykle Lomuto nebo modifikované verze (3-way partition pro duplicity).
+
+### Krok-za-krokem trace Lomuto pro `[3, 7, 2, 9, 1, 5]`, pivot = 5
+
+```
+Inicializace: i = -1, pivot = 5
+
+j=0: pole[0]=3, 3<5 → i=0, swap(0,0)
+     [3, 7, 2, 9, 1, 5]  i=0
+      ^
+
+j=1: pole[1]=7, 7<5? NE
+     [3, 7, 2, 9, 1, 5]  i=0
+
+j=2: pole[2]=2, 2<5 → i=1, swap(1,2)
+     [3, 2, 7, 9, 1, 5]  i=1
+         ^
+
+j=3: pole[3]=9, 9<5? NE
+     [3, 2, 7, 9, 1, 5]  i=1
+
+j=4: pole[4]=1, 1<5 → i=2, swap(2,4)
+     [3, 2, 1, 9, 7, 5]  i=2
+            ^
+
+Konec cyklu. Pivot na pozici i+1 = 3:
+swap(3, 5): [3, 2, 1, 5, 7, 9]
+                     ^
+            pivot na finální pozici
+
+Vrátí: 3
+```
+
+Výsledek: `[3, 2, 1] < 5 < [7, 9]`. Pivot (5) je trvale na indexu 3.
+
+---
+
+## 4. Volba pivota
+
+### Proč na volbě pivota záleží
+
+Volba pivota určuje, jak rovnoměrně se pole rozdělí - a tím přímo ovlivňuje hloubku rekurze a celkovou složitost.
+
+| Volba | Rozdělení | Hloubka rekurze | Složitost |
+|-------|-----------|-----------------|-----------|
+| **Ideální** (medián) | n/2 + n/2 | log n | O(n log n) |
+| **Dobrá** | ~n/4 + ~3n/4 | log n (s vyšší konst.) | O(n log n) |
+| **Špatná** (min/max) | 0 + (n-1) | n | O(n²) |
+
+### Strategie volby pivota
+
+#### 1. První / poslední prvek
+
+```csharp
+int pivot = pole[left];                            // první prvek
+int pivot = pole[right];                           // poslední prvek
+```
+
+**Problém:** Setříděné nebo zpětně setříděné pole způsobí worst case O(n²). V praxi je to extrémně častý patologický případ (např. dotaz na databázi, který už vrátil setříděná data).
+
+#### 2. Prostřední prvek
+
+```csharp
+int pivot = pole[left + (right - left) / 2];
+```
+
+**Výhoda:** Pro setříděná pole funguje výborně.
+**Nevýhoda:** Existují (uměle vytvořené) sekvence, které tuto strategii zlomí na O(n²).
+
+#### 3. Náhodný pivot (Randomized Quick Sort)
+
+```csharp
+Random rng = new Random();
+int pivotIndex = rng.Next(left, right + 1);
+(pole[pivotIndex], pole[right]) = (pole[right], pole[pivotIndex]);
+int pivot = pole[right];
+```
+
+**Výhoda:** Žádný konkrétní vstup nemůže být patologický (útočník neumí předpovědět pivot).
+**Garance:** Očekávaná složitost O(n log n), bez ohledu na vstup.
+
+#### 4. Median-of-three
+
+Vyber medián z prvního, prostředního a posledního prvku:
+
+```csharp
 static int MedianOfThree(int[] pole, int low, int high)
 {
     int mid = low + (high - low) / 2;
-    
-    // Seřadíme trojici: pole[low] <= pole[mid] <= pole[high]
-    if (pole[low] > pole[mid])
-        Swap(pole, low, mid);
-    if (pole[low] > pole[high])
-        Swap(pole, low, high);
-    if (pole[mid] > pole[high])
-        Swap(pole, mid, high);
-    
-    // Medián je uprostřed, přesuneme ho na konec pro partition
-    Swap(pole, mid, high - 1);
+
+    if (pole[low] > pole[mid])  (pole[low], pole[mid])  = (pole[mid], pole[low]);
+    if (pole[low] > pole[high]) (pole[low], pole[high]) = (pole[high], pole[low]);
+    if (pole[mid] > pole[high]) (pole[mid], pole[high]) = (pole[high], pole[mid]);
+
+    (pole[mid], pole[high - 1]) = (pole[high - 1], pole[mid]);  // pivot na předposlední
     return pole[high - 1];
 }
 ```
 
-**Příklad:**
-```
-Pole: [8, 3, 1, 7, 0, 10, 2]
-       ↑     ↑           ↑
-      low   mid        high
-      
-Trojice: 8, 7, 2 → seřazeno: 2, 7, 8 → medián = 7
-```
+**Výhody:**
+- Eliminuje worst case pro setříděné a zpětně setříděné pole.
+- Pivot je s velkou pravděpodobností "rozumný" prostřední prvek.
+- Žádné náhodné číslo - deterministický.
+
+#### 5. Median-of-medians (BFPRT)
+
+Algoritmus zaručující skutečný medián v lineárním čase O(n). Použití pro Quick Sort by zaručilo worst case O(n log n), ale konstanta je obrovská, takže v praxi se nepoužívá. Důležitý pro QuickSelect s garantovaným O(n).
 
 ---
 
-### BOD 4: Využití v praxi
+## 5. Vizualizace
 
-#### Kde se Quick Sort používá?
-
-| Použití | Příklad |
-|---------|---------|
-| **Standardní knihovny** | C# `Array.Sort()`, Java `Arrays.sort()`, C++ `std::sort()` |
-| **Databáze** | Třídění výsledků dotazů (ORDER BY) |
-| **Souborové systémy** | Třídění souborů podle jména/data |
-| **Grafické aplikace** | Třídění objektů podle Z-indexu |
-
-#### Introspective Sort (IntroSort)
-
-Moderní implementace (včetně C#) kombinují:
-```
-IntroSort = QuickSort + HeapSort + InsertionSort
-
-1. Začni QuickSortem
-2. Pokud rekurze jde příliš hluboko → přepni na HeapSort (garantuje O(n log n))
-3. Pro malé úseky (< 16 prvků) → použij InsertionSort (rychlejší pro malá pole)
-```
-
-#### Kdy Quick Sort NEPOUŽÍVAT?
-
-| Situace | Proč | Alternativa |
-|---------|------|-------------|
-| Skoro setříděná data | Degraduje na O(n²) | InsertionSort O(n) |
-| Potřeba stability | Quick Sort není stabilní | Merge Sort |
-| Garantovaný O(n log n) | Nejhorší případ O(n²) | Heap Sort |
-| Velmi malá pole | Overhead rekurze | InsertionSort |
-
----
-
-### BOD 5: Znázornění na obrázku
-
-#### Kompletní průběh Quick Sort
+### Kompletní průchod pro `[6, 3, 8, 5, 2, 7, 4, 1]`
 
 ```
-VSTUP: [6, 3, 8, 5, 2, 7, 4, 1]
+Vstup: [6, 3, 8, 5, 2, 7, 4, 1]
 
-═══════════════════════════════════════════════════════
-ÚROVEŇ 0: Celé pole
-═══════════════════════════════════════════════════════
+ÚROVEŇ 0: celé pole, pivot = 1 (poslední)
+─────────────────────────────────────────────────
+Po partition: [1] | 1 nemá menší než sebe | [6, 3, 8, 5, 2, 7, 4]
+             pozice 0 (pivot)
 
-[6, 3, 8, 5, 2, 7, 4, 1]    pivot = 1
-         ↓ partition
-[1] [6, 3, 8, 5, 2, 7, 4]   (1 je na místě)
- ↑
-hotovo
+ÚROVEŇ 1: pravá část [6, 3, 8, 5, 2, 7, 4], pivot = 4
+─────────────────────────────────────────────────
+Po partition: [3, 2] | [4] | [6, 8, 5, 7]
+                       pozice 3 (pivot)
 
-═══════════════════════════════════════════════════════
-ÚROVEŇ 1: Pravá část [6, 3, 8, 5, 2, 7, 4]
-═══════════════════════════════════════════════════════
+ÚROVEŇ 2a: levá [3, 2], pivot = 2
+─────────────────────────────────────────────────
+Po partition: [] | [2] | [3]
 
-[6, 3, 8, 5, 2, 7, 4]       pivot = 4
-         ↓ partition
-[3, 2] [4] [6, 8, 5, 7]     (4 je na místě)
-        ↑
-      hotovo
+ÚROVEŇ 2b: pravá [6, 8, 5, 7], pivot = 7
+─────────────────────────────────────────────────
+Po partition: [6, 5] | [7] | [8]
 
-═══════════════════════════════════════════════════════
-ÚROVEŇ 2: Levá [3, 2] a Pravá [6, 8, 5, 7]
-═══════════════════════════════════════════════════════
+ÚROVEŇ 3: [6, 5], pivot = 5
+─────────────────────────────────────────────────
+Po partition: [] | [5] | [6]
 
-[3, 2]  pivot = 2           [6, 8, 5, 7]  pivot = 7
-   ↓ partition                    ↓ partition
-[2] [3]                     [6, 5] [7] [8]
- ↑   ↑                             ↑   ↑
-hotovo                           hotovo hotovo
-
-═══════════════════════════════════════════════════════
-ÚROVEŇ 3: [6, 5]
-═══════════════════════════════════════════════════════
-
-[6, 5]  pivot = 5
-   ↓ partition
-[5] [6]
- ↑   ↑
-hotovo
-
-═══════════════════════════════════════════════════════
 VÝSLEDEK: [1, 2, 3, 4, 5, 6, 7, 8]
-═══════════════════════════════════════════════════════
 ```
 
-#### Rekurzivní strom volání
+### Rekurzivní strom
 
 ```
-                    QuickSort([6,3,8,5,2,7,4,1])
-                              │
-                    ┌─────────┴─────────┐
-                    │                   │
-              QS([])              QS([6,3,8,5,2,7,4])
-              (prázdné)                 │
-                              ┌─────────┴─────────┐
-                              │                   │
-                        QS([3,2])           QS([6,8,5,7])
-                           │                      │
-                      ┌────┴────┐            ┌────┴────┐
-                      │         │            │         │
-                   QS([])    QS([3])    QS([6,5])   QS([8])
-                                              │
-                                         ┌────┴────┐
-                                         │         │
-                                      QS([])    QS([6])
+              QuickSort([6,3,8,5,2,7,4,1])
+                        |
+              +---------+---------+
+              |                   |
+            QS([])         QS([6,3,8,5,2,7,4])
+            prazdne                |
+                          +--------+--------+
+                          |                 |
+                       QS([3,2])      QS([6,8,5,7])
+                          |                 |
+                       +--+--+           +--+--+
+                       |     |           |     |
+                     QS([]) QS([3])   QS([6,5]) QS([8])
+                                         |
+                                      +--+--+
+                                      |     |
+                                    QS([]) QS([6])
+```
+
+### Best vs worst case strom
+
+```
+BEST CASE (pivot vždy medián):              WORST CASE (pivot vždy min):
+
+       [8]                                  [8]
+      /   \                                /   \
+   [4]     [4]                          [1]    [7]
+   / \     / \                                 / \
+ [2] [2] [2] [2]                            [1]   [6]
+                                                  / \
+hloubka log n,                                 [1]   [5]
+celkem n log n                                       / \
+                                                  ...
+                                                  hloubka n,
+                                                  celkem n²
 ```
 
 ---
 
-### BOD 6: Časová složitost
+## 6. Časová složitost
 
-#### Přehled složitostí
+### Přehled
 
 | Případ | Složitost | Kdy nastává |
 |--------|-----------|-------------|
-| **Nejlepší** | O(n log n) | Pivot vždy medián → půlí pole |
-| **Průměrný** | O(n log n) | Náhodná data |
-| **Nejhorší** | O(n²) | Pivot vždy min/max (setříděné pole) |
+| **Nejlepší** | O(n log n) | Pivot vždy medián (dělí přesně na poloviny) |
+| **Průměrný** | O(n log n) | Náhodná data; očekávaná hodnota |
+| **Nejhorší** | O(n²) | Pivot vždy extrém (min nebo max) |
 
-#### Proč O(n log n) v průměru?
+### Odvození průměrné složitosti
 
-```
-Partition = O(n) ... projdeme všechny prvky jednou
-
-Pokud pivot půlí pole:
-- Úroveň 0: 1× partition na n prvcích     = n
-- Úroveň 1: 2× partition na n/2 prvcích   = n
-- Úroveň 2: 4× partition na n/4 prvcích   = n
-- ...
-- Úroveň k: 2^k × partition na n/2^k      = n
-
-Počet úrovní = log₂(n)
-
-Celkem: n × log(n) = O(n log n)
-```
+Rekurence pro průměrný případ (předpokládáme, že pozice pivota je rovnoměrně rozdělená v [0, n-1]):
 
 ```
-      [████████████████]           n prvků
-             ↓
-    [████████] [████████]          n/2 + n/2 = n
-         ↓          ↓
-    [████] [████] [████] [████]    n/4 × 4 = n
-       ↓              ↓
-      ...            ...           log(n) úrovní
-       ↓              ↓
-      [█]            [█]           jednotlivé prvky
-      
-Každá úroveň = O(n) práce
-Počet úrovní = O(log n)
-CELKEM = O(n × log n)
+T(n) = (1/n) · Σ (T(k) + T(n-1-k)) + Θ(n)
+       └───────────┬───────────┘     └─┬─┘
+        průměr přes všechny pozice    PARTITION
+
+Řešením je T(n) = Θ(n log n).
 ```
 
-#### Proč O(n²) v nejhorším případě?
+Pro **best case** (pivot dělí přesně na poloviny) máme rekurenci:
 
 ```
-Setříděné pole: [1, 2, 3, 4, 5]  pivot = poslední
-
-Partition 1: [] [1] [2,3,4,5]     práce: 5
-Partition 2: [] [2] [3,4,5]       práce: 4
-Partition 3: [] [3] [4,5]         práce: 3
-Partition 4: [] [4] [5]           práce: 2
-Partition 5: [] [5] []            práce: 1
-
-Celkem: 5+4+3+2+1 = n(n+1)/2 = O(n²)
+T(n) = 2 · T(n/2) + Θ(n)     →     T(n) = Θ(n log n)
 ```
+
+(Stejná jako Merge Sort, viz Master Theorem.)
+
+### Odvození worst case
+
+Pro setříděné pole a pivot = poslední prvek:
+
+```
+T(n) = T(n-1) + T(0) + Θ(n)
+     = T(n-1) + Θ(n)
+     = Θ(n) + Θ(n-1) + ... + Θ(1)
+     = Θ(n²)
+```
+
+Patologické vstupy pro různé strategie:
+
+| Strategie | Patologický vstup |
+|-----------|-------------------|
+| `pole[right]` | Setříděné pole |
+| `pole[left]` | Setříděné pole |
+| `pole[mid]` | Speciálně sestavená sekvence (existuje, neintuitivní) |
+| `median-of-3` | Speciálně sestavená sekvence (těžko sestavit) |
+| Random | Žádný (s vysokou pravděpodobností) |
+
+### Proč v praxi rychlejší než Merge Sort?
+
+I když mají stejnou asymptotickou složitost O(n log n), **Quick Sort má menší konstantu**:
+
+1. **Cache lokalita** - PARTITION pracuje sekvenčně, nevyžaduje skoky v paměti.
+2. **In-place** - žádné alokace pomocných polí (Merge Sort alokuje O(n) pomocné paměti).
+3. **Méně paměťových přístupů** - každý prvek se v průměru přesune jen 1-2×.
+
+Benchmarky ukazují, že Quick Sort je v praxi 2-3× rychlejší než Merge Sort pro běžná data v RAM.
 
 ---
 
-### BOD 7: Paměťová složitost
+## 7. Paměťová složitost
 
-#### Quick Sort třídí IN-PLACE
+### In-place algoritmus
 
-```
-Nepotřebuje pomocné pole jako Merge Sort!
-Pouze prohazuje prvky v původním poli.
-```
+Quick Sort **nepotřebuje žádné pomocné pole**. Třídění probíhá výhradně přes swapy v původním poli.
 
-#### Ale... rekurze zabírá paměť na CALL STACKU
+### Paměť na zásobníku rekurze
 
-| Případ | Hloubka rekurze | Paměť stacku |
-|--------|-----------------|--------------|
-| **Nejlepší/Průměrný** | O(log n) | O(log n) |
-| **Nejhorší** | O(n) | O(n) |
+| Případ | Hloubka rekurze | Paměť |
+|--------|-----------------|-------|
+| Best / Average | O(log n) | O(log n) |
+| Worst | O(n) | O(n) - **StackOverflow** pro velká n! |
 
-```
-Průměrný případ (pivot půlí pole):
-- Hloubka rekurze = log(n)
-- Stack: log(n) rámců
+Pro `n = 10⁶` v nejhorším případě je hloubka rekurze 1 milion volání - to typicky překročí limit zásobníku (~1 MB) a způsobí pád programu.
 
-Nejhorší případ (pivot = min/max):
-- Hloubka rekurze = n
-- Stack: n rámců → možný STACK OVERFLOW!
-```
+### Tail call optimization
 
-#### Optimalizace - Tail Call Elimination
+Standardní rekurze rekurzivně volá obě části:
 
 ```csharp
-// Optimalizovaná verze - vždy rekurze na MENŠÍ část
+QuickSort(pole, left, pivot - 1);
+QuickSort(pole, pivot + 1, right);                  // tail position
+```
+
+Druhé volání je v **tail position** - po něm už nic není. Můžeme ho převést na iteraci pomocí smyčky `while`. To samo ale nestačí - musíme rekurzivně volat vždy na **menší** část, abychom zaručili O(log n) hloubku rekurze:
+
+```csharp
 static void QuickSortOptimized(int[] pole, int low, int high)
 {
     while (low < high)
     {
         int pivot = Partition(pole, low, high);
-        
-        // Rekurze na menší část, iterace na větší
-        if (pivot - low < high - pivot)
+
+        if (pivot - low < high - pivot)             // menší část = levá
         {
             QuickSortOptimized(pole, low, pivot - 1);
-            low = pivot + 1;  // "Tail call" jako iterace
+            low = pivot + 1;                         // iteruj na pravou
+        }
+        else                                          // menší část = pravá
+        {
+            QuickSortOptimized(pole, pivot + 1, high);
+            high = pivot - 1;                        // iteruj na levou
+        }
+    }
+}
+```
+
+**Důsledek:** garantovaná hloubka rekurze O(log n) i v nejhorším případě. Worst case času zůstává O(n²), ale eliminujeme riziko StackOverflow.
+
+---
+
+## 8. Optimalizace Quick Sortu
+
+### 1. Median-of-three pivot (viz Bod 4)
+
+### 2. Tail call optimization (viz Bod 7)
+
+### 3. 3-Way Partition (Dutch National Flag)
+
+Klasický Lomuto má problém s **mnoha duplicitními hodnotami** - prvky rovné pivotu se nepřesouvají efektivně, vzniká nevyvážené rozdělení. **3-way partition** rozdělí pole na tři části:
+
+```
++------------+------------+------------+
+|  < pivot   |  = pivot   |  > pivot   |
++------------+------------+------------+
+```
+
+Implementace (Dijkstra):
+
+```csharp
+static (int lt, int gt) Partition3Way(int[] pole, int left, int right)
+{
+    int pivot = pole[left];
+    int lt = left, i = left + 1, gt = right;
+
+    while (i <= gt)
+    {
+        if (pole[i] < pivot)
+        {
+            (pole[lt], pole[i]) = (pole[i], pole[lt]);
+            lt++; i++;
+        }
+        else if (pole[i] > pivot)
+        {
+            (pole[i], pole[gt]) = (pole[gt], pole[i]);
+            gt--;
+        }
+        else i++;
+    }
+
+    return (lt, gt);
+}
+
+static void QuickSort3Way(int[] pole, int left, int right)
+{
+    if (left >= right) return;
+    var (lt, gt) = Partition3Way(pole, left, right);
+    QuickSort3Way(pole, left, lt - 1);
+    QuickSort3Way(pole, gt + 1, right);
+}
+```
+
+**Výhoda:** Pro pole s `k` distinct hodnotami běží v O(n log k) místo O(n log n). Pro pole pouze s několika unikátními hodnotami (např. true/false) běží v O(n).
+
+### 4. Insertion sort pro malá podpole
+
+Pro malá pole (cca `< 16` prvků) má Insertion Sort menší konstantu kvůli režii rekurze a vyhodnocování pivota. Hybridní algoritmy přepínají:
+
+```csharp
+const int INSERTION_THRESHOLD = 16;
+
+static void HybridQuickSort(int[] pole, int low, int high)
+{
+    while (low < high)
+    {
+        if (high - low + 1 < INSERTION_THRESHOLD)
+        {
+            InsertionSort(pole, low, high);          // pro malé úseky
+            return;
+        }
+
+        int p = Partition(pole, low, high);
+
+        if (p - low < high - p)
+        {
+            HybridQuickSort(pole, low, p - 1);
+            low = p + 1;
         }
         else
         {
-            QuickSortOptimized(pole, pivot + 1, high);
-            high = pivot - 1;
+            HybridQuickSort(pole, p + 1, high);
+            high = p - 1;
         }
     }
 }
-// Garantuje max O(log n) hloubku stacku!
 ```
 
-#### Srovnání paměťové složitosti
+### 5. Paralelní Quick Sort
 
-| Algoritmus | Paměťová složitost | Poznámka |
-|------------|-------------------|----------|
-| Quick Sort | O(log n) průměr | In-place, jen stack |
-| Merge Sort | O(n) | Potřebuje pomocné pole |
-| Heap Sort | O(1) | Skutečně in-place |
-| Bubble Sort | O(1) | In-place |
-
----
-
-### BOD 8: Podobnost s algoritmem QuickSelect
-
-#### Co je QuickSelect?
-
-**Úloha:** Najdi **k-tý nejmenší** prvek v nesetříděném poli.
-
-```
-Pole: [3, 7, 2, 9, 1, 5]
-Najdi 3. nejmenší prvek (k=3)
-
-Odpověď: 3 (setříděně by bylo [1, 2, 3, 5, 7, 9])
-```
-
-#### Podobnost s Quick Sort
-
-| | Quick Sort | QuickSelect |
-|-|------------|-------------|
-| **Cíl** | Setřídit celé pole | Najít k-tý prvek |
-| **Partition** | ✅ Stejná | ✅ Stejná |
-| **Rekurze** | Na OBĚ části | Jen na JEDNU část |
-| **Složitost** | O(n log n) | O(n) průměr |
-
-#### Jak QuickSelect funguje?
-
-```
-Pole: [3, 7, 2, 9, 1, 5]    Hledáme k=3 (3. nejmenší)
-
-1. Partition s pivot=5:
-   [3, 2, 1] [5] [7, 9]
-   pozice:  0,1,2  3   4,5
-   
-   Pivot je na pozici 3 (je to 4. nejmenší)
-   Hledáme 3. nejmenší → musí být VLEVO
-
-2. Rekurze jen na [3, 2, 1], pivot=1:
-   [] [1] [3, 2]
-   
-   Pivot na pozici 0 (je to 1. nejmenší)
-   Hledáme 3. → musí být VPRAVO
-
-3. Rekurze na [3, 2], pivot=2:
-   [] [2] [3]
-   
-   Pivot na pozici 1 (je to 2. nejmenší)
-   Hledáme 3. → musí být VPRAVO
-   
-4. "Rekurze" na [3]:
-   Jediný prvek → to je náš 3. nejmenší!
-
-ODPOVĚĎ: 3
-```
-
-#### Implementace QuickSelect
+Stejně jako Merge Sort se Quick Sort dá výborně paralelizovat - obě části po partition jsou nezávislé:
 
 ```csharp
-// ✅ VERZE A - MATURITNÍ
-// QuickSelect - najde k-tý nejmenší prvek
-
-static int QuickSelect(int[] pole, int left, int right, int k)
+static void ParallelQuickSort(int[] pole, int low, int high, int depth = 0)
 {
-    // Jeden prvek = odpověď
-    if (left == right)
-        return pole[left];
-    
-    // Partition - stejná jako u QuickSort!
-    int pivotIndex = Partition(pole, left, right);
-    
-    // Kolikátý nejmenší je pivot?
-    int pivotRank = pivotIndex - left + 1;
-    
-    if (k == pivotRank)
+    if (low >= high) return;
+    int p = Partition(pole, low, high);
+
+    if (depth < 4 && (high - low) > 4096)
     {
-        // Našli jsme!
-        return pole[pivotIndex];
-    }
-    else if (k < pivotRank)
-    {
-        // Hledáme VLEVO
-        return QuickSelect(pole, left, pivotIndex - 1, k);
+        Parallel.Invoke(
+            () => ParallelQuickSort(pole, low, p - 1, depth + 1),
+            () => ParallelQuickSort(pole, p + 1, high, depth + 1)
+        );
     }
     else
     {
-        // Hledáme VPRAVO (upravíme k)
-        return QuickSelect(pole, pivotIndex + 1, right, k - pivotRank);
+        ParallelQuickSort(pole, low, p - 1, depth);
+        ParallelQuickSort(pole, p + 1, high, depth);
     }
 }
-
-// Použití:
-int[] cisla = { 3, 7, 2, 9, 1, 5 };
-int tretiNejmensi = QuickSelect(cisla, 0, cisla.Length - 1, 3);
-// Výsledek: 3
-```
-
-#### Proč je QuickSelect O(n)?
-
-```
-Quick Sort: rekurze na obě části
-  n + n/2 + n/2 + n/4 + n/4 + n/4 + n/4 + ... = n × log(n)
-
-QuickSelect: rekurze jen na JEDNU část
-  n + n/2 + n/4 + n/8 + ... = 2n = O(n)
-  
-(geometrická řada se součtem 2n)
 ```
 
 ---
 
-## 💻 Kompletní implementace
+## 9. QuickSelect - hledání k-tého prvku
+
+### Úloha
+
+Najdi `k`-tý nejmenší prvek v nesetříděném poli. Příklady:
+
+- **Medián** - k = n/2.
+- **Top-K** - prvních k největších (k-tý + všechno větší).
+- **Percentily** - 95. percentil dotazování na výkon.
+
+### Naivní řešení
+
+1. Setřiď pole → O(n log n).
+2. Vrať `pole[k-1]` → O(1).
+
+Celkem O(n log n), zbytečně setřídíme celé pole.
+
+### QuickSelect (Hoare)
+
+QuickSelect je modifikace Quick Sortu: místo abychom rekurzivně třídili obě části, **rekurzujeme jen do té části, kde je hledaný k-tý prvek**.
 
 ```csharp
-// ✅ VERZE A - MATURITNÍ (Must Have)
-// Jednoduchý QuickSort s Lomutovým partition
-
-static void QuickSort(int[] pole, int leva, int prava)
+static int QuickSelect(int[] pole, int left, int right, int k)
 {
-    // Základní podmínka: pokud má úsek 0 nebo 1 prvek, konec
-    if (leva >= prava)
-        return;
-    
-    // Partition - rozděl pole a získej pozici pivota
-    int pivotIndex = Partition(pole, leva, prava);
-    
-    // Rekurzivně setřiď levou a pravou část
-    QuickSort(pole, leva, pivotIndex - 1);   // levá část
-    QuickSort(pole, pivotIndex + 1, prava);  // pravá část
-}
+    if (left == right) return pole[left];
 
-static int Partition(int[] pole, int leva, int prava)
-{
-    // Pivot = poslední prvek (jednoduchá volba)
-    int pivot = pole[prava];
-    
-    // i = hranice mezi "menší" a "větší" prvky
-    // Začínáme před polem (žádný menší prvek zatím)
-    int i = leva - 1;
-    
-    // Projdi všechny prvky (kromě pivota)
-    for (int j = leva; j < prava; j++)
-    {
-        // Pokud je prvek menší než pivot
-        if (pole[j] < pivot)
-        {
-            i++;  // Posuň hranici
-            // Prohoď prvky
-            int temp = pole[i];
-            pole[i] = pole[j];
-            pole[j] = temp;
-        }
-    }
-    
-    // Dej pivot na správné místo (za všechny menší)
-    int tmp = pole[i + 1];
-    pole[i + 1] = pole[prava];
-    pole[prava] = tmp;
-    
-    // Vrať pozici pivota
-    return i + 1;
-}
+    int pivotIndex = Partition(pole, left, right);
+    int rank = pivotIndex - left + 1;              // pořadí pivota v aktuálním úseku
 
-// Hlavní program
-static void Main()
-{
-    int[] cisla = { 6, 3, 8, 5, 2, 7, 4, 1 };
-    
-    Console.WriteLine("Před tříděním: " + string.Join(", ", cisla));
-    
-    QuickSort(cisla, 0, cisla.Length - 1);
-    
-    Console.WriteLine("Po třídění:    " + string.Join(", ", cisla));
+    if (k == rank)
+        return pole[pivotIndex];                    // našli jsme
+    else if (k < rank)
+        return QuickSelect(pole, left, pivotIndex - 1, k);
+    else
+        return QuickSelect(pole, pivotIndex + 1, right, k - rank);
 }
 ```
 
-```csharp
-// 💡 VERZE B - SENIOR (Nice to Have)
-// Čistší kód + Median-of-three + Swap helper
+### Analýza složitosti
 
-static void QuickSortSenior(int[] pole) 
-    => QuickSortRecursive(pole, 0, pole.Length - 1);
+V průměrném případě:
 
-static void QuickSortRecursive(int[] pole, int low, int high)
-{
-    if (low < high)
-    {
-        int pivotIndex = PartitionMedian(pole, low, high);
-        QuickSortRecursive(pole, low, pivotIndex - 1);
-        QuickSortRecursive(pole, pivotIndex + 1, high);
-    }
-}
-
-static int PartitionMedian(int[] pole, int low, int high)
-{
-    // Median-of-three pro lepší volbu pivota
-    int mid = low + (high - low) / 2;
-    if (pole[low] > pole[mid]) Swap(pole, low, mid);
-    if (pole[low] > pole[high]) Swap(pole, low, high);
-    if (pole[mid] > pole[high]) Swap(pole, mid, high);
-    Swap(pole, mid, high);  // Pivot na konec
-    
-    int pivot = pole[high];
-    int i = low - 1;
-    
-    for (int j = low; j < high; j++)
-    {
-        if (pole[j] < pivot)
-        {
-            i++;
-            Swap(pole, i, j);
-        }
-    }
-    
-    Swap(pole, i + 1, high);
-    return i + 1;
-}
-
-static void Swap(int[] pole, int a, int b) 
-    => (pole[a], pole[b]) = (pole[b], pole[a]);
 ```
+T(n) = T(n/2) + Θ(n)     (jen JEDNA rekurze místo dvou)
+     = Θ(n) + Θ(n/2) + Θ(n/4) + ... + Θ(1)
+     = Θ(2n) = Θ(n)
+```
+
+Geometrická řada dává **lineární čas O(n)**. To je překvapivý výsledek - umíme najít k-tý nejmenší prvek v lineárním čase, aniž bychom celé pole třídili.
+
+Worst case zůstává O(n²) (stejné patologické případy jako Quick Sort). Pomocí **Median-of-medians** lze garantovat worst case O(n) - viz BFPRT algoritmus.
+
+### Příklad
+
+```
+Pole: [3, 7, 2, 9, 1, 5]    hledáme 3. nejmenší (k = 3)
+
+Krok 1: Partition s pivot = 5
+   Výsledek: [3, 2, 1, 5, 7, 9]
+            pivot na indexu 3, rank = 4
+   k = 3 < rank = 4 → rekurze na levou část [3, 2, 1]
+
+Krok 2: Partition na [3, 2, 1] s pivot = 1
+   Výsledek: [1, 3, 2]
+            pivot na indexu 0, rank = 1
+   k = 3 > rank = 1 → rekurze na pravou s k' = 3 - 1 = 2
+
+Krok 3: Partition na [3, 2] s pivot = 2
+   Výsledek: [2, 3]
+            pivot na indexu 0, rank = 1
+   k = 2 > rank = 1 → rekurze na pravou s k' = 1
+
+Krok 4: Jediný prvek [3] → vrať 3
+
+Odpověď: 3 (3. nejmenší)
+```
+
+### Použití v .NET
+
+C# nemá built-in QuickSelect, ale lze implementovat snadno nebo použít `OrderBy().Skip(k-1).First()` (pomalejší O(n log n)).
 
 ---
 
-## ⚠️ Na co si dát pozor (Maturitní "chytáky")
+## 10. Quick Sort v praxi (IntroSort)
 
-### 1. Hranice rekurze
+### IntroSort = QuickSort + HeapSort + InsertionSort
+
+Moderní implementace v knihovnách (C++ `std::sort`, .NET `Array.Sort`) používají **IntroSort** (Introspective Sort), který kombinuje tři algoritmy:
+
+1. **Začíná QuickSortem** - nejrychlejší v průměru.
+2. **Sleduje hloubku rekurze.** Pokud překročí `2 · log₂(n)`, **přepne na HeapSort** - to zaručuje worst case O(n log n) a eliminuje patologické případy.
+3. **Pro malé úseky (< 16 prvků)** používá **Insertion Sort** - menší konstanta než rekurze.
+
+```
+n = 1000:
+- threshold hloubky = 2 · log₂(1000) ≈ 20
+
+QuickSort se spustí, pokud hloubka <= 20: pokračuj QuickSortem
+                                  > 20:  přepni na HeapSort
+
+Pro úseky < 16 prvků: InsertionSort
+```
+
+### Algoritmus IntroSort (zjednodušený)
+
 ```csharp
-// ❌ ŠPATNĚ - chybí základní podmínka
-static void QuickSort(int[] pole, int l, int r)
+const int INSERTION_THRESHOLD = 16;
+
+static void IntroSort(int[] pole, int low, int high, int depthLimit)
 {
-    int p = Partition(pole, l, r);  // CRASH pro prázdné pole!
-    QuickSort(pole, l, p - 1);
-    QuickSort(pole, p + 1, r);
+    while (high - low > INSERTION_THRESHOLD)
+    {
+        if (depthLimit == 0)
+        {
+            HeapSort(pole, low, high);              // fallback proti O(n²)
+            return;
+        }
+
+        depthLimit--;
+        int p = Partition(pole, low, high);
+        IntroSort(pole, p + 1, high, depthLimit);   // rekurze na pravou
+        high = p - 1;                                // iterativně na levou
+    }
+
+    InsertionSort(pole, low, high);                  // dokončení malých úseků
 }
 
-// ✅ SPRÁVNĚ
-static void QuickSort(int[] pole, int l, int r)
+static void IntroSort(int[] pole)
 {
-    if (l >= r) return;  // Základní podmínka!
-    int p = Partition(pole, l, r);
-    QuickSort(pole, l, p - 1);
-    QuickSort(pole, p + 1, r);
+    int depthLimit = 2 * (int)Math.Log2(pole.Length);
+    IntroSort(pole, 0, pole.Length - 1, depthLimit);
 }
 ```
 
-### 2. Index `i` začíná na `low - 1`, ne na `low`
-```csharp
-// ❌ ŠPATNĚ
-int i = low;  // Přeskočí první prvek!
+### Použití v jazycích
 
-// ✅ SPRÁVNĚ
-int i = low - 1;  // Zóna menších je na začátku prázdná
+| Jazyk / knihovna | Algoritmus |
+|------------------|-----------|
+| C++ STL `std::sort` | IntroSort |
+| .NET `Array.Sort` (primitive) | IntroSort |
+| .NET `Array.Sort` (objekty, .NET Core 3+) | Tim-like sort |
+| Java `Arrays.sort(int[])` | Dual-Pivot QuickSort |
+| Java `Arrays.sort(Object[])` | TimSort |
+| Python `list.sort()` | TimSort |
+| Rust `sort_unstable` | PDQSort (Pattern-Defeating QuickSort) |
+
+### Dual-Pivot QuickSort
+
+Java používá variantu se **dvěma pivoty** - vybere dva pivoty `p < q` a rozdělí pole na tři části:
+
+```
++----------+----------+----------+
+| < p      | p ≤ x ≤ q| > q      |
++----------+----------+----------+
 ```
 
-### 3. Partition cyklus jde do `j < high`, ne `j <= high`
+V praxi výrazně rychlejší než klasický Quick Sort pro velká pole.
+
+---
+
+## 11. Porovnání s ostatními algoritmy
+
+### Třídicí algoritmy - shrnutí
+
+| Algoritmus | Best | Avg | Worst | Paměť | Stabilní | In-place |
+|------------|------|-----|-------|-------|----------|----------|
+| **Quick Sort** | O(n log n) | O(n log n) | O(n²) | O(log n) | Ne | Ano |
+| **Merge Sort** | O(n log n) | O(n log n) | O(n log n) | O(n) | Ano | Ne |
+| **Heap Sort** | O(n log n) | O(n log n) | O(n log n) | O(1) | Ne | Ano |
+| **Insert Sort** | O(n) | O(n²) | O(n²) | O(1) | Ano | Ano |
+| **Bubble Sort** | O(n) | O(n²) | O(n²) | O(1) | Ano | Ano |
+| **Select Sort** | O(n²) | O(n²) | O(n²) | O(1) | Ne | Ano |
+| **TimSort** | O(n) | O(n log n) | O(n log n) | O(n) | Ano | Ne |
+| **IntroSort** | O(n log n) | O(n log n) | O(n log n) | O(log n) | Ne | Ano |
+
+### Když použít co
+
+| Situace | Doporučený algoritmus |
+|---------|----------------------|
+| Obecné třídění čísel | Quick Sort / IntroSort |
+| Stabilní třídění objektů | Merge Sort / TimSort |
+| Garantovaný worst case | Heap Sort / Merge Sort |
+| Téměř setříděná data | TimSort / Insertion Sort |
+| Externí třídění (soubory) | Merge Sort (k-way) |
+| Malá pole (< 30 prvků) | Insertion Sort |
+| Třídění s mnoha duplicitami | 3-way Quick Sort |
+| Hledání k-tého prvku | QuickSelect |
+| Streamingové třídění | Heap (PriorityQueue) |
+
+---
+
+## 12. Maturitní chytáky
+
+### Časté implementační chyby
+
+**Chybějící základní případ:**
+
 ```csharp
-// ❌ ŠPATNĚ - zahrnuje pivot do cyklu
+// CHYBA - nikdy se nezastaví
+static void QuickSort(int[] pole, int low, int high)
+{
+    int p = Partition(pole, low, high);            // CRASH pro prázdné pole
+    QuickSort(pole, low, p - 1);
+    QuickSort(pole, p + 1, high);
+}
+
+// SPRÁVNĚ
+static void QuickSort(int[] pole, int low, int high)
+{
+    if (low >= high) return;                       // základní případ
+    int p = Partition(pole, low, high);
+    QuickSort(pole, low, p - 1);
+    QuickSort(pole, p + 1, high);
+}
+```
+
+**Špatná inicializace `i`:**
+
+```csharp
+// CHYBA - přeskočí první prvek
+int i = low;
+
+// SPRÁVNĚ - hranice "menší zóny" je prázdná
+int i = low - 1;
+```
+
+**Chybný cyklus `j`:**
+
+```csharp
+// CHYBA - zahrne pivot do partition
 for (int j = low; j <= high; j++)
 
-// ✅ SPRÁVNĚ - pivot je na indexu high, nezahrnujeme ho
+// SPRÁVNĚ - pivot je na indexu high
 for (int j = low; j < high; j++)
 ```
 
-### 4. Nejhorší případ pro setříděná data
-```
-❓ "Jaká je složitost Quick Sortu pro setříděné pole?"
-✅ O(n²) - pivot je vždy min/max!
+**Overflow při výpočtu středu (median-of-three):**
 
-Řešení: Median-of-three nebo náhodný pivot
+```csharp
+// PROBLEM - může přetéct
+int mid = (low + high) / 2;
+
+// SPRÁVNĚ - bezpečně
+int mid = low + (high - low) / 2;
 ```
 
-### 5. Quick Sort NENÍ stabilní
-```
-❓ "Je Quick Sort stabilní?"
-✅ NE - stejné prvky mohou změnit pořadí
+**Zapomenutí na duplicity:**
 
-Stabilní = prvky se stejnou hodnotou zůstanou ve stejném pořadí
-```
+Klasický Lomuto neefektivně řeší pole s mnoha duplicitami. Pro takové vstupy použijte 3-way partition.
+
+### Typické otázky u ústní zkoušky
+
+- **"Proč je Quick Sort v praxi rychlejší než Merge Sort?"**
+  Cache lokalita (sekvenční přístup), in-place (žádné alokace), menší konstanta. I když mají stejnou asymptotickou složitost, Quick Sort vyhrává v reálných benchmarcích.
+
+- **"Kdy nastává worst case Quick Sortu?"**
+  Když pivot vždy padne na extrém (min nebo max), takže jedna část je prázdná a druhá má n-1 prvků. Typicky pro setříděné pole + pivot = první/poslední prvek.
+
+- **"Jak se dá worst case obejít?"**
+  Median-of-three pivot, náhodný pivot, IntroSort (přepnutí na HeapSort při hluboké rekurzi), 3-way partition pro duplicity.
+
+- **"Proč Quick Sort není stabilní?"**
+  Při swapování v partition se mohou prvky se stejnou hodnotou přehodit přes sebe. Příklad: `[5a, 3, 5b, 1]` s pivot = 1 - swapy poruší pořadí `5a, 5b`.
+
+- **"Vysvětli princip Lomuto partition."**
+  Pivot = poslední prvek. Index `i` značí konec "menší zóny" (na začátku `i = low - 1`). Procházíme `j` přes celý úsek, a když najdeme prvek `< pivot`, zvětšíme `i` a swapneme `pole[i]` s `pole[j]`. Na konci swapneme pivot na pozici `i+1`.
+
+- **"Co je QuickSelect a jaký má rozdíl od Quick Sortu?"**
+  QuickSelect najde k-tý nejmenší prvek v O(n) průměrně. Rozdíl: po partition rekurzuje jen do JEDNÉ části (té, kde je k-tý prvek).
+
+- **"Co je IntroSort?"**
+  Hybridní algoritmus: začíná QuickSortem, při překročení hloubky `2·log(n)` přepne na HeapSort (garantuje O(n log n)) a pro malá podpole (< 16) přepne na Insertion Sort.
+
+- **"Jaký je rozdíl mezi Lomuto a Hoare partition?"**
+  Lomuto: pivot = poslední, jednoduchý, pivot je na finální pozici. Hoare: dva ukazatele se pohybují proti sobě, méně swapů v průměru, pivot není na finální pozici.
+
+### Kontrolní seznam při code review
+
+- [ ] Základní případ `if (low >= high) return;`
+- [ ] Inicializace `i = low - 1`
+- [ ] Cyklus `j < high` (ne `<=`)
+- [ ] Závěrečný swap `pole[i+1] ↔ pole[high]`
+- [ ] Rekurzivní volání: `(low, p-1)` a `(p+1, high)` - bez pivota
+- [ ] Bezpečný výpočet `mid = low + (high - low) / 2`
+- [ ] Tail call optimization pro garantovanou hloubku O(log n)
+- [ ] Median-of-three nebo randomizace proti patologickým vstupům
 
 ---
 
-## 🚀 Senior Tipy
+## 13. Klíčové pojmy
 
-### 1. V praxi se používá IntroSort
-```
-IntroSort = QuickSort + HeapSort + InsertionSort
-- Začne QuickSortem
-- Hloubka > 2×log(n) → přepne na HeapSort
-- Malé úseky (< 16) → InsertionSort
-```
-
-### 2. 3-Way Partition pro duplicity
-```csharp
-// Když máš hodně duplicitních hodnot:
-// [ < pivot | == pivot | > pivot ]
-// Sníží složitost pro pole s duplicitami
-```
-
-### 3. Tail Call Optimization
-```csharp
-// Rekurze vždy na menší část → max O(log n) stack
-while (low < high)
-{
-    int p = Partition(pole, low, high);
-    if (p - low < high - p)
-    {
-        QuickSort(pole, low, p - 1);
-        low = p + 1;
-    }
-    else
-    {
-        QuickSort(pole, p + 1, high);
-        high = p - 1;
-    }
-}
-```
-
-### 4. QuickSelect pro k-tý prvek
-```
-Potřebuješ najít medián nebo k-tý nejmenší?
-→ QuickSelect v O(n), ne O(n log n)!
-```
+- **Quick Sort** - rekurzivní in-place porovnávací třídicí algoritmus typu Divide & Conquer s průměrnou složitostí O(n log n).
+- **Pivot** - prvek, který slouží jako dělicí hranice mezi menší a větší částí pole.
+- **Partition** - operace, která přeskupí pole tak, aby pivot byl na své finální pozici a kolem něj byly menší/větší prvky.
+- **Lomutův partition** - jednodušší schéma s pivotem na konci, jednou hranicí `i`.
+- **Hoareův partition** - původní schéma s dvěma ukazateli pohybujícími se proti sobě.
+- **3-Way Partition (Dutch National Flag)** - rozdělení na tři části `< = >` pivot, efektivní pro pole s duplicitami.
+- **Median-of-three** - strategie volby pivota jako mediánu z prvního, prostředního a posledního prvku.
+- **Median-of-medians (BFPRT)** - algoritmus pro nalezení skutečného mediánu v O(n).
+- **Randomized Quick Sort** - varianta s náhodným pivotem, garantující očekávané O(n log n).
+- **Cache lokalita** - vlastnost algoritmu pracovat se sousedními pamětními buňkami, využívající procesorovou cache.
+- **In-place algoritmus** - pracuje s O(1) extra pamětí mimo vstup.
+- **Stabilita** - vlastnost zachovávat relativní pořadí prvků se stejným klíčem; Quick Sort stabilní NENÍ.
+- **QuickSelect** - lineární algoritmus pro hledání k-tého nejmenšího prvku, modifikace Quick Sortu.
+- **IntroSort (Introspective Sort)** - hybridní algoritmus kombinující QuickSort, HeapSort a InsertionSort.
+- **Dual-Pivot QuickSort** - varianta se dvěma pivoty rozdělující pole na tři části, používaná v Javě.
+- **Pattern-Defeating QuickSort (PDQSort)** - moderní varianta v Rustu, detekuje patologické vzory a přepíná strategii.
+- **Tail call optimization** - převedení rekurzivního volání v tail position na iteraci, eliminuje hloubku zásobníku.
+- **Hloubka rekurze** - počet aktivních volání na zásobníku; pro Quick Sort O(log n) průměrně, O(n) worst case.
+- **StackOverflow** - chyba způsobená přetečením zásobníku rekurze, hrozí při worst-case Quick Sortu bez optimalizace.
+- **Patologický vstup** - vstup způsobující worst-case chování algoritmu (např. setříděné pole pro Quick Sort s prvním pivotem).
+- **Comparison-based sort** - algoritmus pracující pouze přes porovnání prvků; spodní mez Ω(n log n).
 
 ---
 
-## 🔗 Souvislosti s jinými otázkami
+## Souvislosti s jinými otázkami
 
 | Otázka | Souvislost |
 |--------|------------|
-| **Ot. 5 - Rekurze** | Quick Sort je rekurzivní algoritmus |
-| **Ot. 7 - Složitost** | Analýza O(n log n) vs O(n²) |
-| **Ot. 10-11 - Třídění** | Srovnání s jinými algoritmy |
-| **Ot. 13 - Heap Sort** | Alternativa s garantovaným O(n log n) |
-| **Ot. 15 - Divide & Conquer** | Quick Sort je ukázka D&C |
-
----
-
-## 📊 Srovnání třídících algoritmů
-
-| Algoritmus | Průměr | Nejhorší | Paměť | Stabilní |
-|------------|--------|----------|-------|----------|
-| **Quick Sort** | O(n log n) | O(n²) | O(log n) | ❌ |
-| Merge Sort | O(n log n) | O(n log n) | O(n) | ✅ |
-| Heap Sort | O(n log n) | O(n log n) | O(1) | ❌ |
-| Bubble Sort | O(n²) | O(n²) | O(1) | ✅ |
-| Insert Sort | O(n²) | O(n²) | O(1) | ✅ |
-
-**Quick Sort je nejrychlejší v praxi** díky cache locality, i když teoreticky má horší worst-case než Merge/Heap Sort.
-
----
-
-## 🎯 Quick Reference pro maturitu
-
-```
-QUICK SORT = Divide & Conquer třídící algoritmus
-
-POSTUP:
-1. Vyber PIVOT
-2. PARTITION: menší vlevo, větší vpravo
-3. REKURZE na obě části
-
-PARTITION (Lomuto):
-- i = low - 1 (hranice menších, začíná prázdná)
-- Pro každý prvek < pivot: i++, swap(i, j)
-- Na konci: swap(i+1, high) - pivot na místo
-
-SLOŽITOST:
-- Čas: O(n log n) průměr, O(n²) worst
-- Paměť: O(log n) - stack rekurze
-
-PIVOT STRATEGIE:
-- Jednoduchá: poslední prvek
-- Lepší: median-of-three
-
-QUICKSELECT:
-- Najde k-tý nejmenší v O(n)
-- Jako QuickSort, ale rekurze jen na jednu stranu
-```
-
----
-
-*Zpracováno: 1. února 2025*
+| Ot. 5 - Rekurze | Quick Sort jako klasický rekurzivní algoritmus |
+| Ot. 7 - Složitost | Analýza O(n log n) vs O(n²), Master Theorem |
+| Ot. 9 - Stromy | Heap Sort jako fallback v IntroSortu, prioritní fronta |
+| Ot. 10 - Insert/Select Sort | Insertion Sort pro malé úseky v IntroSortu |
+| Ot. 11 - Bubble/Merge Sort | Porovnání s Merge Sortem - oba D&C, rozdíly |
+| Ot. 13 - Heap/Radix Sort | Heap Sort jako alternativa s garantovaným O(n log n) |
+| Ot. 15 - Rozděl a panuj | Quick Sort jako ukázkový příklad paradigmatu |
+| Ot. 16 - Algoritmické techniky | Randomizace, hybridní algoritmy |

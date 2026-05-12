@@ -1,37 +1,37 @@
-# 📚 ZÁPISKY: Otázka č. 1 - Datové typy v C#
+# ZÁPISKY: Otázka č. 1 - Datové typy v C#
 
-**Datum zpracování:** 17. prosince 2024  
-**Status:** ✅ KOMPLETNÍ (10/10 bodů)  
+**Datum zpracování:** 17. prosince 2024
+**Status:** KOMPLETNÍ (10/10 bodů)
 **Předmět:** Programování - Maturitní příprava
 
 ---
 
-## ✅ CHECKLIST BODŮ OTÁZKY
+## CHECKLIST BODŮ OTÁZKY
 
 | # | Bod | Status |
 |---|-----|--------|
-| 1 | Pojem proměnná | ✅ |
-| 2 | Jednoduché typy (int, long, char, bool, double, float, decimal) | ✅ |
-| 3 | Velikosti a rozsahy typů | ✅ |
-| 4 | Signed vs unsigned | ✅ |
-| 5 | Složené typy: pole | ✅ |
-| 6 | Složené typy: List, Dictionary | ✅ |
-| 7 | Složené typy: string | ✅ |
-| 8 | Složené typy: struct vs class | ✅ |
-| 8b | **BONUS: Detailní syntaxe CLASS** | ✅ |
-| 9 | NULL a nullable typy | ✅ |
-| 10 | Hodnotové vs referenční typy | ✅ |
+| 1 | Pojem proměnná | |
+| 2 | Jednoduché typy (int, long, char, bool, double, float, decimal) | |
+| 3 | Velikosti a rozsahy typů | |
+| 4 | Signed vs unsigned | |
+| 5 | Složené typy: pole | |
+| 6 | Složené typy: List, Dictionary | |
+| 7 | Složené typy: string | |
+| 8 | Složené typy: struct vs class | |
+| 8b | **BONUS: Detailní syntaxe CLASS** | |
+| 9 | NULL a nullable typy | |
+| 10 | Hodnotové vs referenční typy | |
 
 ---
 
-# 📌 BOD 1: PROMĚNNÁ
+# BOD 1: PROMĚNNÁ
 
-## 🧠 Definice
+## Definice
 **Proměnná** = pojmenované místo v paměti, které uchovává hodnotu určitého typu.
 
 **Analogie:** Šuplík se jmenovkou – na jmenovce je název (`vek`) a uvnitř je obsah (`18`).
 
-## 💻 Syntaxe
+## Syntaxe
 
 ```csharp
 // DEKLARACE - vytvoření proměnné (rezervace paměti)
@@ -50,7 +50,7 @@ vek = 19;
 Console.WriteLine(vek);  // vypíše: 19
 ```
 
-## 📋 Co musíš umět říct u tabule
+## Co musíš umět říct u tabule
 
 Proměnná má:
 1. **Název** (identifikátor) - např. `vek`
@@ -58,7 +58,7 @@ Proměnná má:
 3. **Hodnotu** - např. `18`
 4. **Adresu v paměti** - kde je uložena v RAM
 
-## 🎨 Vizualizace
+## Vizualizace
 
 ```
 PAMĚŤ:
@@ -71,12 +71,12 @@ PAMĚŤ:
 └─────────────┴─────────┘
 ```
 
-## ⚠️ Chyták: Deklarace vs Inicializace
+## Chyták: Deklarace vs Inicializace
 
 - **Deklarace** = vytvoření proměnné (`int cislo;`)
 - **Inicializace** = první přiřazení hodnoty (`cislo = 10;`)
 
-## 🚀 Senior tip
+## Senior tip
 
 ```csharp
 var vek = 18;              // implicitně typovaná (kompilátor odvodí int)
@@ -86,9 +86,9 @@ readonly int rok = 2007;   // pouze pro čtení
 
 ---
 
-# 📌 BOD 2-4: JEDNODUCHÉ DATOVÉ TYPY
+# BOD 2-4: JEDNODUCHÉ DATOVÉ TYPY
 
-## 📊 KOMPLETNÍ TABULKA TYPŮ
+## KOMPLETNÍ TABULKA TYPŮ
 
 ### Celočíselné typy (SIGNED - se znaménkem)
 
@@ -127,7 +127,7 @@ readonly int rok = 2007;   // pouze pro čtení
 
 ---
 
-## 💻 INT (nejčastější)
+## INT (nejčastější)
 
 ```csharp
 int pocetStudentu = 25;
@@ -147,7 +147,7 @@ int zbytek = a % b;      // 1 (modulo)
 
 ---
 
-## 💻 LONG
+## LONG
 
 ```csharp
 long velkeCislo = 9000000000000L;  // SUFFIX L povinný!
@@ -158,7 +158,7 @@ long obyvatel = 8000000000L;       // populace Země
 
 ---
 
-## 💻 FLOAT, DOUBLE, DECIMAL
+## FLOAT, DOUBLE, DECIMAL
 
 ```csharp
 // FLOAT - 7 číslic přesnosti
@@ -176,7 +176,7 @@ decimal plat = 45000.50m;
 
 ---
 
-## 💻 CHAR
+## CHAR
 
 ```csharp
 char pismeno = 'A';              // APOSTROFY!
@@ -212,7 +212,7 @@ char.ToLower('B');      // 'b'
 
 ---
 
-## 💻 BOOL
+## BOOL
 
 ```csharp
 bool pravda = true;
@@ -227,7 +227,7 @@ bool NOT = !a;           // false
 
 ---
 
-## 📊 SIGNED vs UNSIGNED
+## SIGNED vs UNSIGNED
 
 **Klíčový rozdíl:** Stejná velikost, jiný rozsah!
 
@@ -240,13 +240,13 @@ bool NOT = !a;           // false
 
 ```csharp
 int signed = -100;       // OK
-uint unsigned = -100;    // ❌ CHYBA! uint nemůže být záporný
-uint unsigned2 = 100;    // ✅ OK
+uint unsigned = -100;    //  CHYBA! uint nemůže být záporný
+uint unsigned2 = 100;    //  OK
 ```
 
 ---
 
-## ⚠️ MATURITNÍ CHYŤÁKY - Jednoduché typy
+## MATURITNÍ CHYŤÁKY - Jednoduché typy
 
 ### 1. Celočíselné dělení
 ```csharp
@@ -278,18 +278,18 @@ Math.Abs(a - 0.3) < 0.0001;  // TRUE
 
 ### 5. Char - apostrofy vs uvozovky
 ```csharp
-char c = 'A';            // ✅ apostrofy
-char c = "A";            // ❌ uvozovky jsou pro string!
+char c = 'A';            //  apostrofy
+char c = "A";            //  uvozovky jsou pro string!
 ```
 
 ---
 
-# 📌 BOD 5: POLE (Array)
+# BOD 5: POLE (Array)
 
-## 🧠 Definice
+## Definice
 **Pole** = kolekce prvků stejného typu s pevnou velikostí, indexovaná od 0.
 
-## 💻 Syntaxe
+## Syntaxe
 
 ```csharp
 // Vytvoření
@@ -319,14 +319,14 @@ int[,] matice2 = {{1,2}, {3,4}, {5,6}};
 matice2[0, 1] = 99;                    // řádek 0, sloupec 1
 ```
 
-## 📋 Vlastnosti pole
+## Vlastnosti pole
 
 - **Pevná velikost** - nelze měnit po vytvoření
 - **Referenční typ** - předává se odkaz
 - **Indexování od 0** - první prvek je `[0]`
 - **Časová složitost:** přístup O(1), hledání O(n)
 
-## 🛠️ Užitečné metody
+## Užitečné metody
 
 ```csharp
 int[] pole = {5, 2, 8, 1, 9};
@@ -338,12 +338,12 @@ Array.Copy(zdroj, cil, delka);       // kopírování
 Array.Resize(ref pole, 10);          // změna velikosti (vytvoří nové!)
 ```
 
-## ⚠️ Chyťáky - Pole
+## Chyťáky - Pole
 
 ```csharp
 // 1. Index mimo rozsah
 int[] pole = {1, 2, 3};
-pole[3] = 10;                        // ❌ IndexOutOfRangeException!
+pole[3] = 10;                        //  IndexOutOfRangeException!
 
 // 2. Kopírování odkazu (ne dat!)
 int[] a = {1, 2, 3};
@@ -360,9 +360,9 @@ Array.Copy(a, d, a.Length);
 
 ---
 
-# 📌 BOD 6: LIST<T> A DICTIONARY<K,V>
+# BOD 6: LIST<T> A DICTIONARY<K,V>
 
-## 💻 LIST<T>
+## LIST<T>
 
 **List** = dynamické pole s automatickou změnou velikosti.
 
@@ -401,24 +401,24 @@ int[] pole = seznam.ToArray();
 List<int> zpet = pole.ToList();
 ```
 
-### ⚠️ Chyťáky - List
+### Chyťáky - List
 
 ```csharp
 // 1. Count, ne Length!
-seznam.Count;    // ✅
-seznam.Length;   // ❌ neexistuje
+seznam.Count;    //
+seznam.Length;   //  neexistuje
 
 // 2. Nelze měnit během foreach
 foreach (int x in seznam)
 {
-    seznam.Remove(x);  // ❌ CHYBA!
+    seznam.Remove(x);  //  CHYBA!
 }
 // Řešení: for pozpátku nebo RemoveAll()
 ```
 
 ---
 
-## 💻 DICTIONARY<TKey, TValue>
+## DICTIONARY<TKey, TValue>
 
 **Dictionary** = kolekce párů klíč-hodnota s rychlým vyhledáváním.
 
@@ -428,12 +428,12 @@ Dictionary<string, int> skore = new();
 Dictionary<string, int> s2 = new() {{"Adam", 100}, {"Bára", 150}};
 
 // Přidávání
-skore.Add("Adam", 100);              // ❌ chyba pokud klíč existuje
-skore["Adam"] = 200;                 // ✅ přidá nebo přepíše
+skore.Add("Adam", 100);              //  chyba pokud klíč existuje
+skore["Adam"] = 200;                 //  přidá nebo přepíše
 skore.TryAdd("Cyril", 120);          // vrací bool
 
 // Přístup
-int x = skore["Adam"];               // ❌ KeyNotFoundException pokud neexistuje!
+int x = skore["Adam"];               //  KeyNotFoundException pokud neexistuje!
 
 // Bezpečný přístup
 if (skore.TryGetValue("Eva", out int hodnota))
@@ -452,16 +452,16 @@ foreach (var (klic, hodnota) in skore)
 }
 ```
 
-### ⚠️ Chyťáky - Dictionary
+### Chyťáky - Dictionary
 
 ```csharp
 // 1. Neexistující klíč
-skore["Neexistuje"];                 // ❌ KeyNotFoundException!
+skore["Neexistuje"];                 //  KeyNotFoundException!
 // Řešení: TryGetValue()
 
 // 2. Duplicitní klíč v Add
 skore.Add("Adam", 100);
-skore.Add("Adam", 200);              // ❌ ArgumentException!
+skore.Add("Adam", 200);              //  ArgumentException!
 // Řešení: použij indexer skore["Adam"] = 200;
 
 // 3. ContainsValue je O(n)!
@@ -470,12 +470,12 @@ skore.ContainsValue(100);            // pomalé - projde vše
 
 ---
 
-# 📌 BOD 7: STRING
+# BOD 7: STRING
 
-## 🧠 Definice
+## Definice
 **String** = posloupnost znaků (char), referenční typ, ale **IMMUTABLE** (neměnný).
 
-## 💻 Základní operace
+## Základní operace
 
 ```csharp
 // Vytvoření
@@ -488,14 +488,14 @@ int delka = text.Length;             // 4
 
 // Indexování (jako pole charů)
 char c = text[0];                    // 'A'
-text[0] = 'X';                       // ❌ CHYBA! immutable
+text[0] = 'X';                       //  CHYBA! immutable
 
 // Spojování
 string s = "Ahoj" + " " + "světe";
 string s2 = $"Jmenuji se {jmeno}";   // doporučené
 ```
 
-## 🛠️ Užitečné metody
+## Užitečné metody
 
 ```csharp
 string text = "  Ahoj Světe!  ";
@@ -522,13 +522,13 @@ string.IsNullOrEmpty(text);          // false
 string.IsNullOrWhiteSpace("   ");    // true
 ```
 
-## ⚠️ Chyťáky - String
+## Chyťáky - String
 
 ```csharp
 // 1. IMMUTABLE - musíš přiřadit zpět!
 string s = "ahoj";
-s.ToUpper();                         // ❌ nic se nestane!
-s = s.ToUpper();                     // ✅ "AHOJ"
+s.ToUpper();                         //  nic se nestane!
+s = s.ToUpper();                     //  "AHOJ"
 
 // 2. Apostrofy vs uvozovky
 char c = 'A';                        // apostrofy = char
@@ -537,8 +537,8 @@ string s = "A";                      // uvozovky = string
 // 3. null vs ""
 string a = null;                     // žádný objekt
 string b = "";                       // prázdný string (objekt existuje)
-a.Length;                            // ❌ NullReferenceException!
-b.Length;                            // ✅ 0
+a.Length;                            //  NullReferenceException!
+b.Length;                            //  0
 
 // 4. == porovnává OBSAH (speciální chování stringu)
 string x = "test";
@@ -546,7 +546,7 @@ string y = "test";
 x == y;                              // true (porovnává obsah)
 ```
 
-## 🎨 Escape sekvence
+## Escape sekvence
 
 | Sekvence | Význam |
 |----------|--------|
@@ -558,19 +558,19 @@ x == y;                              // true (porovnává obsah)
 
 ---
 
-# 📌 BOD 8: STRUCT vs CLASS
+# BOD 8: STRUCT vs CLASS
 
-## 🎯 Klíčový rozdíl
+## Klíčový rozdíl
 
 | Vlastnost | STRUCT | CLASS |
 |-----------|--------|-------|
 | **Typ** | HODNOTOVÝ | REFERENČNÍ |
 | **Uložení** | STACK | HEAP |
 | **Kopírování** | Kopíruje HODNOTU | Kopíruje ODKAZ |
-| **Dědičnost** | ❌ nelze | ✅ může |
-| **Null** | ❌ (bez `?`) | ✅ může |
+| **Dědičnost** | nelze | může |
+| **Null** | (bez `?`) | může |
 
-## 💻 Příklad
+## Příklad
 
 ```csharp
 // STRUCT - kopíruje hodnotu
@@ -597,7 +597,7 @@ d.X = 99;
 Console.WriteLine(c.X);              // 99 (!) změnilo se i c
 ```
 
-## 📋 Kdy použít co?
+## Kdy použít co?
 
 **STRUCT:**
 - Malá data (<16 bajtů)
@@ -613,9 +613,9 @@ Console.WriteLine(c.X);              // 99 (!) změnilo se i c
 
 ---
 
-# 📌 BOD 8b: DETAILNÍ SYNTAXE TŘÍDY (CLASS)
+# BOD 8b: DETAILNÍ SYNTAXE TŘÍDY (CLASS)
 
-## 🏗️ Základní struktura třídy
+## Základní struktura třídy
 
 ```csharp
 // MODIFIKÁTOR PŘÍSTUPU + KLÍČOVÉ SLOVO + NÁZEV
@@ -625,7 +625,7 @@ public class Student
     private string jmeno;
     private int vek;
     private static int pocetStudentu = 0;  // statická = sdílená všemi instancemi
-    
+
     // 2. KONSTRUKTOR - volá se při "new"
     public Student(string jmeno, int vek)
     {
@@ -633,38 +633,38 @@ public class Student
         this.vek = vek;
         pocetStudentu++;       // zvýšíme počítadlo
     }
-    
+
     // 3. VLASTNOSTI (properties) - bezpečný přístup k datům
-    public string Jmeno 
-    { 
+    public string Jmeno
+    {
         get { return jmeno; }           // getter - čtení
         set { jmeno = value; }          // setter - zápis
     }
-    
+
     // Zkrácená syntaxe (auto-property)
     public int Vek { get; set; }
-    
+
     // Pouze pro čtení (read-only)
     public int RokNarozeni { get; }
-    
+
     // 4. METODY - funkce třídy
     public void Predstav()
     {
         Console.WriteLine($"Jsem {jmeno}, je mi {vek} let.");
     }
-    
+
     // Metoda s návratovou hodnotou
     public bool JePlnolety()
     {
         return vek >= 18;
     }
-    
+
     // 5. STATICKÁ METODA - volá se na třídě, ne na instanci
     public static int GetPocetStudentu()
     {
         return pocetStudentu;
     }
-    
+
     // 6. OVERRIDE ToString() - co se vypíše při Console.WriteLine(student)
     public override string ToString()
     {
@@ -673,7 +673,7 @@ public class Student
 }
 ```
 
-## 🔧 Použití třídy
+## Použití třídy
 
 ```csharp
 // Vytvoření instance (volá se konstruktor)
@@ -687,14 +687,14 @@ pepa.Vek = 21;                     // změna věku
 pepa.Predstav();                   // "Jsem Pepa, je mi 21 let."
 
 // Volání statické metody na TŘÍDĚ (ne na instanci!)
-int pocet = Student.GetPocetStudentu();  // ✅
-// int pocet = pepa.GetPocetStudentu();  // ❌ funguje, ale není správně
+int pocet = Student.GetPocetStudentu();  //
+// int pocet = pepa.GetPocetStudentu();  //  funguje, ale není správně
 
 // Výpis (použije ToString())
 Console.WriteLine(pepa);           // "Student: Pepa (21 let)"
 ```
 
-## 🔐 Modifikátory přístupu
+## Modifikátory přístupu
 
 | Modifikátor | Viditelnost | Použití |
 |-------------|-------------|---------|
@@ -706,8 +706,8 @@ Console.WriteLine(pepa);           // "Student: Pepa (21 let)"
 ```csharp
 class Ucet
 {
-    private decimal zustatek;     // ❌ zvenku nedostupné
-    public decimal Zustatek       // ✅ bezpečný přístup
+    private decimal zustatek;     //  zvenku nedostupné
+    public decimal Zustatek       //  bezpečný přístup
     {
         get { return zustatek; }
         private set { zustatek = value; }  // setter jen interně
@@ -715,30 +715,30 @@ class Ucet
 }
 ```
 
-## 📐 Typy vlastností (Properties)
+## Typy vlastností (Properties)
 
 ```csharp
 class Ukazka
 {
     // 1. Auto-property (nejčastější)
     public string Jmeno { get; set; }
-    
+
     // 2. S výchozí hodnotou (C# 6+)
     public int Pocet { get; set; } = 0;
-    
+
     // 3. Read-only (jen getter)
     public DateTime Vytvoreno { get; } = DateTime.Now;
-    
+
     // 4. Computed property (vypočítaná)
     public string Pozdrav => $"Ahoj, {Jmeno}!";
-    
+
     // 5. S validací v setteru
     private int vek;
     public int Vek
     {
         get { return vek; }
-        set 
-        { 
+        set
+        {
             if (value >= 0 && value <= 150)
                 vek = value;
             else
@@ -748,7 +748,7 @@ class Ukazka
 }
 ```
 
-## 🏭 Konstruktory
+## Konstruktory
 
 ```csharp
 class Auto
@@ -756,7 +756,7 @@ class Auto
     public string Znacka { get; set; }
     public string Model { get; set; }
     public int Rok { get; set; }
-    
+
     // 1. Bezparametrický konstruktor
     public Auto()
     {
@@ -764,7 +764,7 @@ class Auto
         Model = "Neznámý";
         Rok = 2000;
     }
-    
+
     // 2. Parametrický konstruktor
     public Auto(string znacka, string model)
     {
@@ -772,7 +772,7 @@ class Auto
         Model = model;
         Rok = DateTime.Now.Year;
     }
-    
+
     // 3. Plný konstruktor (volá jiný přes "this")
     public Auto(string znacka, string model, int rok) : this(znacka, model)
     {
@@ -789,22 +789,22 @@ Auto a3 = new Auto("BMW", "M3", 2023);          // 3 parametry
 Auto a4 = new Auto { Znacka = "Audi", Model = "A4", Rok = 2022 };
 ```
 
-## 🔄 Static vs Instance
+## Static vs Instance
 
 ```csharp
 class Kalkulacka
 {
     // STATICKÉ - patří TŘÍDĚ (sdílené)
     public static double PI = 3.14159;
-    
+
     public static int Secti(int a, int b)
     {
         return a + b;
     }
-    
+
     // INSTANČNÍ - patří konkrétnímu OBJEKTU
     public string Nazev { get; set; }
-    
+
     public void Vypis()
     {
         Console.WriteLine($"Kalkulačka: {Nazev}");
@@ -821,7 +821,7 @@ k.Nazev = "Moje kalkulačka";
 k.Vypis();
 ```
 
-## 📝 Vizualizace: Co se děje v paměti
+## Vizualizace: Co se děje v paměti
 
 ```
 STACK                          HEAP
@@ -844,46 +844,46 @@ Student kopie = pepa;   // NEKOPÍRUJE objekt!
                         // Obě proměnné ukazují na STEJNÝ objekt!
 ```
 
-## ⚠️ Časté chyby u tříd
+## Časté chyby u tříd
 
 ```csharp
-// ❌ CHYBA 1: Zapomenutý "new"
+//  CHYBA 1: Zapomenutý "new"
 Student s;
 s.Jmeno = "Test";  // NullReferenceException!
 
-// ✅ SPRÁVNĚ:
+//  SPRÁVNĚ:
 Student s = new Student();
 s.Jmeno = "Test";
 
-// ❌ CHYBA 2: Porovnávání referencí místo hodnot
+//  CHYBA 2: Porovnávání referencí místo hodnot
 Student a = new Student("Pepa", 20);
 Student b = new Student("Pepa", 20);
 if (a == b)  // FALSE! Různé objekty v paměti
 
-// ✅ SPRÁVNĚ: Porovnat vlastnosti nebo override Equals()
+//  SPRÁVNĚ: Porovnat vlastnosti nebo override Equals()
 
-// ❌ CHYBA 3: Změna přes "kopii"
+//  CHYBA 3: Změna přes "kopii"
 Student original = new Student("Pepa", 20);
 Student kopie = original;
 kopie.Jmeno = "Karel";
 // POZOR: original.Jmeno je teď taky "Karel"!
 ```
 
-## 🎯 Pro maturitu: Co říct u tabule
+## Pro maturitu: Co říct u tabule
 
 > "Třída je šablona pro vytváření objektů. Obsahuje:
 > - **Datové položky** (fields) - data objektu
 > - **Vlastnosti** (properties) - bezpečný přístup k datům
 > - **Konstruktor** - inicializace při vytvoření
 > - **Metody** - chování objektu
-> 
+>
 > Třída je **referenční typ** - na stacku je jen odkaz, samotná data jsou na heapu."
 
 ---
 
-# 📌 BOD 9: NULL A NULLABLE TYPY
+# BOD 9: NULL A NULLABLE TYPY
 
-## 🧠 Co je NULL?
+## Co je NULL?
 
 **NULL** = "nic" / "žádná hodnota" / "ukazatel nikam"
 
@@ -892,19 +892,19 @@ string text = null;      // žádný objekt
 string prazdny = "";     // prázdný string (objekt existuje!)
 ```
 
-## 📊 Kdo může být NULL?
+## Kdo může být NULL?
 
 | Typ | Může být NULL? |
 |-----|----------------|
-| Referenční (string, class, array, List) | ✅ ANO |
-| Hodnotové (int, double, bool, struct) | ❌ NE |
-| Nullable hodnotové (int?, double?) | ✅ ANO |
+| Referenční (string, class, array, List) | ANO |
+| Hodnotové (int, double, bool, struct) | NE |
+| Nullable hodnotové (int?, double?) | ANO |
 
-## 💻 NULLABLE TYPY
+## NULLABLE TYPY
 
 ```csharp
 // Přidej ? za typ
-int? cislo = null;                   // ✅ OK
+int? cislo = null;                   //  OK
 int? vek = 18;                       // má hodnotu
 
 // Kontrola hodnoty
@@ -924,7 +924,7 @@ int vysledek = cislo ?? 0;           // pokud null, použij 0
 int vysledek2 = cislo.GetValueOrDefault(99);
 ```
 
-## 🎯 NULL OPERÁTORY
+## NULL OPERÁTORY
 
 ### `??` - Null-coalescing
 ```csharp
@@ -953,21 +953,21 @@ int[] pole = null;
 int? prvni = pole?[0];               // null (ne exception!)
 ```
 
-## ⚠️ Chyťáky - NULL
+## Chyťáky - NULL
 
 ```csharp
 // 1. NullReferenceException
 string text = null;
-text.Length;                         // ❌ NullReferenceException!
+text.Length;                         //  NullReferenceException!
 
 // Řešení:
-text?.Length ?? 0;                   // ✅
+text?.Length ?? 0;                   //
 
 // 2. Nullable → normální typ
 int? nullable = 10;
-int normalni = nullable;             // ❌ CHYBA!
-int normalni = nullable ?? 0;        // ✅
-int normalni = nullable.Value;       // ⚠️ může vyhodit výjimku
+int normalni = nullable;             //  CHYBA!
+int normalni = nullable ?? 0;        //
+int normalni = nullable.Value;       //  může vyhodit výjimku
 
 // 3. IsNullOrEmpty vs IsNullOrWhiteSpace
 string.IsNullOrEmpty(null);          // true
@@ -979,9 +979,9 @@ string.IsNullOrWhiteSpace("   ");    // true
 
 ---
 
-# 📌 BOD 10: HODNOTOVÉ vs REFERENČNÍ TYPY
+# BOD 10: HODNOTOVÉ vs REFERENČNÍ TYPY
 
-## 📊 PŘEHLED
+## PŘEHLED
 
 ### HODNOTOVÉ TYPY (Value Types) → STACK
 ```
@@ -1004,7 +1004,7 @@ interface
 delegate
 ```
 
-## 🎨 VIZUALIZACE V PAMĚTI
+## VIZUALIZACE V PAMĚTI
 
 ```
 STACK (rychlý, malý)          HEAP (pomalejší, velký)
@@ -1021,7 +1021,7 @@ STACK (rychlý, malý)          HEAP (pomalejší, velký)
 └─────────────────┘           └─────────────────────┘
 ```
 
-## 💻 CHOVÁNÍ PŘI KOPÍROVÁNÍ
+## CHOVÁNÍ PŘI KOPÍROVÁNÍ
 
 ```csharp
 // HODNOTOVÝ TYP - kopíruje HODNOTU
@@ -1040,7 +1040,7 @@ y.Jmeno = "Bára";
 Console.WriteLine(x.Jmeno);          // "Bára" (!) změnilo se i x
 ```
 
-## 💻 PŘEDÁVÁNÍ DO FUNKCE
+## PŘEDÁVÁNÍ DO FUNKCE
 
 ```csharp
 // HODNOTOVÝ TYP - předává kopii
@@ -1065,7 +1065,7 @@ ZmenOsobu(adam);
 Console.WriteLine(adam.Jmeno);       // "Změněno" (!)
 ```
 
-## 📋 SROVNÁVACÍ TABULKA
+## SROVNÁVACÍ TABULKA
 
 | Vlastnost | HODNOTOVÝ | REFERENČNÍ |
 |-----------|-----------|------------|
@@ -1079,7 +1079,7 @@ Console.WriteLine(adam.Jmeno);       // "Změněno" (!)
 
 *) String je výjimka - porovnává obsah
 
-## ⚠️ KLÍČOVÉ CHYŤÁKY
+## KLÍČOVÉ CHYŤÁKY
 
 ### 1. Pole JE referenční!
 ```csharp
@@ -1107,7 +1107,7 @@ class Kontejner
 
 ---
 
-# ⚠️ SOUHRN VŠECH CHYŤÁKŮ
+# SOUHRN VŠECH CHYŤÁKŮ
 
 ## Jednoduché typy
 1. **Suffixes:** `L` pro long, `f` pro float, `m` pro decimal
@@ -1135,7 +1135,7 @@ class Kontejner
 
 ---
 
-# 🎯 CO ŘÍCT U TABULE (SHRNUTÍ)
+# CO ŘÍCT U TABULE (SHRNUTÍ)
 
 ## Proměnná
 "Pojmenované místo v paměti s názvem, typem a hodnotou."
@@ -1166,7 +1166,7 @@ class Kontejner
 
 ---
 
-# 🚀 SENIOR TIPY
+# SENIOR TIPY
 
 ```csharp
 // Pattern matching
@@ -1188,4 +1188,4 @@ sb.Append("text");
 
 ---
 
-*Zápisky vytvořeny: 17. prosince 2024*  
+*Zápisky vytvořeny: 17. prosince 2024*

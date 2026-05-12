@@ -1,26 +1,26 @@
-# 📚 Zápisky: Otázka č. 25 - Hledání nejkratší cesty v grafu
+# Zápisky: Otázka č. 25 - Hledání nejkratší cesty v grafu
 
-**Datum:** 2025-02-17  
-**Status:** ✅ KOMPLETNÍ (7/7 bodů)  
+**Datum:** 2025-02-17
+**Status:** KOMPLETNÍ (7/7 bodů)
 **Předmět:** Programování – Maturitní příprava
 
 ---
 
-## ✅ Checklist bodů otázky
+## Checklist bodů otázky
 
 | # | Bod | Status |
 |---|-----|--------|
-| 1 | Definice pojmů (graf, ohodnocený graf, vzdálenost, cesta, nejkratší cesta, záporné hrany) | ✅ |
-| 2 | Motivační příklad z praxe | ✅ |
-| 3 | Příklady úloh vedoucích na hledání nejkratší cesty | ✅ |
-| 4 | Využití BFS pro nejkratší cestu (neohodnocený graf) | ✅ |
-| 5 | Využití DFS (a proč není ideální) | ✅ |
-| 6 | Dijkstrův algoritmus s minimovou haldou | ✅ |
-| 7 | Omezení Dijkstry (záporné hrany, alternativy) | ✅ |
+| 1 | Definice pojmů (graf, ohodnocený graf, vzdálenost, cesta, nejkratší cesta, záporné hrany) | |
+| 2 | Motivační příklad z praxe | |
+| 3 | Příklady úloh vedoucích na hledání nejkratší cesty | |
+| 4 | Využití BFS pro nejkratší cestu (neohodnocený graf) | |
+| 5 | Využití DFS (a proč není ideální) | |
+| 6 | Dijkstrův algoritmus s minimovou haldou | |
+| 7 | Omezení Dijkstry (záporné hrany, alternativy) | |
 
 ---
 
-# 📌 BOD 1: DEFINICE POJMŮ
+# BOD 1: DEFINICE POJMŮ
 
 ## Graf
 Dvojice G = (V, E), kde V = množina vrcholů, E = množina hran.
@@ -57,7 +57,7 @@ Cesta s **minimální celkovou vzdáleností** (minimální součet vah).
 ```
 A→D přes graf výše:
   A → B → D = 5 + 3 = 8
-  A → C → D = 2 + 1 = 3  ✅ (nejkratší!)
+  A → C → D = 2 + 1 = 3   (nejkratší!)
 ```
 
 ## Záporné hrany
@@ -67,7 +67,7 @@ Hrany se zápornou vahou. Mohou vytvořit **záporný cyklus** – cyklus, kde s
 
 ---
 
-# 📌 BOD 2: MOTIVAČNÍ PŘÍKLAD Z PRAXE
+# BOD 2: MOTIVAČNÍ PŘÍKLAD Z PRAXE
 
 ## Navigace (Google Maps, Mapy.cz)
 
@@ -100,7 +100,7 @@ Nejkratší Praha → Olomouc: Praha → Plzeň → Olomouc = 140 km
 
 ---
 
-# 📌 BOD 3: PŘÍKLADY ÚLOH
+# BOD 3: PŘÍKLADY ÚLOH
 
 ## Typ 1: Explicitní graf – města a silnice
 Města, silnice s délkami → **Dijkstra**
@@ -135,7 +135,7 @@ Stavy = vrcholy, přechody = hrany. Příklad: Rubikova kostka.
 
 ---
 
-# 📌 BOD 4: BFS PRO NEJKRATŠÍ CESTU
+# BOD 4: BFS PRO NEJKRATŠÍ CESTU
 
 ## Proč BFS funguje?
 BFS prochází graf **po vrstvách** (vzdálenost 0, 1, 2...). FIFO fronta garantuje, že první nalezení cíle = nejkratší cesta.
@@ -206,7 +206,7 @@ Předchůdce: -1   0    0    1    2    3
 Rekonstrukce od cíle zpět:
   5 → pred[5]=3 → pred[3]=1 → pred[1]=0 → STOP (-1)
 Pozpátku: 5, 3, 1, 0
-Reverse:  0 → 1 → 3 → 5  ✅
+Reverse:  0 → 1 → 3 → 5
 ```
 
 ## Složitost:
@@ -218,7 +218,7 @@ Funguje **POUZE** pro neohodnocený graf (nebo všechny hrany stejná váha). Pr
 
 ---
 
-# 📌 BOD 5: DFS A PROČ NENÍ IDEÁLNÍ
+# BOD 5: DFS A PROČ NENÍ IDEÁLNÍ
 
 ## DFS najde NĚJAKOU cestu, ale ne nutně nejkratší
 
@@ -227,8 +227,8 @@ Funguje **POUZE** pro neohodnocený graf (nebo všechny hrany stejná váha). Pr
     |                 |
     +---D---F---G---H-+
 
-DFS (přes D): A → D → F → G → H → E  (5 hran) ❌
-BFS:          A → B → C → E            (3 hrany) ✅
+DFS (přes D): A → D → F → G → H → E  (5 hran)
+BFS:          A → B → C → E            (3 hrany)
 ```
 
 ## Proč?
@@ -248,7 +248,7 @@ Ano, ale musí prozkoumat **VŠECHNY** cesty (backtracking) → až O(V!) = expo
 
 ---
 
-# 📌 BOD 6: DIJKSTRŮV ALGORITMUS S MINIMOVOU HALDOU
+# BOD 6: DIJKSTRŮV ALGORITMUS S MINIMOVOU HALDOU
 
 ## Co řeší?
 Nejkratší cestu z jednoho startu do všech ostatních ve **váženém grafu s kladnými hranami**.
@@ -379,12 +379,12 @@ PriorityQueue v C# neumí aktualizovat prioritu → přidáme nový záznam, sta
 
 ---
 
-# 📌 BOD 7: OMEZENÍ DIJKSTRY
+# BOD 7: OMEZENÍ DIJKSTRY
 
-## Omezení 1: Záporné hrany ❌
+## Omezení 1: Záporné hrany
 Dijkstra je **greedy** – když zpracuje vrchol, předpokládá finální vzdálenost. Záporné hrany tento předpoklad porušují.
 
-## Omezení 2: Záporné cykly ❌
+## Omezení 2: Záporné cykly
 Dijkstra je nedetekuje – zacyklí se nebo dá špatný výsledek.
 
 ## Co použít místo Dijkstry:
@@ -412,17 +412,17 @@ Proč V-1 opakování? Nejkratší cesta má max V-1 hran.
 ## Shrnutí Dijkstry:
 
 ```
-✅ Kladné váhy
-✅ Orientovaný i neorientovaný graf
-✅ Řídký i hustý graf
-❌ Záporné hrany
-❌ Záporné cykly
-❌ All-pairs (→ Floyd-Warshall)
+ Kladné váhy
+ Orientovaný i neorientovaný graf
+ Řídký i hustý graf
+ Záporné hrany
+ Záporné cykly
+ All-pairs (→ Floyd-Warshall)
 ```
 
 ---
 
-## ⚠️ Na co si dát pozor (Maturitní "chytáky")
+## Na co si dát pozor (Maturitní "chytáky")
 
 1. **BFS vs Dijkstra** – BFS POUZE pro neohodnocený graf! Pro váhy musíš Dijkstru.
 2. **DFS nenajde nejkratší cestu** – jen "nějakou" cestu. Tohle se rádi ptají!
@@ -435,7 +435,7 @@ Proč V-1 opakování? Nejkratší cesta má max V-1 hran.
 
 ---
 
-## 🚀 Senior Tip
+## Senior Tip
 
 - **A\* algoritmus** = Dijkstra + heuristika (odhad vzdálenosti k cíli). Používá se v herním pathfindingu – prohledává méně vrcholů, protože "ví" kterým směrem je cíl.
 - **PriorityQueue<T, TPriority>** je v .NET 6+ – na maturitě zmíň, že starší verze C# to nemají a musíš si haldu napsat nebo použít SortedSet.
@@ -443,7 +443,7 @@ Proč V-1 opakování? Nejkratší cesta má max V-1 hran.
 
 ---
 
-## 🔗 Souvislosti s jinými otázkami
+## Souvislosti s jinými otázkami
 
 - **Otázka 3** (Fronta a zásobník) – BFS = fronta, DFS = zásobník, PriorityQueue pro Dijkstru
 - **Otázka 8** (Reprezentace grafu) – seznam sousedů s vahami pro Dijkstru
@@ -456,7 +456,7 @@ Proč V-1 opakování? Nejkratší cesta má max V-1 hran.
 
 ---
 
-## 📋 Relevantní maturitní úlohy
+## Relevantní maturitní úlohy
 
 | Úloha | Soubor | Téma | Souvisí s body |
 |-------|--------|------|----------------|

@@ -1,10 +1,10 @@
-# 📚 Zápisky: Otázka č. 23 – Hledání minimální kostry grafu
+# Zápisky: Otázka č. 23 – Hledání minimální kostry grafu
 **Datum:** 2025-02-20
-**Status:** ✅ Hotovo
+**Status:** Hotovo
 
 ---
 
-## ✅ Checklist bodů otázky
+## Checklist bodů otázky
 - [x] Bod 1: Definice kostry grafu
 - [x] Bod 2: Definice minimální kostry grafu
 - [x] Bod 3: Motivační příklad
@@ -14,7 +14,7 @@
 
 ---
 
-## 🧠 Klíčové koncepty & Snippety
+## Klíčové koncepty & Snippety
 
 ### Bod 1: Kostra grafu
 
@@ -46,7 +46,7 @@ Minimální kostra = kostra s **nejmenším součtem vah hran**. Existuje jen pr
 Pokud jsou všechny váhy unikátní → MST je **jednoznačná**.
 
 ```
-Kostra 1: AD(2), CD(1), AB(3) → součet = 6  ← MST ✅
+Kostra 1: AD(2), CD(1), AB(3) → součet = 6  ← MST
 Kostra 2: AD(2), CD(1), BD(5) → součet = 8
 Kostra 3: AB(3), AC(4), CD(1) → součet = 8
 ```
@@ -85,13 +85,13 @@ Myšlenka: Seber všechny hrany, **seřaď od nejlevnější**, přidávej jednu
 KROK 0: Seřazené hrany: CD(1), AD(2), AB(3), AC(4), BD(5)
          Komponenty: {A} {B} {C} {D}
 
-KROK 1: CD(1) → C,D nejsou propojené → PŘIDEJ ✅
+KROK 1: CD(1) → C,D nejsou propojené → PŘIDEJ
          Komponenty: {A} {B} {C,D}
 
-KROK 2: AD(2) → A,D nejsou propojené → PŘIDEJ ✅
+KROK 2: AD(2) → A,D nejsou propojené → PŘIDEJ
          Komponenty: {B} {A,C,D}
 
-KROK 3: AB(3) → A,B nejsou propojené → PŘIDEJ ✅
+KROK 3: AB(3) → A,B nejsou propojené → PŘIDEJ
          Komponenty: {A,B,C,D}  ← vše propojeno, HOTOVO!
 
 MST: CD(1) + AD(2) + AB(3) = 6
@@ -338,7 +338,7 @@ static List<(int, int, int)> JarnikSenior(
 
 ---
 
-## ⚠️ Na co si dát pozor (Maturitní "chytáky")
+## Na co si dát pozor (Maturitní "chytáky")
 
 - **Kostra existuje jen pro souvislý graf** – nesouvislý graf nemá kostru
 - **V-1 hran** – kostra s V vrcholy má VŽDY přesně V-1 hran
@@ -349,7 +349,7 @@ static List<(int, int, int)> JarnikSenior(
 
 ---
 
-## 🚀 Senior Tip
+## Senior Tip
 
 V praxi se Kruskal hodí, pokud máš hrany už načtené v seznamu (edge list). Jarník je lepší, pokud máš graf jako seznamy sousedů (adjacency list) a graf je hustý. Obě varianty se dají zrychlit na téměř lineární čas s pokročilými datovými strukturami (Fibonacci heap pro Jarníka → O(E + V log V)).
 
@@ -357,7 +357,7 @@ Zmínka o **Borůvkově algoritmu**: Pracuje paralelně – v každém kroku ka�
 
 ---
 
-## 🔗 Souvislosti s jinými otázkami
+## Souvislosti s jinými otázkami
 
 - **Otázka 8** (Reprezentace grafu) – graf potřebuješ reprezentovat, aby algoritmy fungovaly
 - **Otázka 9** (Stromy) – kostra JE strom, halda se používá v optimalizovaném Jarníkovi

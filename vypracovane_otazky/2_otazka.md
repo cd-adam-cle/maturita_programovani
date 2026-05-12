@@ -1,11 +1,11 @@
-# 📚 Zápisky: Otázka č. 2 - Spojové datové struktury. Pole.
+# Zápisky: Otázka č. 2 - Spojové datové struktury. Pole.
 
-**Datum:** 2026-01-05  
-**Status:** ✅ Hotovo
+**Datum:** 2026-01-05
+**Status:** Hotovo
 
 ---
 
-## ✅ Checklist bodů otázky
+## Checklist bodů otázky
 
 - [x] **Bod 1:** Spojový seznam - základy (co to je, paměť, typy)
 - [x] **Bod 2:** Spojový seznam - operace (přidání, odebrání, průnik, sjednocení, max + časová složitost)
@@ -14,13 +14,13 @@
 
 ---
 
-## 🧠 Klíčové koncepty & Implementace
+## Klíčové koncepty & Implementace
 
 ---
 
 ## BOD 1: Spojový seznam - základy
 
-### 📖 Co to je a k čemu to slouží?
+### Co to je a k čemu to slouží?
 
 **Spojový seznam** (linked list) je **dynamická datová struktura**, která se skládá z tzv. **uzlů** (nodes). Každý uzel obsahuje dvě hlavní části:
 
@@ -35,7 +35,7 @@ Představ si to jako **řetěz**, kde každé "oko" řetězu ukazuje na další 
 
 ---
 
-### 💾 Jak je spojový seznam uložen v paměti?
+### Jak je spojový seznam uložen v paměti?
 
 Na rozdíl od pole, kde jsou všechna data uložena **vedle sebe** v jednom souvislém bloku paměti, spojový seznam má své uzly **roztroušené** po různých místech v paměti. Každý uzel "ví", kde najít další uzel díky odkazu.
 
@@ -75,9 +75,9 @@ Na rozdíl od pole, kde jsou všechna data uložena **vedle sebe** v jednom souv
 
 ---
 
-### 🔗 Typy spojových seznamů
+### Typy spojových seznamů
 
-#### 1️⃣ Jednosměrný spojový seznam (Singly Linked List)
+#### 1⃣ Jednosměrný spojový seznam (Singly Linked List)
 
 Každý uzel má pouze **jeden odkaz** - ukazuje na **následující** uzel. Můžeš procházet jen jedním směrem - od začátku ke konci.
 
@@ -99,7 +99,7 @@ HEAD → [5|•]──>[3|•]──>[8|•]──>[1|NULL]
 
 ---
 
-#### 2️⃣ Obousměrný spojový seznam (Doubly Linked List)
+#### 2⃣ Obousměrný spojový seznam (Doubly Linked List)
 
 Každý uzel má **dva odkazy** - ukazuje na **předchozí** i **následující** uzel. Můžeš se pohybovat oběma směry.
 
@@ -107,7 +107,7 @@ Každý uzel má **dva odkazy** - ukazuje na **předchozí** i **následující*
 NULL←─[•|5|•]<──>[•|3|•]<──>[•|8|•]──>NULL
        ↑    ↑       ↑    ↑       ↑    ↑
      Prev Next    Prev Next    Prev Next
-     
+
 • Každý uzel zná svého souseda zprava i zleva
 • Lze procházet oběma směry
 ```
@@ -122,7 +122,7 @@ NULL←─[•|5|•]<──>[•|3|•]<──>[•|8|•]──>NULL
 
 ---
 
-#### 3️⃣ Kruhový spojový seznam (Circular Linked List)
+#### 3⃣ Kruhový spojový seznam (Circular Linked List)
 
 Poslední uzel neukazuje na NULL, ale zpět na **první uzel**. Seznam tvoří "kruh".
 
@@ -130,7 +130,7 @@ Poslední uzel neukazuje na NULL, ale zpět na **první uzel**. Seznam tvoří "
      ┌──────────────────────┐
      ↓                      │
   [5|•]──>[3|•]──>[8|•]─────┘
-  
+
 • Žádný konec (NULL)
 • Lze procházet donekonečna
 ```
@@ -142,7 +142,7 @@ Poslední uzel neukazuje na NULL, ale zpět na **první uzel**. Seznam tvoří "
 
 ---
 
-### 💻 Implementace v C#
+### Implementace v C#
 
 #### Verze A: Maturitní (vlastní implementace)
 
@@ -154,7 +154,7 @@ public class Node
 {
     public int Data;       // Hodnota uložená v uzlu
     public Node Next;      // Odkaz na další uzel (nebo null)
-    
+
     // Konstruktor - vytvoří nový uzel s danou hodnotou
     public Node(int data)
     {
@@ -249,21 +249,21 @@ foreach (int value in list)
 4. **Type-safe** - kompilátor hlídá typy
 
 ```csharp
-// ✅ LinkedList<int> - pouze čísla
+//  LinkedList<int> - pouze čísla
 LinkedList<int> cisla = new LinkedList<int>();
 cisla.AddLast(5);
-// cisla.AddLast("text");  // ❌ Chyba při kompilaci!
+// cisla.AddLast("text");  //  Chyba při kompilaci!
 
 // vs
 
-// ❌ Vlastní Node bez generik
+//  Vlastní Node bez generik
 Node node = new Node(5);
-node.Next = new Node("text");  // ✅ Projde, ale chyba za běhu!
+node.Next = new Node("text");  //  Projde, ale chyba za běhu!
 ```
 
 ---
 
-### ⏱️ Časová složitost základních operací
+### ⏱ Časová složitost základních operací
 
 | Operace | Jednosměrný | Obousměrný (LinkedList<T>) | Vysvětlení |
 |---------|-------------|---------------------------|------------|
@@ -272,7 +272,7 @@ node.Next = new Node("text");  // ✅ Projde, ale chyba za běhu!
 | **Přidání na konec** | O(n) | O(1) | Jednosměrný musí projít, obousměrný má tail |
 | **Hledání prvku** | O(n) | O(n) | Musíš projít od začátku |
 
-**Důležité pro maturitu:** 
+**Důležité pro maturitu:**
 - Spojový seznam **nemá** přímý přístup jako pole!
 - `list[5]` neexistuje u LinkedList<T> - nelze přistoupit přes index
 - Vždy musíš procházet od začátku nebo konce
@@ -281,7 +281,7 @@ node.Next = new Node("text");  // ✅ Projde, ale chyba za běhu!
 
 ## BOD 2: Spojový seznam - operace
 
-### ➕ Operace: Přidání prvku
+### Operace: Přidání prvku
 
 #### 1. Přidání na začátek (AddFirst)
 
@@ -295,19 +295,19 @@ Toto je **nejrychlejší operace** u spojového seznamu - O(1).
 **Vizualizace:**
 
 ```
-PŘED:  
+PŘED:
 HEAD → [5|•]──>[3|•]──>[8|NULL]
 
 Chci přidat 9 na začátek:
 
 Krok 1: Vytvoř nový uzel
         [9|null]
-        
+
 Krok 2: Nech ho ukazovat na současný head
         [9|•]──>[5|•]──>[3|•]──>[8|NULL]
                  ↑
               starý head
-              
+
 Krok 3: Nový uzel je teď head
 HEAD → [9|•]──>[5|•]──>[3|•]──>[8|NULL]
 ```
@@ -320,11 +320,11 @@ public void AddFirst(int value)
 {
     // 1. Vytvoř nový uzel s danou hodnotou
     Node newNode = new Node(value);
-    
+
     // 2. Nový uzel ukazuje na současnou hlavu
     //    (i když je head null, funguje to - prázdný seznam)
     newNode.Next = head;
-    
+
     // 3. Nový uzel se stává hlavou
     head = newNode;
 }
@@ -366,7 +366,7 @@ list.AddFirst(9);  // list: 9 <-> 5 <-> 3 <-> 8
 **Vizualizace pro jednosměrný:**
 
 ```
-PŘED:  
+PŘED:
 HEAD → [5|•]──>[3|•]──>[8|NULL]
 
 Chci přidat 7 na konec:
@@ -375,14 +375,14 @@ Krok 1: Projdi celý seznam, dokud nenajdeš NULL
         current = head
         while (current.Next != null):
             current = current.Next
-        
+
         HEAD → [5|•]──>[3|•]──>[8|NULL]
                                 ↑
                              current
-                             
+
 Krok 2: Vytvoř nový uzel
         [7|NULL]
-        
+
 Krok 3: Poslední uzel ukazuje na nový
         HEAD → [5|•]──>[3|•]──>[8|•]──>[7|NULL]
 ```
@@ -394,14 +394,14 @@ public void AddLast(int value)
 {
     // 1. Vytvoř nový uzel
     Node newNode = new Node(value);
-    
+
     // 2. SPECIÁLNÍ PŘÍPAD: Seznam je prázdný
     if (head == null)
     {
         head = newNode;  // Nový uzel je zároveň první i poslední
         return;
     }
-    
+
     // 3. Projdi seznam až na konec
     Node current = head;
     while (current.Next != null)  // Dokud není poslední
@@ -409,7 +409,7 @@ public void AddLast(int value)
         current = current.Next;  // Přeskoč na další
     }
     // Teď je current.Next == null, jsme na konci
-    
+
     // 4. Poslední uzel ukazuje na nový
     current.Next = newNode;
 }
@@ -447,12 +447,12 @@ Chci přidat 99 ZA uzel s hodnotou 3:
 
 Krok 1: Najdi uzel s hodnotou 3 - O(n)
         node = list.Find(3);
-        
+
 Krok 2: Vytvoř nový uzel [99|•]
-        
+
 Krok 3: Nový ukazuje tam, kam ukazoval nalezený
         [99|•]──>[8|NULL]
-        
+
 Krok 4: Nalezený ukazuje na nový
 HEAD → [5|•]──>[3|•]──>[99|•]──>[8|NULL]
 ```
@@ -489,7 +489,7 @@ if (node != null)
 
 ---
 
-### ➖ Operace: Odebrání prvku
+### Operace: Odebrání prvku
 
 #### 1. Odebrání ze začátku (RemoveFirst)
 
@@ -498,15 +498,15 @@ Nejjednodušší operace - jen změníme head.
 **Vizualizace:**
 
 ```
-PŘED:  
+PŘED:
 HEAD → [9|•]──>[5|•]──>[3|•]──>[8|NULL]
 
 Chci odebrat první (9):
 
 Krok 1: Přesuň head na druhý uzel
-        
+
         HEAD ─────────>[5|•]──>[3|•]──>[8|NULL]
-        
+
         [9|•] (nyní nedostupný, garbage collector ho smaže)
 
 PO:
@@ -532,7 +532,7 @@ list.RemoveFirst();  // Odebere 9
 
 #### 2. Odebrání z konce (RemoveLast)
 
-**Jednosměrný:** Musíš najít předposlední uzel → O(n)  
+**Jednosměrný:** Musíš najít předposlední uzel → O(n)
 **Obousměrný (LinkedList<T>):** Přímý přístup → O(1)
 
 **Kód - Senior:**
@@ -551,7 +551,7 @@ Najde **první výskyt** dané hodnoty a odebere ho.
 **Vizualizace:**
 
 ```
-PŘED:  
+PŘED:
 HEAD → [5|•]──>[3|•]──>[8|•]──>[3|NULL]
 
 Chci odebrat hodnotu 3:
@@ -563,7 +563,7 @@ Krok 1: Najdi první uzel s hodnotou 3
 
 Krok 2: Předchozí uzel přesměruj na následující
         HEAD → [5|•]─────────>[8|•]──>[3|NULL]
-        
+
                [3|•] (nedostupný, bude smazán)
 
 PO:
@@ -580,7 +580,7 @@ list.Remove(3);  // Odebere první výskyt hodnoty 3
 
 ---
 
-### 🔍 Operace: Hledání maxima
+### Operace: Hledání maxima
 
 Musíme projít celý seznam a sledovat největší nalezenou hodnotu.
 
@@ -591,19 +591,19 @@ Seznam: 4 <-> 8 <-> 3 <-> 8 <-> 6
 
 Krok 1: max = první prvek = 4
         current = 4
-        
+
 Krok 2: current = 8
         8 > 4? Ano → max = 8
-        
+
 Krok 3: current = 3
         3 > 8? Ne → max zůstává 8
-        
+
 Krok 4: current = 8
         8 > 8? Ne → max zůstává 8
-        
+
 Krok 5: current = 6
         6 > 8? Ne → max zůstává 8
-        
+
 Výsledek: max = 8
 ```
 
@@ -615,10 +615,10 @@ public int FindMax(LinkedList<int> list)
     // 1. Kontrola prázdného seznamu
     if (list.Count == 0)
         throw new Exception("Seznam je prázdný!");
-    
+
     // 2. Začni s nejmenší možnou hodnotou
     int max = int.MinValue;  // -2,147,483,648
-    
+
     // 3. Projdi všechny prvky
     foreach (int value in list)
     {
@@ -628,7 +628,7 @@ public int FindMax(LinkedList<int> list)
             max = value;  // Aktualizuj max
         }
     }
-    
+
     // 4. Vrať nalezené maximum
     return max;
 }
@@ -652,7 +652,7 @@ public int FindMax(LinkedList<int> list)
 
 ---
 
-### 🔗 Operace: Průnik seznamů
+### Operace: Průnik seznamů
 
 **Průnik** = prvky, které jsou **v obou seznamech**.
 
@@ -696,7 +696,7 @@ public LinkedList<int> Prunik(LinkedList<int> list1, LinkedList<int> list2)
 {
     // 1. Vytvoř prázdný výsledný seznam
     LinkedList<int> result = new LinkedList<int>();
-    
+
     // 2. Pro každý prvek v list1
     foreach (int value in list1)
     {
@@ -712,7 +712,7 @@ public LinkedList<int> Prunik(LinkedList<int> list1, LinkedList<int> list2)
             }
         }
     }
-    
+
     // 5. Vrať výsledný seznam
     return result;
 }
@@ -756,7 +756,7 @@ LINQ s HashSet (O(n+m)):
 
 ---
 
-### 🔀 Operace: Sjednocení seznamů
+### Operace: Sjednocení seznamů
 
 **Sjednocení** = všechny **unikátní prvky** z obou seznamů.
 
@@ -796,7 +796,7 @@ public LinkedList<int> Sjednoceni(LinkedList<int> list1, LinkedList<int> list2)
 {
     // 1. Vytvoř prázdný výsledný seznam
     LinkedList<int> result = new LinkedList<int>();
-    
+
     // 2. Přidej všechny prvky z list1 (bez duplicit)
     foreach (int value in list1)
     {
@@ -806,7 +806,7 @@ public LinkedList<int> Sjednoceni(LinkedList<int> list1, LinkedList<int> list2)
             result.AddLast(value);
         }
     }
-    
+
     // 3. Přidej prvky z list2, které tam ještě nejsou
     foreach (int value in list2)
     {
@@ -816,7 +816,7 @@ public LinkedList<int> Sjednoceni(LinkedList<int> list1, LinkedList<int> list2)
             result.AddLast(value);
         }
     }
-    
+
     // 4. Vrať výsledný seznam
     return result;
 }
@@ -844,7 +844,7 @@ public LinkedList<int> Sjednoceni(LinkedList<int> list1, LinkedList<int> list2)
 
 ---
 
-### 📊 Shrnutí časových složitostí operací
+### Shrnutí časových složitostí operací
 
 | Operace | LinkedList<T> (C#) | Vlastní jednosměrný | Vysvětlení |
 |---------|-------------------|-------------------|------------|
@@ -869,21 +869,21 @@ public LinkedList<int> Sjednoceni(LinkedList<int> list1, LinkedList<int> list2)
 
 ## BOD 3: Pole (Arrays) - základy
 
-### 📖 Co to je a k čemu to slouží?
+### Co to je a k čemu to slouží?
 
 **Pole** (array) je **statická datová struktura** s **pevnou velikostí**, kde jsou všechny prvky uloženy **vedle sebe** v jednom souvislém bloku paměti.
 
 **Hlavní vlastnosti:**
-- 🔢 **Indexované** - každý prvek má své číslo (index) od 0
-- ⚡ **Rychlý přístup** - můžeš "skočit" přímo na prvek `array[42]` v konstantním čase O(1)
-- 📦 **Fixní velikost** - po vytvoření nelze měnit velikost
-- 🧱 **Homogenní** - všechny prvky mají stejný typ
+- **Indexované** - každý prvek má své číslo (index) od 0
+- **Rychlý přístup** - můžeš "skočit" přímo na prvek `array[42]` v konstantním čase O(1)
+- **Fixní velikost** - po vytvoření nelze měnit velikost
+- **Homogenní** - všechny prvky mají stejný typ
 
 **Analogie:** Pole je jako řada **poštovních schránek** na ulici. Každá má své číslo a můžeš rovnou otevřít schránku číslo 5, aniž bys musel projít 1, 2, 3, 4.
 
 ---
 
-### 💾 Jak je pole uloženo v paměti?
+### Jak je pole uloženo v paměti?
 
 Pole je uloženo jako **jeden souvislý blok** v paměti. To znamená, že všechna data jsou "vedle sebe" a počítač může rychle vypočítat, kde se nachází jakýkoliv prvek.
 
@@ -897,8 +897,8 @@ Pole je uloženo jako **jeden souvislý blok** v paměti. To znamená, že všec
 │            ↑    ↑                        │
 │         začátek  +4 byty (int má 4 B)   │
 │                                          │
-│  ✅ Souvislý blok paměti                 │
-│  ✅ Přímý výpočet adresy                 │
+│   Souvislý blok paměti                 │
+│   Přímý výpočet adresy                 │
 │                                          │
 │  Výpočet adresy prvku:                   │
 │  adresa[i] = začátek + (i × velikost)    │
@@ -928,12 +928,12 @@ LINKED LIST:
 
 ---
 
-### 💻 Vytvoření a inicializace pole
+### Vytvoření a inicializace pole
 
 #### Základní způsoby v C#:
 
 ```csharp
-// ✅ ZPŮSOB 1: Deklarace s velikostí
+//  ZPŮSOB 1: Deklarace s velikostí
 // Vytvoří pole pro 5 čísel, všechny inicializované na 0
 int[] cisla = new int[5];
 
@@ -950,7 +950,7 @@ cisla[4] = 50;
 ```
 
 ```csharp
-// ✅ ZPŮSOB 2: Inicializace přímo s hodnotami
+//  ZPŮSOB 2: Inicializace přímo s hodnotami
 int[] cisla = { 10, 20, 30, 40, 50 };
 
 // Kompilátor automaticky spočítá velikost (5)
@@ -958,21 +958,21 @@ int[] cisla = { 10, 20, 30, 40, 50 };
 ```
 
 ```csharp
-// ✅ ZPŮSOB 3: Explicitní s new
+//  ZPŮSOB 3: Explicitní s new
 int[] cisla = new int[] { 10, 20, 30, 40, 50 };
 
 // Stejné jako způsob 2, jen delší
 ```
 
 ```csharp
-// 💡 ZPŮSOB 4: Collection expression (C# 12+)
+//  ZPŮSOB 4: Collection expression (C# 12+)
 int[] cisla = [10, 20, 30, 40, 50];
 
 // Nejmodernější a nejkratší syntaxe
 ```
 
 ```csharp
-// 💡 ZPŮSOB 5: Typové odvození
+//  ZPŮSOB 5: Typové odvození
 var cisla = new[] { 10, 20, 30, 40, 50 };
 
 // Kompilátor odvodí typ z hodnot
@@ -1005,9 +1005,9 @@ int[,] matice2 = {
 
 ---
 
-### 📤 Předávání pole v parametru funkce
+### Předávání pole v parametru funkce
 
-**⚠️ KRITICKY DŮLEŽITÉ:** V C# se pole předává **referencí**, nikoliv hodnotou! To znamená, že funkce pracuje s **originálním polem**, ne s kopií.
+** KRITICKY DŮLEŽITÉ:** V C# se pole předává **referencí**, nikoliv hodnotou! To znamená, že funkce pracuje s **originálním polem**, ne s kopií.
 
 **Co to znamená v praxi:**
 - Změny uvnitř funkce **ovlivní původní pole**
@@ -1020,20 +1020,20 @@ int[,] matice2 = {
 // Funkce, která mění pole
 static void ZmenPrvniPrvek(int[] pole)
 {
-    pole[0] = 999;  // ⚠️ Změní původní pole!
+    pole[0] = 999;  //  Změní původní pole!
 }
 
 static void Main()
 {
     // Vytvoř pole
     int[] cisla = { 1, 2, 3, 4, 5 };
-    
+
     Console.WriteLine("PŘED voláním:");
     Console.WriteLine(cisla[0]);  // Vypíše: 1
-    
+
     // Zavolej funkci
     ZmenPrvniPrvek(cisla);
-    
+
     Console.WriteLine("PO volání:");
     Console.WriteLine(cisla[0]);  // Vypíše: 999 ← Změnilo se!
 }
@@ -1084,25 +1084,25 @@ static void Main()
 Pole je **referenční typ** (jako třídy, na rozdíl od int, double, které jsou hodnotové typy). Když předáš pole do funkce, předáváš **adresu v paměti**, ne kopii dat.
 
 **Výhody:**
-- ⚡ Rychlé - nekopíruje se celé pole
-- 💾 Úsporné - neplýtvá pamětí
+- Rychlé - nekopíruje se celé pole
+- Úsporné - neplýtvá pamětí
 
 **Nevýhody:**
-- ⚠️ Nečekané změny - musíš si dát pozor
-- 🐛 Těžší debugging - změna může přijít odkudkoliv
+- Nečekané změny - musíš si dát pozor
+- Těžší debugging - změna může přijít odkudkoliv
 
 **Pokud chceš původní pole ochránit, musíš ho zkopírovat!** (viz další sekce)
 
 ---
 
-### 📋 Kopírování pole
+### Kopírování pole
 
 Pokud nechceš, aby funkce měnila originál, musíš vytvořit **kopii** pole.
 
 #### Proč je to důležité:
 
 ```csharp
-// ❌ ŠPATNĚ: Pouze přiřazení reference
+//  ŠPATNĚ: Pouze přiřazení reference
 int[] original = { 1, 2, 3, 4, 5 };
 int[] kopie = original;  // Toto NENÍ kopie!
 
@@ -1133,7 +1133,7 @@ Console.WriteLine(kopie[0]);     // Vypíše 999
 
 #### Způsoby kopírování:
 
-**1️⃣ Ruční kopírování (for cyklus):**
+**1⃣ Ruční kopírování (for cyklus):**
 
 Nejzákladnější způsob - pochopíš, jak to funguje.
 
@@ -1159,7 +1159,7 @@ Console.WriteLine(kopie[0]);     // Vypíše: 999
 
 ---
 
-**2️⃣ Array.Copy (efektivnější):**
+**2⃣ Array.Copy (efektivnější):**
 
 Vestavěná metoda - rychlejší než for cyklus.
 
@@ -1184,7 +1184,7 @@ Array.Copy(original, kopie, original.Length);
 
 ---
 
-**3️⃣ Clone() metoda:**
+**3⃣ Clone() metoda:**
 
 Vytvoří mělkou kopii pole.
 
@@ -1201,7 +1201,7 @@ if (original.Clone() is int[] kopie2)
 }
 ```
 
-**⚠️ Pozor:** Clone dělá **mělkou kopii** (shallow copy). Pro pole objektů to znamená:
+** Pozor:** Clone dělá **mělkou kopii** (shallow copy). Pro pole objektů to znamená:
 - Zkopírují se reference, ne samotné objekty
 - Změna objektu ovlivní obě pole
 
@@ -1221,7 +1221,7 @@ Console.WriteLine(original[0].Jmeno);  // Vypíše: "Pavel" (změnilo se!)
 
 ---
 
-**4️⃣ ToArray() s LINQ:**
+**4⃣ ToArray() s LINQ:**
 
 Moderní způsob pro jednoduchost.
 
@@ -1236,7 +1236,7 @@ int[] kopie = original.ToArray();
 
 ---
 
-**5️⃣ Spread operator (C# 12+):**
+**5⃣ Spread operator (C# 12+):**
 
 Nejmodernější a nejelegantnější.
 
@@ -1262,7 +1262,7 @@ int[] kopie = [..original];
 │  Heap:          ↓                          │
 │    [1][2][3][4][5]                         │
 │                                            │
-│  změna kopie = změna originalu ❌          │
+│  změna kopie = změna originalu           │
 ├────────────────────────────────────────────┤
 │  KOPIE (Clone/ToArray/...):                │
 │                                            │
@@ -1272,17 +1272,17 @@ int[] kopie = [..original];
 │                                            │
 │  Heap: Dvě samostatná pole                 │
 │                                            │
-│  změna kopie ≠ originál ✅                 │
+│  změna kopie ≠ originál                  │
 └────────────────────────────────────────────┘
 ```
 
 ---
 
-### 🖨️ Výpis prvků pole
+### Výpis prvků pole
 
 Existuje několik způsobů, jak projít a vypsat pole:
 
-#### 1️⃣ Klasický for cyklus (s indexem):
+#### 1⃣ Klasický for cyklus (s indexem):
 
 Použij, když potřebuješ znát **index** prvku.
 
@@ -1312,7 +1312,7 @@ for (int i = 0; i < cisla.Length; i++)
 
 ---
 
-#### 2️⃣ Foreach cyklus (bez indexu):
+#### 2⃣ Foreach cyklus (bez indexu):
 
 Použij, když index **nepotřebuješ** - jednodušší a čitelnější.
 
@@ -1344,7 +1344,7 @@ foreach (int cislo in cisla)
 
 ---
 
-#### 3️⃣ String.Join (pro debugging):
+#### 3⃣ String.Join (pro debugging):
 
 Vypíše celé pole na **jeden řádek**.
 
@@ -1366,7 +1366,7 @@ Console.WriteLine(vysledek);
 
 ---
 
-#### 4️⃣ Array.ForEach (funkcionální styl):
+#### 4⃣ Array.ForEach (funkcionální styl):
 
 LINQ přístup - kratší pro jednoduché operace.
 
@@ -1383,7 +1383,7 @@ Array.ForEach(cisla, c => Console.WriteLine(c));
 
 ---
 
-#### 5️⃣ Foreach s indexem (C# 8+):
+#### 5⃣ Foreach s indexem (C# 8+):
 
 Moderní způsob, pokud chceš **obojí** - hodnotu i index.
 
@@ -1409,7 +1409,7 @@ foreach (var (cislo, index) in cisla.Select((value, idx) => (value, idx)))
 
 ---
 
-### ⏱️ Časové složitosti operací s polem
+### ⏱ Časové složitosti operací s polem
 
 | Operace | Časová složitost | Vysvětlení |
 |---------|------------------|------------|
@@ -1443,18 +1443,18 @@ Nezáleží, jestli pole má 10 nebo 10 000 000 prvků.
 
 ---
 
-### ⚠️ Časté chyby při práci s polem
+### Časté chyby při práci s polem
 
 #### 1. IndexOutOfRangeException
 
 Nejčastější chyba - přístup mimo meze pole.
 
 ```csharp
-// ❌ ŠPATNĚ:
+//  ŠPATNĚ:
 int[] cisla = new int[5];  // Indexy 0-4
 cisla[5] = 10;  // Chyba! Index 5 neexistuje
 
-// ✅ SPRÁVNĚ:
+//  SPRÁVNĚ:
 cisla[4] = 10;  // Poslední prvek má index Length-1
 ```
 
@@ -1465,13 +1465,13 @@ cisla[4] = 10;  // Poslední prvek má index Length-1
 #### 2. Přepsání reference místo kopie
 
 ```csharp
-// ❌ ŠPATNĚ:
+//  ŠPATNĚ:
 int[] original = { 1, 2, 3 };
 int[] kopie = original;  // Jen reference!
 kopie[0] = 999;
 Console.WriteLine(original[0]);  // Vypíše 999 (oba ukazují na stejná data)
 
-// ✅ SPRÁVNĚ:
+//  SPRÁVNĚ:
 int[] kopie = (int[])original.Clone();
 kopie[0] = 999;
 Console.WriteLine(original[0]);  // Vypíše 1 (nezměnilo se)
@@ -1482,14 +1482,14 @@ Console.WriteLine(original[0]);  // Vypíše 1 (nezměnilo se)
 #### 3. Off-by-one chyba v cyklu
 
 ```csharp
-// ❌ ŠPATNĚ:
+//  ŠPATNĚ:
 int[] cisla = { 10, 20, 30, 40, 50 };
 for (int i = 0; i <= cisla.Length; i++)  // <= je chyba!
 {
     Console.WriteLine(cisla[i]);  // Při i=5 → IndexOutOfRange
 }
 
-// ✅ SPRÁVNĚ:
+//  SPRÁVNĚ:
 for (int i = 0; i < cisla.Length; i++)  // < je správně
 {
     Console.WriteLine(cisla[i]);
@@ -1501,11 +1501,11 @@ for (int i = 0; i < cisla.Length; i++)  // < je správně
 #### 4. Zapomenutá inicializace
 
 ```csharp
-// ❌ ŠPATNĚ:
+//  ŠPATNĚ:
 int[] cisla;
 cisla[0] = 10;  // Chyba! Pole nebylo vytvořeno
 
-// ✅ SPRÁVNĚ:
+//  SPRÁVNĚ:
 int[] cisla = new int[5];  // Nebo { 0, 0, 0, 0, 0 }
 cisla[0] = 10;
 ```
@@ -1515,11 +1515,11 @@ cisla[0] = 10;
 #### 5. NullReferenceException
 
 ```csharp
-// ❌ ŠPATNĚ:
+//  ŠPATNĚ:
 int[] cisla = null;
 Console.WriteLine(cisla.Length);  // Chyba! Nelze číst z null
 
-// ✅ SPRÁVNĚ:
+//  SPRÁVNĚ:
 int[] cisla = null;
 if (cisla != null)
 {
@@ -1532,7 +1532,7 @@ Console.WriteLine(cisla?.Length ?? 0);  // Vypíše 0 pokud null
 
 ---
 
-### 💡 List<T> jako dynamické pole
+### List<T> jako dynamické pole
 
 V praxi často používáme `List<T>` místo klasického pole, protože nabízí **dynamickou velikost**.
 
@@ -1579,45 +1579,45 @@ Console.WriteLine(cisla.Capacity);  // 8 - alokovaná kapacita
 ```
 
 **Výhody List<T> oproti poli:**
-- ✅ Dynamická velikost
-- ✅ Stále O(1) přístup
-- ✅ Užitečné metody: `Add`, `Remove`, `Insert`, `Sort`, ...
-- ✅ LINQ podpora
+- Dynamická velikost
+- Stále O(1) přístup
+- Užitečné metody: `Add`, `Remove`, `Insert`, `Sort`, ...
+- LINQ podpora
 
 **Nevýhody:**
-- ❌ Trochu pomalejší než čisté pole (overhead)
-- ❌ Vkládání uprostřed stále O(n)
+- Trochu pomalejší než čisté pole (overhead)
+- Vkládání uprostřed stále O(n)
 
 ---
 
 ## BOD 4: Srovnání pole vs spojový seznam
 
-### 📊 Kompletní srovnávací tabulka
+### Kompletní srovnávací tabulka
 
 | Kritérium | **Pole (Array)** | **Spojový seznam (LinkedList)** |
 |-----------|------------------|----------------------------------|
 | **Struktura v paměti** | Souvislý blok | Roztroušené uzly |
-| **Velikost** | ❌ Fixní (nebo drahé zvětšování u List<T>) | ✅ Dynamická |
-| **Přístup k prvku `[i]`** | ✅ O(1) přímý přístup | ❌ O(n) musíš projít uzly |
-| **Vložení na začátek** | ❌ O(n) posun všech prvků | ✅ O(1) změna odkazů |
-| **Vložení na konec** | ✅ O(1) pokud je místo | ✅ O(1) obousměrný / ❌ O(n) jednosměrný |
-| **Vložení uprostřed** | ❌ O(n) posun prvků | ❌ O(n) musíš najít místo + O(1) vložení |
-| **Mazání ze začátku** | ❌ O(n) posun všech | ✅ O(1) změna odkazů |
-| **Mazání z konce** | ✅ O(1) jen sníž count | ✅ O(1) obousměrný / ❌ O(n) jednosměrný |
-| **Mazání uprostřed** | ❌ O(n) posun prvků | ❌ O(n) musíš najít + O(1) smazání |
-| **Hledání prvku** | ❌ O(n) lineární / O(log n) setříděné | ❌ O(n) lineární |
-| **Cache výkon** | ✅ Výborný (CPU prefetch) | ❌ Horší (random access) |
-| **Paměťová režie** | ✅ Pouze data | ❌ Data + odkazy (16B/uzel navíc) |
-| **Iterace (foreach)** | ✅ Velmi rychlá | ❌ Pomalejší (skákání po paměti) |
+| **Velikost** | Fixní (nebo drahé zvětšování u List<T>) | Dynamická |
+| **Přístup k prvku `[i]`** | O(1) přímý přístup | O(n) musíš projít uzly |
+| **Vložení na začátek** | O(n) posun všech prvků | O(1) změna odkazů |
+| **Vložení na konec** | O(1) pokud je místo | O(1) obousměrný /  O(n) jednosměrný |
+| **Vložení uprostřed** | O(n) posun prvků | O(n) musíš najít místo + O(1) vložení |
+| **Mazání ze začátku** | O(n) posun všech | O(1) změna odkazů |
+| **Mazání z konce** | O(1) jen sníž count | O(1) obousměrný /  O(n) jednosměrný |
+| **Mazání uprostřed** | O(n) posun prvků | O(n) musíš najít + O(1) smazání |
+| **Hledání prvku** | O(n) lineární / O(log n) setříděné | O(n) lineární |
+| **Cache výkon** | Výborný (CPU prefetch) | Horší (random access) |
+| **Paměťová režie** | Pouze data | Data + odkazy (16B/uzel navíc) |
+| **Iterace (foreach)** | Velmi rychlá | Pomalejší (skákání po paměti) |
 | **Použití** | Známá velikost, časté čtení | Časté vkládání/mazání, neznámá velikost |
 
 ---
 
-### ✅ Výhody a nevýhody
+### Výhody a nevýhody
 
 #### **POLE:**
 
-**✅ Výhody:**
+** Výhody:**
 
 1. **Rychlý přímý přístup** - O(1)
    ```csharp
@@ -1628,35 +1628,35 @@ Console.WriteLine(cisla.Capacity);  // 8 - alokovaná kapacita
 2. **Menší paměťová náročnost**
    - Pouze samotná data
    - Žádné odkazy na další prvky
-   
+
 3. **Cache-friendly výkon**
    - CPU načte více prvků najednou (spatial locality)
    - Rychlejší iterace (for, foreach)
-   
+
 4. **Jednodušší na použití**
    - Přímočará syntaxe
    - Snadné pochopení
 
-**❌ Nevýhody:**
+** Nevýhody:**
 
 1. **Fixní velikost**
    - Musíš předem vědět, kolik prvků budeš mít
    - Změna velikosti = vytvoř nové pole + zkopíruj data (O(n))
-   
+
 2. **Pomalé vkládání/mazání uprostřed** - O(n)
    ```
    PŘED:  [10][20][30][40][50]
    Vložit 25 na index 2:
-   
+
    Krok 1: Posuň všechny prvky od indexu 2 doprava
    [10][20][  ][30][40][50]
-   
+
    Krok 2: Vlož nový prvek
    [10][20][25][30][40][50]
-   
+
    → Musíš posunout 3 prvky (O(n))
    ```
-   
+
 3. **Plýtvání pamětí**
    ```
    List<int> list = new List<int>(100);  // Kapacita 100
@@ -1669,34 +1669,34 @@ Console.WriteLine(cisla.Capacity);  // 8 - alokovaná kapacita
 
 #### **SPOJOVÝ SEZNAM:**
 
-**✅ Výhody:**
+** Výhody:**
 
 1. **Dynamická velikost**
    - Přidávej a odebírej, kolik chceš
    - Žádné plýtvání pamětí
-   
+
 2. **Rychlé vkládání/mazání na koncích** - O(1)
    ```
    PŘED:  5 <-> 3 <-> 8
    AddFirst(9):
-   
+
    Krok 1: Vytvoř uzel [9|•]
    Krok 2: [9|•] ukazuje na 5
    Krok 3: head = [9|•]
-   
+
    PO:    9 <-> 5 <-> 3 <-> 8
-   
+
    → Pouze změna 2 odkazů (O(1))
    ```
-   
+
 3. **Žádné přesouvání dat**
    - Vkládání = změna odkazů
    - Není potřeba posunovat prvky
-   
+
 4. **Snadné reorganizace**
    - Můžeš přeřadit uzly bez kopírování dat
-   
-**❌ Nevýhody:**
+
+** Nevýhody:**
 
 1. **Pomalý přístup k prvkům** - O(n)
    ```
@@ -1704,55 +1704,55 @@ Console.WriteLine(cisla.Capacity);  // 8 - alokovaná kapacita
    → Musím projít: 0 → 1 → 2 → ... → 100
    → 100 operací!
    ```
-   
+
 2. **Větší paměťová režie**
    ```
    Uložení 1000 čísel (int = 4 byty):
-   
+
    POLE:
    1000 × 4 = 4,000 bytů
-   
+
    LINKED LIST (obousměrný):
    1000 × (4 data + 16 odkazy) = 20,000 bytů
-   
-   Rozdíl: 5× více! ❌
+
+   Rozdíl: 5× více!
    ```
-   
+
 3. **Cache-unfriendly**
    - Data roztroušená → CPU musí často chodit do RAM
    - Pomalejší iterace
-   
+
 4. **Složitější implementace**
    - Musíš spravovat odkazy
    - Víc místa pro chyby (null pointers)
 
 ---
 
-### 🎯 Kdy použít co?
+### Kdy použít co?
 
-#### **📦 Použij POLE, když:**
+#### ** Použij POLE, když:**
 
 **1. Znáš počet prvků dopředu**
 
 ```csharp
-// ✅ Výsledky testů 30 studentů
+//  Výsledky testů 30 studentů
 int[] vysledky = new int[30];
 
-// ✅ Herní mapa 100×100
+//  Herní mapa 100×100
 int[,] mapa = new int[100, 100];
 
-// ✅ Dny v týdnu
+//  Dny v týdnu
 string[] dny = { "Po", "Út", "St", "Čt", "Pá", "So", "Ne" };
 ```
 
 **2. Potřebuješ rychlý přístup k libovolnému prvku**
 
 ```csharp
-// ✅ Tabulka ASCII kódů
+//  Tabulka ASCII kódů
 char[] ascii = new char[128];
 char znak = ascii[65];  // O(1) - okamžitě 'A'
 
-// ✅ Pixely obrázku
+//  Pixely obrázku
 Color[,] obraz = new Color[1920, 1080];
 Color pixel = obraz[500, 300];  // O(1)
 ```
@@ -1760,8 +1760,8 @@ Color pixel = obraz[500, 300];  // O(1)
 **3. Málo vkládáš/mažeš, hlavně čteš**
 
 ```csharp
-// ✅ Tabulka matematických konstant
-double[] konstanty = { 
+//  Tabulka matematických konstant
+double[] konstanty = {
     3.14159,  // Pi
     2.71828,  // e
     1.41421,  // √2
@@ -1774,7 +1774,7 @@ double[] konstanty = {
 **4. Záleží na výkonu (rychlá iterace)**
 
 ```csharp
-// ✅ Zpracování velkého množství dat
+//  Zpracování velkého množství dat
 int[] data = new int[1_000_000];
 
 // For cyklus je mnohem rychlejší na poli než na LinkedList
@@ -1787,19 +1787,19 @@ for (int i = 0; i < data.Length; i++)
 **5. Potřebuješ vícerozměrná data**
 
 ```csharp
-// ✅ Matice, tabulky, herní pole
+//  Matice, tabulky, herní pole
 int[,] sachovnice = new int[8, 8];
 int[][] pascal = new int[10][];  // Pascalův trojúhelník
 ```
 
 ---
 
-#### **🔗 Použij SPOJOVÝ SEZNAM, když:**
+#### ** Použij SPOJOVÝ SEZNAM, když:**
 
 **1. Nevíš, kolik prvků budeš mít**
 
 ```csharp
-// ✅ Fronta úkolů přicházejících z webu
+//  Fronta úkolů přicházejících z webu
 LinkedList<Task> taskQueue = new LinkedList<Task>();
 
 while (server.HasNewRequest())
@@ -1811,7 +1811,7 @@ while (server.HasNewRequest())
 **2. Často vkládáš/mažeš na začátku nebo konci**
 
 ```csharp
-// ✅ Historie akcí (Undo/Redo)
+//  Historie akcí (Undo/Redo)
 LinkedList<Action> undoHistory = new LinkedList<Action>();
 
 void PerformAction(Action action)
@@ -1833,7 +1833,7 @@ void Undo()
 **3. Implementuješ frontu (Queue) nebo zásobník (Stack)**
 
 ```csharp
-// ✅ FIFO fronta
+//  FIFO fronta
 LinkedList<Customer> fronta = new LinkedList<Customer>();
 
 void EnqueueCustomer(Customer c)
@@ -1852,7 +1852,7 @@ Customer DequeueCustomer()
 **4. Potřebuješ vkládat mezi existující prvky**
 
 ```csharp
-// ✅ Playlist hudby - vložení písně za aktuální
+//  Playlist hudby - vložení písně za aktuální
 LinkedList<Song> playlist = new LinkedList<Song>();
 
 LinkedListNode<Song> currentSong = playlist.Find(nowPlaying);
@@ -1866,7 +1866,7 @@ if (currentSong != null)
 **5. Implementuješ LRU cache (Least Recently Used)**
 
 ```csharp
-// ✅ Cache s odstraněním nejméně používaných
+//  Cache s odstraněním nejméně používaných
 LinkedList<CacheEntry> cache = new LinkedList<CacheEntry>();
 
 void AccessItem(CacheEntry item)
@@ -1884,7 +1884,7 @@ void RemoveLRU()
 
 ---
 
-### 📏 Paměťové nároky - konkrétní příklady
+### Paměťové nároky - konkrétní příklady
 
 #### Příklad 1: 1000 celých čísel
 
@@ -1901,7 +1901,7 @@ void RemoveLRU()
 │  1000 × (4 data + 8 Next + 8 Prev)  │
 │  = 1000 × 20 = 20,000 bytů           │
 │                                      │
-│  Poměr: LinkedList je 5× větší! ❌   │
+│  Poměr: LinkedList je 5× větší!    │
 └──────────────────────────────────────┘
 ```
 
@@ -1927,7 +1927,7 @@ void RemoveLRU()
 
 ---
 
-### 🏆 Praktické příklady ze života
+### Praktické příklady ze života
 
 | Scénář | Optimální struktura | Odůvodnění |
 |--------|-------------------|------------|
@@ -1943,22 +1943,22 @@ void RemoveLRU()
 
 ---
 
-### 💡 List<T> jako kompromis
+### List<T> jako kompromis
 
 **List<T>** kombinuje výhody obou:
 
 ```csharp
 List<int> cisla = new List<int>();  // Začne s kapacitou 0
 
-// ✅ Dynamická velikost (jako LinkedList)
+//  Dynamická velikost (jako LinkedList)
 cisla.Add(10);
 cisla.Add(20);
 cisla.Add(30);
 
-// ✅ Rychlý přístup O(1) (jako pole)
+//  Rychlý přístup O(1) (jako pole)
 int hodnota = cisla[1];  // 20
 
-// ❌ Ale: vkládání uprostřed stále O(n)
+//  Ale: vkládání uprostřed stále O(n)
 cisla.Insert(1, 15);  // Musí posunout prvky
 ```
 
@@ -1989,10 +1989,10 @@ cisla.Insert(1, 15);  // Musí posunout prvky
 ```
 
 **Výhody List<T>:**
-- ✅ Dynamická velikost
-- ✅ O(1) přístup přes index
-- ✅ Bohaté API (Add, Remove, Sort, Find, ...)
-- ✅ LINQ podpora
+- Dynamická velikost
+- O(1) přístup přes index
+- Bohaté API (Add, Remove, Sort, Find, ...)
+- LINQ podpora
 
 **Kdy použít:**
 - 90% případů v běžném programování
@@ -2001,16 +2001,16 @@ cisla.Insert(1, 15);  // Musí posunout prvky
 
 ---
 
-## ⚠️ Na co si dát pozor (Maturitní "chytáky")
+## Na co si dát pozor (Maturitní "chytáky")
 
 ### 1. LinkedList vs List<T>
 
 **Chyták:** "Je LinkedList rychlejší než List?"
 
 **Odpověď:** Záleží na operaci!
-- ✅ AddFirst/RemoveFirst: LinkedList O(1) vs List O(n)
-- ❌ Přístup [i]: LinkedList O(n) vs List O(1)
-- ❌ Iterace: LinkedList pomalejší (cache)
+- AddFirst/RemoveFirst: LinkedList O(1) vs List O(n)
+- Přístup [i]: LinkedList O(n) vs List O(1)
+- Iterace: LinkedList pomalejší (cache)
 
 **Pravidlo:** List<T> je výchozí volba. LinkedList jen když **opravdu** často vkládáš na začátek.
 
@@ -2021,19 +2021,19 @@ cisla.Insert(1, 15);  // Musí posunout prvky
 **Chyták:** "Můžu zvětšit pole po vytvoření?"
 
 **Odpověď:**
-- ❌ Klasické pole (`int[]`) má fixní velikost
-- ✅ `List<T>` ano, ale interně vytváří nové pole a kopíruje (O(n))
-- ✅ `LinkedList<T>` ano, bez kopírování (O(1))
+- Klasické pole (`int[]`) má fixní velikost
+- `List<T>` ano, ale interně vytváří nové pole a kopíruje (O(n))
+- `LinkedList<T>` ano, bez kopírování (O(1))
 
 ```csharp
-// ❌ Toto NEJDE:
+//  Toto NEJDE:
 int[] cisla = new int[5];
 cisla.Length = 10;  // Chyba! Length je readonly
 
-// ✅ Toto JDE (ale vytvoří nové pole):
+//  Toto JDE (ale vytvoří nové pole):
 Array.Resize(ref cisla, 10);  // Interně: new + copy
 
-// ✅ List<T> to řeší automaticky:
+//  List<T> to řeší automaticky:
 List<int> list = new List<int>();
 list.Add(x);  // Automaticky resize když je potřeba
 ```
@@ -2044,18 +2044,18 @@ list.Add(x);  // Automaticky resize když je potřeba
 
 **Chyták:** "LinkedList má O(1) vložení, takže je vždy rychlejší?"
 
-**Odpověď:** ❌ NE! Záleží **kde** vkládáš:
+**Odpověď:** NE! Záleží **kde** vkládáš:
 
 ```csharp
-// ✅ LinkedList rychlejší:
+//  LinkedList rychlejší:
 linkedList.AddFirst(x);   // O(1)
 list.Insert(0, x);        // O(n) - musí posunout všechny
 
-// ❌ LinkedList NENÍ rychlejší:
+//  LinkedList NENÍ rychlejší:
 linkedList.AddLast(x);    // O(1)
 list.Add(x);              // O(1) amortizovaně - stejné!
 
-// ❌ LinkedList POMALEJŠÍ (musíš najít místo):
+//  LinkedList POMALEJŠÍ (musíš najít místo):
 var node = linkedList.Find(target);  // O(n)
 linkedList.AddAfter(node, x);        // O(1)
 // Celkem: O(n) + O(1) = O(n)
@@ -2070,7 +2070,7 @@ list.Insert(index, x);    // O(n)
 
 **Chyták:** "Změní funkce původní pole?"
 
-**Odpověď:** ✅ ANO! Pole se předává referencí.
+**Odpověď:** ANO! Pole se předává referencí.
 
 ```csharp
 void Funkce(int[] pole)
@@ -2140,11 +2140,11 @@ CPU musí:
 **Chyták:** "Jaký je rozdíl mezi `null` a `new int[0]`?"
 
 ```csharp
-// ❌ Null - neexistuje žádné pole
+//  Null - neexistuje žádné pole
 int[] pole1 = null;
 Console.WriteLine(pole1.Length);  // NullReferenceException!
 
-// ✅ Prázdné pole - existuje, ale má 0 prvků
+//  Prázdné pole - existuje, ale má 0 prvků
 int[] pole2 = new int[0];  // nebo Array.Empty<int>()
 Console.WriteLine(pole2.Length);  // 0 (v pořádku)
 ```
@@ -2153,15 +2153,15 @@ Console.WriteLine(pole2.Length);  // 0 (v pořádku)
 
 ---
 
-## 🚀 Senior Tipy
+## Senior Tipy
 
 ### 1. Preferuj List<T> před polem
 
 ```csharp
-// ❌ Méně flexibilní:
+//  Méně flexibilní:
 int[] cisla = new int[100];
 
-// ✅ Lépe:
+//  Lépe:
 List<int> cisla = new List<int>();
 
 // Proč:
@@ -2175,13 +2175,13 @@ List<int> cisla = new List<int>();
 ### 2. Použij LINQ pro složité operace
 
 ```csharp
-// ❌ Ruční průnik (O(n×m)):
+//  Ruční průnik (O(n×m)):
 LinkedList<int> result = new LinkedList<int>();
 foreach (int x in list1)
     if (list2.Contains(x) && !result.Contains(x))
         result.AddLast(x);
 
-// ✅ LINQ (O(n+m)):
+//  LINQ (O(n+m)):
 var result = list1.Intersect(list2);
 ```
 
@@ -2190,10 +2190,10 @@ var result = list1.Intersect(list2);
 ### 3. Array.Empty<T>() pro prázdná pole
 
 ```csharp
-// ❌ Alokuje paměť zbytečně:
+//  Alokuje paměť zbytečně:
 int[] empty1 = new int[0];
 
-// ✅ Použije cached instanci (žádná alokace):
+//  Použije cached instanci (žádná alokace):
 int[] empty2 = Array.Empty<int>();
 ```
 
@@ -2204,7 +2204,7 @@ int[] empty2 = Array.Empty<int>();
 Pro high-performance scénáře:
 
 ```csharp
-// ✅ Žádná alokace, rychlé
+//  Žádná alokace, rychlé
 Span<int> cisla = stackalloc int[100];
 cisla[50] = 42;
 ```
@@ -2214,13 +2214,13 @@ cisla[50] = 42;
 ### 5. Kdy opravdu použít LinkedList
 
 ```csharp
-// ✅ Opravdu má smysl:
+//  Opravdu má smysl:
 // 1. LRU Cache
 // 2. Undo/Redo historie
 // 3. Playlist s častým vkládáním mezi písně
 // 4. Priority Queue implementace
 
-// ❌ Zbytečné:
+//  Zbytečné:
 // 1. Běžná kolekce dat → použij List<T>
 // 2. Setříděné hledání → použij pole nebo SortedSet<T>
 // 3. Libovolný přístup → použij pole nebo List<T>
@@ -2228,7 +2228,7 @@ cisla[50] = 42;
 
 ---
 
-## 📋 Quick Reference (Rychlá nápověda)
+## Quick Reference (Rychlá nápověda)
 
 ### Pole (Array)
 ```csharp
@@ -2299,7 +2299,7 @@ var filtered = list.Where(x => x > 5).ToList();
 
 ---
 
-## 🔗 Souvislosti s jinými otázkami
+## Souvislosti s jinými otázkami
 
 - **Otázka 1:** Datové typy - pole a LinkedList jsou složené datové typy
 - **Otázka 3:** Fronta a zásobník - implementovatelné pomocí pole i LinkedList
@@ -2311,6 +2311,6 @@ var filtered = list.Where(x => x > 5).ToList();
 
 ---
 
-**✅ Otázka 2 kompletně hotova!**
+** Otázka 2 kompletně hotova!**
 
 *Toto je kompletní zápis pro maturitu. Obsahuje vše, co potřebuješ znát o spojových seznamech a polích - od základů přes implementace až po praktické použití a časté chyby.*
